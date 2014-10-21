@@ -2,6 +2,6 @@ package jingleheimercalendar;
 
 import javax.swing.JPanel;
 
-public class WeekPanel extends JPanel {
+class WeekPanel extends JPanel {
     
 }
