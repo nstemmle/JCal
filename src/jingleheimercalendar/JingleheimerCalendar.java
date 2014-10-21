@@ -33,6 +33,7 @@ public class JingleheimerCalendar extends JFrame {
     private static void createAndShowGUI() {
         new JingleheimerCalendar();
         // Forgive my terrible names
+            //@nstemmle - Renamed and forgiven
     }
     
     public JingleheimerCalendar() {
@@ -92,7 +93,7 @@ public class JingleheimerCalendar extends JFrame {
     }
     
     private Font loadFont() throws FontFormatException, IOException  {
-        URL fontUrl = getClass().getResource("/learn/font/Nexa_Bold.ttf");
+        URL fontUrl = getClass().getResource("/font/Nexa_Bold.ttf");
         Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
         font = font.deriveFont(Font.PLAIN,60);
         return font;
