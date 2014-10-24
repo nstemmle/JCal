@@ -6,6 +6,10 @@ If you hate this we don't have to use any of it - just trying to get the ball ro
 package jingleheimercalendar;
 
 import java.awt.*;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.*;
@@ -29,9 +33,9 @@ public class JingleheimerCalendar extends JFrame {
     // Class variables
     private NavigationPanel mNavigationPanel;
     private CategoryPanel mCategoryPanel;
+    private PlaceholderView mPlaceHolderView;
     private JLabel topLabel, bottomLabel, viewLabel;
     private Font sans, customFont;
-    //static ResizableBorder mResizableBorder;
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -60,6 +64,9 @@ public class JingleheimerCalendar extends JFrame {
         //Taken from the following stackoverflow
         //http://stackoverflow.com/questions/1936566/how-do-you-get-the-screen-width-in-java/8101318#8101318
 
+        this.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+        this.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+
         workableBounds = getScreenBounds(null);
         int initialHeight, initialWidth;
         if (workableBounds.width <= PREFERRED_WIDTH) {
@@ -75,23 +82,21 @@ public class JingleheimerCalendar extends JFrame {
 
         this.setSize(initialWidth, initialHeight);
         //Output for testing
-        System.out.println("workable bounds x: " + workableBounds.width + "\nworkable bounds y: " + workableBounds.height);
-        System.out.println("init width: " + initialWidth + "\ninit height: " + initialHeight);
+        //System.out.println("workable bounds x: " + workableBounds.width + "\nworkable bounds y: " + workableBounds.height);
+        //System.out.println("init width: " + initialWidth + "\ninit height: " + initialHeight);
 
-        // JFrame dimensions include the operating system's borders.
-        // The actual size of the JFrame on windows is 1296x758, but this is left out for now because
-        // I'm sure it's different on mac and the frame stretches to fit the components with pack() anyway
+        //Set default location to center of default screen device
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("Jingleheimer Dingleheimer");
-        
-        mNavigationPanel = new NavigationPanel();
-        mCategoryPanel = new CategoryPanel();
-        PlaceholderView view = new PlaceholderView();
 
-        // Separate JPanel classes for top and bottom because they have different borders.
-        
-        view.setLayout(new GridBagLayout());
+        mNavigationPanel = new NavigationPanel();
+        mNavigationPanel.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, NavigationPanel.MINIMUM_HEIGHT));
+        mCategoryPanel = new CategoryPanel();
+        mCategoryPanel.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, CategoryPanel.MINIMUM_HEIGHT));
+        mPlaceHolderView = new PlaceholderView();
+
+        mPlaceHolderView.setLayout(new GridBagLayout());
         // default GridBag just for centering the label.
         
         topLabel    = new JLabel("Top navigation area (Swing default font)");
@@ -118,26 +123,32 @@ public class JingleheimerCalendar extends JFrame {
         
         mNavigationPanel.add(topLabel);
         mCategoryPanel.add(bottomLabel);
-        view.add(viewLabel);
+        mPlaceHolderView.add(viewLabel);
 
-        
-        BasePanel base = new BasePanel();
-        base.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-                
-        base.add(mNavigationPanel);
-        base.add(view);
-        base.add(mCategoryPanel);
-        
-        this.add(base);
+        add(mNavigationPanel);
+        add(mCategoryPanel);
+        add(mPlaceHolderView);
+
+
         pack();
         this.setVisible(true);
-
+        this.validate();
         //If the application window size is set to the maximum workable bounds, then maximize the application
         //Take from the following stackoverflow
         //http://stackoverflow.com/questions/479523/java-swing-maximize-window
         if (maxWidth && maxHeight) {
             this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         }
+
+        //Debugging/testing output
+        /*
+        System.out.println("JFrame width: " + getWidth() + "\nJFrame height: " + getHeight());
+        System.out.println("Cat Panel x: " + mCategoryPanel.getX() + "\nCat Panel width: " + mCategoryPanel.getWidth());
+        System.out.println("Cat Panel y: " + mCategoryPanel.getY() + "\nCat Panel height: " + mCategoryPanel.getHeight());
+        System.out.println("Nav Panel x: " + mNavigationPanel.getX() + "\nNav Panel width: " + mNavigationPanel.getWidth());
+        System.out.println("Nav Panel y: " + mNavigationPanel.getY() + "\nNav Panel height: " + mNavigationPanel.getHeight());
+        System.out.println("\n\n***Initial Settings\n\n");
+        */
     }
     
     private Font loadFont() throws FontFormatException, IOException  {
@@ -147,49 +158,35 @@ public class JingleheimerCalendar extends JFrame {
         return font;
     }
 
-    //@nstemmle
-    //This will have enough functionality that it should be its own class, I think
-    //Do its fields need to be accessed directly?
-    /*class TopNavigation extends JPanel {
-        public TopNavigation() {
-            setBorder(BorderFactory.createMatteBorder(0,0,2,0,Color.BLACK));
-            // MatteBorder takes arguments for the width of each border's side.
-            this.setBackground(Color.WHITE);
-            this.setMinimumSize(new Dimension(600,35));
-            this.setMaximumSize(new Dimension());
+    //This allows for dynamic resizing of components in window
+    @Override
+    public void validate() {
+        super.validate();
+        if (mCategoryPanel != null) {
+            mCategoryPanel.setSize(getContentPane().getWidth(), CategoryPanel.MINIMUM_HEIGHT);
+            mCategoryPanel.setLocation(0, getContentPane().getHeight() - CategoryPanel.MINIMUM_HEIGHT);
+            //Debugging/testing output
+            //System.out.println("Cat Panel x: " + mCategoryPanel.getX() + "\nCat Panel width: " + mCategoryPanel.getWidth());
+            //System.out.println("Cat Panel y: " + mCategoryPanel.getY() + "\nCat Panel height: " + mCategoryPanel.getHeight());
         }
-        public Dimension getPreferredSize() {
-            return new Dimension(1280,35);
+
+        if (mNavigationPanel != null) {
+            mNavigationPanel.setSize(getContentPane().getWidth(), NavigationPanel.MINIMUM_HEIGHT);
+            //Debugging/testing output
+            //System.out.println("Nav Panel x: " + mNavigationPanel.getX() + "\nNav Panel width: " + mNavigationPanel.getWidth());
+            //System.out.println("Nav Panel y: " + mNavigationPanel.getY() + "\nNav Panel height: " + mNavigationPanel.getHeight());
+        }
+        if (mPlaceHolderView != null) {
+            mPlaceHolderView.setSize(getContentPane().getWidth(), getContentPane().getHeight() - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT);
+            mPlaceHolderView.setLocation(0, NavigationPanel.MINIMUM_HEIGHT);
         }
     }
-    */
-    /*
-    class BottomNavigation extends JPanel {
-        public BottomNavigation() {
-            setBorder(BorderFactory.createMatteBorder(2,0,0,0,Color.BLACK));
-            // MatteBorder takes arguments for the width of each border's side.
-            this.setBackground(Color.WHITE);
-        }
-        public Dimension getPreferredSize() {
-            return new Dimension(1280,35);
-        }
-    }*/
 
     class PlaceholderView extends JPanel {
         public PlaceholderView() {
             this.setBackground(Color.WHITE);
-        }
-        public Dimension getPreferredSize() {
-            return new Dimension(1280,650);
-        }
-    }
-
-    class BasePanel extends JPanel {
-        public BasePanel(){
-            this.setBackground(Color.WHITE);
-        }
-        public Dimension getPreferredSize() {
-            return new Dimension(1280,720);
+            this.setPreferredSize(new Dimension(1280, 650));
+            this.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT));
         }
     }
 

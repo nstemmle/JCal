@@ -7,8 +7,8 @@ import java.awt.*;
  * Created by Roach on 10/24/2014.
  */
 public class CategoryPanel extends JPanel {
-    private static final int MINIMUM_WIDTH = 450;
-    private static final int MINIMUM_HEIGHT = 35;
+    public static final int MINIMUM_WIDTH = 450;
+    public static final int MINIMUM_HEIGHT = 35;
 
     public CategoryPanel() {
         setBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK));

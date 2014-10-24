@@ -7,8 +7,8 @@ import java.awt.*;
  * Created by Roach on 10/24/2014.
  */
 public class NavigationPanel extends JPanel {
-    private static final int MINIMUM_WIDTH = 450;
-    private static final int MINIMUM_HEIGHT = 35;
+    public static final int MINIMUM_WIDTH = 450;
+    public static final int MINIMUM_HEIGHT = 35;
 
     public NavigationPanel() {
         setBorder(BorderFactory.createMatteBorder(0,0,2,0, Color.BLACK));
