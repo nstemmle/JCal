@@ -66,7 +66,7 @@ public class JingleheimerCalendar extends JFrame {
             maxWidth = true;
             initialWidth = workableBounds.width;
         } else
-            initialWidth = JingleheimerCalendar.PREFERRED_WIDTH;
+            initialWidth = PREFERRED_WIDTH;
         if (workableBounds.height <= PREFERRED_HEIGHT) {
             maxHeight = true;
             initialHeight = workableBounds.height;
