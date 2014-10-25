@@ -5,14 +5,14 @@ If you hate this we don't have to use any of it - just trying to get the ball ro
 
 package jingleheimercalendar;
 
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
-import javax.swing.*;
+import java.util.Calendar;
 
 public class JingleheimerCalendar extends JFrame {
     //Constants for preferred/target screen width and height
@@ -24,6 +24,10 @@ public class JingleheimerCalendar extends JFrame {
     public static final int MINIMUM_WIDTH = 800;
     public static final int MINIMUM_HEIGHT = 450;
 
+    //Constant for time-delay of mTimer in miliseconds
+    //Want 1 minute = 60 seconds * 1000 miliseconds/second = 60,000 ms
+    private static final int DELAY_INTERVAL = 60000;
+
     //These might need to be accessed from other methods so moving them outside constructor scope
     //Can re-insert into constructor scope if they don't need to be accessed again
     private Rectangle workableBounds;
@@ -31,10 +35,12 @@ public class JingleheimerCalendar extends JFrame {
     private boolean maxHeight = false;
 
     // Class variables
+    private Timer mTimer;
+    private Calendar mCalendar;
     private NavigationPanel mNavigationPanel;
     private CategoryPanel mCategoryPanel;
     private PlaceholderView mPlaceHolderView;
-    private JLabel topLabel, bottomLabel, viewLabel;
+    private JLabel topLabel, bottomLabel, viewLabel, timeDisplayLabel;
     private Font sans, customFont;
 
     public static void main(String[] args) {
@@ -53,7 +59,7 @@ public class JingleheimerCalendar extends JFrame {
     
     public JingleheimerCalendar() {
         //@nstemmle
-        //Get optimal initial bounds of window while accomadating available screen real estate where
+        //Get optimal initial bounds of window while accommodating available screen real estate where
         // initialWidth preferred is 1280 px (target)
         // initialHeight preferred is 720 px (target)
         // Feel free to adjust these parameters
@@ -96,6 +102,7 @@ public class JingleheimerCalendar extends JFrame {
         mCategoryPanel.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, CategoryPanel.MINIMUM_HEIGHT));
         mPlaceHolderView = new PlaceholderView();
 
+
         mPlaceHolderView.setLayout(new GridBagLayout());
         // default GridBag just for centering the label.
         
@@ -128,7 +135,13 @@ public class JingleheimerCalendar extends JFrame {
         add(mNavigationPanel);
         add(mCategoryPanel);
         add(mPlaceHolderView);
+        ActionListener mTimerListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+            }
+        };
+        mTimer = new Timer(DELAY_INTERVAL,mTimerListener);
 
         pack();
         this.setVisible(true);
@@ -140,6 +153,7 @@ public class JingleheimerCalendar extends JFrame {
             this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         }
 
+        MonthPanel monthPanel = new MonthPanel();
         //Debugging/testing output
         /*
         System.out.println("JFrame width: " + getWidth() + "\nJFrame height: " + getHeight());
@@ -147,7 +161,7 @@ public class JingleheimerCalendar extends JFrame {
         System.out.println("Cat Panel y: " + mCategoryPanel.getY() + "\nCat Panel height: " + mCategoryPanel.getHeight());
         System.out.println("Nav Panel x: " + mNavigationPanel.getX() + "\nNav Panel width: " + mNavigationPanel.getWidth());
         System.out.println("Nav Panel y: " + mNavigationPanel.getY() + "\nNav Panel height: " + mNavigationPanel.getHeight());
-        System.out.println("\n\n***Initial Settings\n\n");
+        System.out.println("\n\n***Initial Settings***\n\n");
         */
     }
     

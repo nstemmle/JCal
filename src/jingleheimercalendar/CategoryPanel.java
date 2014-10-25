@@ -1,7 +1,6 @@
 package jingleheimercalendar;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 /**
  * Created by Roach on 10/24/2014.
