@@ -6,17 +6,13 @@ import java.awt.*;
  * Created by Roach on 10/24/2014.
  */
 public class CategoryPanel extends JPanel {
-    public static final int MINIMUM_WIDTH = 450;
+    public static final int MINIMUM_WIDTH = 800;
     public static final int MINIMUM_HEIGHT = 35;
 
-    public CategoryPanel() {
+    public CategoryPanel(int width) {
         setBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK));
-        //setBorder(JingleheimerCalendar.mResizableBorder);
-        // MatteBorder takes arguments for the width of each border's side.
         this.setBackground(Color.WHITE);
         this.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
-    }
-    public Dimension getPreferredSize() {
-        return new Dimension(1280,35);
+        this.setPreferredSize(new Dimension(width, MINIMUM_HEIGHT));
     }
 }

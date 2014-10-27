@@ -8,8 +8,6 @@ package jingleheimercalendar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
@@ -28,22 +26,21 @@ public class JingleheimerCalendar extends JFrame {
     //Want 1 minute = 60 seconds * 1000 miliseconds/second = 60,000 ms
     private static final int DELAY_INTERVAL = 60000;
 
-    //These might need to be accessed from other methods so moving them outside constructor scope
-    //Can re-insert into constructor scope if they don't need to be accessed again
-    private Rectangle workableBounds;
-    private boolean maxWidth = false;
-    private boolean maxHeight = false;
-
     // Class variables
     private Timer mTimer;
     private Calendar mCalendar;
     private NavigationPanel mNavigationPanel;
     private CategoryPanel mCategoryPanel;
-    private PlaceholderView mPlaceHolderView;
-    private JLabel topLabel, bottomLabel, viewLabel, timeDisplayLabel;
-    private Font sans, customFont;
+    private MonthPanel monthPanel;
+    private JLayeredPane layeredPane;
+    private JLabel topLabel, bottomLabel;
+    private static Font customFont;
+    private Font sans;
+    SpringLayout springLayout, springLayeredPane;
 
     public static void main(String[] args) {
+        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("swing.aatext","true");
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
@@ -52,11 +49,17 @@ public class JingleheimerCalendar extends JFrame {
     }
     
     private static void createAndShowGUI() {
+        try {
+            UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Tahoma", Font.BOLD, 28));
+            System.out.println("Success - but it's actually not");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         new JingleheimerCalendar();
         // Forgive my terrible names
             //@nstemmle - Renamed and forgiven
     }
-    
+
     public JingleheimerCalendar() {
         //@nstemmle
         //Get optimal initial bounds of window while accommodating available screen real estate where
@@ -71,77 +74,99 @@ public class JingleheimerCalendar extends JFrame {
         //http://stackoverflow.com/questions/1936566/how-do-you-get-the-screen-width-in-java/8101318#8101318
 
         this.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
-        this.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+        pack();
 
-        workableBounds = getScreenBounds(null);
-        int initialHeight, initialWidth;
-        if (workableBounds.width <= PREFERRED_WIDTH) {
+        Insets windowInsets = getScreenInsets(null);
+        Rectangle workableBounds = getScreenBounds(null);
+        int prefHeight = PREFERRED_HEIGHT + windowInsets.top + windowInsets.bottom;
+        int prefWidth = PREFERRED_WIDTH + windowInsets.left + windowInsets.right;
+
+        int minHeight = MINIMUM_HEIGHT + windowInsets.top + windowInsets.bottom;
+        int minWidth = MINIMUM_WIDTH + windowInsets.left + windowInsets.right;
+
+        int initialHeight, initialWidth, panelWidth, panelHeight;
+        boolean maxWidth = false;
+        if (workableBounds.width <= prefWidth) {
             maxWidth = true;
-            initialWidth = workableBounds.width;
+            initialWidth = minWidth;
+            panelWidth = MINIMUM_WIDTH;
         } else
-            initialWidth = PREFERRED_WIDTH;
-        if (workableBounds.height <= PREFERRED_HEIGHT) {
+            initialWidth = prefWidth;
+            panelWidth = PREFERRED_WIDTH;
+        boolean maxHeight = false;
+        if (workableBounds.height <= prefHeight) {
             maxHeight = true;
-            initialHeight = workableBounds.height;
+            panelHeight = MINIMUM_HEIGHT;
+            initialHeight = minHeight;
         } else
-            initialHeight = PREFERRED_HEIGHT;
+            panelHeight = PREFERRED_HEIGHT;
+            initialHeight = prefHeight;
 
-        this.setSize(initialWidth, initialHeight);
-        //Output for testing
-        //System.out.println("workable bounds x: " + workableBounds.width + "\nworkable bounds y: " + workableBounds.height);
-        //System.out.println("init width: " + initialWidth + "\ninit height: " + initialHeight);
+        this.setPreferredSize(new Dimension(initialWidth, initialHeight));
+        pack();
+        springLayout = new SpringLayout();
+        getContentPane().setLayout(springLayout);
 
         //Set default location to center of default screen device
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("Jingleheimer Dingleheimer");
 
-        mNavigationPanel = new NavigationPanel();
-        mNavigationPanel.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, NavigationPanel.MINIMUM_HEIGHT));
-        mCategoryPanel = new CategoryPanel();
-        mCategoryPanel.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, CategoryPanel.MINIMUM_HEIGHT));
-        mPlaceHolderView = new PlaceholderView();
+        mNavigationPanel = new NavigationPanel(panelWidth);
+        mCategoryPanel = new CategoryPanel(panelWidth);
 
-
-        mPlaceHolderView.setLayout(new GridBagLayout());
-        // default GridBag just for centering the label.
-        
-        topLabel    = new JLabel("Top navigation area (Swing default font)");
-        viewLabel   = new JLabel("Placeholder view area (Nexa Bold 60pt)");
+        //Pass the size of the monthPanel to be constructed to its constructor
+        monthPanel = new MonthPanel(panelWidth, panelHeight - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT,0);
+        topLabel    = new JLabel("Top navigation area (custom font)");
         bottomLabel = new JLabel("Bottom navigation area (Arial Bold 20pt)");
-        
-        try {
-            customFont = loadFont();
-            // I'm not sure the following two lines are completely necessary.
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-        } catch (FontFormatException|IOException e) {
-            // If you see times at all, something is wrong.
-            System.err.println("Error loading custom font. Using Times.");
-            customFont = new Font("Times New Roman", Font.BOLD,60);
-        }
+
+        springLayeredPane = new SpringLayout();
+        layeredPane = new JLayeredPane();
+        layeredPane.setLayout(springLayeredPane);
+        layeredPane.add(monthPanel);
+        layeredPane.setOpaque(false);
+        layeredPane.moveToFront(monthPanel);
+
+
+
         
         sans = new Font("Arial", Font.BOLD,20);
-        // test reference font for the bottom panel
-        
-        //topLabel is Swing default just for reference, so I don't change it
-        viewLabel.setFont(customFont);
+
+        topLabel.setFont(customFont);
         bottomLabel.setFont(sans);
-        
+
         mNavigationPanel.add(topLabel);
         mCategoryPanel.add(bottomLabel);
-        mPlaceHolderView.add(viewLabel);
+
 
         add(mNavigationPanel);
+        springLayout.putConstraint(SpringLayout.NORTH, mNavigationPanel, 0, SpringLayout.NORTH, getContentPane());
+        springLayout.putConstraint(SpringLayout.WEST, mNavigationPanel, 0, SpringLayout.WEST, getContentPane());
+        springLayout.putConstraint(SpringLayout.EAST, mNavigationPanel, 0, SpringLayout.EAST, getContentPane());
+
         add(mCategoryPanel);
-        add(mPlaceHolderView);
-        ActionListener mTimerListener = new ActionListener() {
+        springLayout.putConstraint(SpringLayout.SOUTH, mCategoryPanel, 0, SpringLayout.SOUTH, getContentPane());
+        springLayout.putConstraint(SpringLayout.WEST, mCategoryPanel, 0, SpringLayout.WEST, getContentPane());
+        springLayout.putConstraint(SpringLayout.EAST, mCategoryPanel, 0, SpringLayout.EAST, getContentPane());
+
+        add(layeredPane);
+        springLayout.putConstraint(SpringLayout.NORTH, layeredPane, 0, SpringLayout.SOUTH, mNavigationPanel);
+        springLayout.putConstraint(SpringLayout.WEST, layeredPane, 0, SpringLayout.WEST, getContentPane());
+        springLayout.putConstraint(SpringLayout.EAST, layeredPane, 0, SpringLayout.EAST, getContentPane());
+        springLayout.putConstraint(SpringLayout.SOUTH, layeredPane, 0, SpringLayout.NORTH, mCategoryPanel);
+
+        springLayeredPane.putConstraint(SpringLayout.NORTH, monthPanel, 0, SpringLayout.NORTH, layeredPane);
+        springLayeredPane.putConstraint(SpringLayout.WEST, monthPanel, 0, SpringLayout.WEST, layeredPane);
+        springLayeredPane.putConstraint(SpringLayout.EAST, monthPanel, 0, SpringLayout.EAST, layeredPane);
+        springLayeredPane.putConstraint(SpringLayout.SOUTH, monthPanel, 0, SpringLayout.SOUTH, layeredPane);
+
+        /*ActionListener mTimerListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
             }
         };
-        mTimer = new Timer(DELAY_INTERVAL,mTimerListener);
+        mTimer = new Timer(DELAY_INTERVAL,mTimerListener);*/
 
         pack();
         this.setVisible(true);
@@ -152,17 +177,7 @@ public class JingleheimerCalendar extends JFrame {
         if (maxWidth && maxHeight) {
             this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         }
-
-        MonthPanel monthPanel = new MonthPanel();
-        //Debugging/testing output
-        /*
-        System.out.println("JFrame width: " + getWidth() + "\nJFrame height: " + getHeight());
-        System.out.println("Cat Panel x: " + mCategoryPanel.getX() + "\nCat Panel width: " + mCategoryPanel.getWidth());
-        System.out.println("Cat Panel y: " + mCategoryPanel.getY() + "\nCat Panel height: " + mCategoryPanel.getHeight());
-        System.out.println("Nav Panel x: " + mNavigationPanel.getX() + "\nNav Panel width: " + mNavigationPanel.getWidth());
-        System.out.println("Nav Panel y: " + mNavigationPanel.getY() + "\nNav Panel height: " + mNavigationPanel.getHeight());
-        System.out.println("\n\n***Initial Settings***\n\n");
-        */
+        this.setLocationRelativeTo(null);
     }
     
     private Font loadFont() throws FontFormatException, IOException  {
@@ -172,39 +187,7 @@ public class JingleheimerCalendar extends JFrame {
         return font;
     }
 
-    //This allows for dynamic resizing of components in window
-    @Override
-    public void validate() {
-        super.validate();
-        if (mCategoryPanel != null) {
-            mCategoryPanel.setSize(getContentPane().getWidth(), CategoryPanel.MINIMUM_HEIGHT);
-            mCategoryPanel.setLocation(0, getContentPane().getHeight() - CategoryPanel.MINIMUM_HEIGHT);
-            //Debugging/testing output
-            //System.out.println("Cat Panel x: " + mCategoryPanel.getX() + "\nCat Panel width: " + mCategoryPanel.getWidth());
-            //System.out.println("Cat Panel y: " + mCategoryPanel.getY() + "\nCat Panel height: " + mCategoryPanel.getHeight());
-        }
-
-        if (mNavigationPanel != null) {
-            mNavigationPanel.setSize(getContentPane().getWidth(), NavigationPanel.MINIMUM_HEIGHT);
-            //Debugging/testing output
-            //System.out.println("Nav Panel x: " + mNavigationPanel.getX() + "\nNav Panel width: " + mNavigationPanel.getWidth());
-            //System.out.println("Nav Panel y: " + mNavigationPanel.getY() + "\nNav Panel height: " + mNavigationPanel.getHeight());
-        }
-        if (mPlaceHolderView != null) {
-            mPlaceHolderView.setSize(getContentPane().getWidth(), getContentPane().getHeight() - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT);
-            mPlaceHolderView.setLocation(0, NavigationPanel.MINIMUM_HEIGHT);
-        }
-    }
-
-    class PlaceholderView extends JPanel {
-        public PlaceholderView() {
-            this.setBackground(Color.WHITE);
-            this.setPreferredSize(new Dimension(1280, 650));
-            this.setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT));
-        }
-    }
-
-    public static Rectangle getScreenBounds(Window currentWindow) {
+    static Rectangle getScreenBounds(Window currentWindow) {
         Rectangle screenBounds;
 
         //Get the operating system insets (dock, taskbar, etc.)
@@ -229,7 +212,7 @@ public class JingleheimerCalendar extends JFrame {
         return screenBounds;
     }
 
-    public static Insets getScreenInsets(Window currentWindow) {
+    static Insets getScreenInsets(Window currentWindow) {
         Insets screenInsets;
 
         if (currentWindow != null) {
