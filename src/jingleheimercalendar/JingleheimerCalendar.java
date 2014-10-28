@@ -8,6 +8,8 @@ package jingleheimercalendar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
@@ -31,8 +33,14 @@ public class JingleheimerCalendar extends JFrame {
     private Calendar mCalendar;
     private NavigationPanel mNavigationPanel;
     private CategoryPanel mCategoryPanel;
-    private MonthPanel monthPanel;
-    private JLayeredPane layeredPane;
+
+    static JLayeredPane layeredPane;
+    static DayPanel dayPanel;
+    static WeekPanel weekPanel;
+    static MonthPanel monthPanel;
+    static YearPanel yearPanel;
+
+
     private JLabel topLabel, bottomLabel;
     private static Font customFont;
     private Font sans;
@@ -41,6 +49,7 @@ public class JingleheimerCalendar extends JFrame {
     public static void main(String[] args) {
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext","true");
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
@@ -51,7 +60,7 @@ public class JingleheimerCalendar extends JFrame {
     private static void createAndShowGUI() {
         try {
             UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Tahoma", Font.BOLD, 28));
-            System.out.println("Success - but it's actually not");
+            //System.out.println("Success - but it's actually not");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,7 +81,6 @@ public class JingleheimerCalendar extends JFrame {
 
         //Taken from the following stackoverflow
         //http://stackoverflow.com/questions/1936566/how-do-you-get-the-screen-width-in-java/8101318#8101318
-
         this.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
         pack();
 
@@ -159,6 +167,23 @@ public class JingleheimerCalendar extends JFrame {
         springLayeredPane.putConstraint(SpringLayout.WEST, monthPanel, 0, SpringLayout.WEST, layeredPane);
         springLayeredPane.putConstraint(SpringLayout.EAST, monthPanel, 0, SpringLayout.EAST, layeredPane);
         springLayeredPane.putConstraint(SpringLayout.SOUTH, monthPanel, 0, SpringLayout.SOUTH, layeredPane);
+
+        Button plus = new Button("+");
+        plus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                monthPanel.changeMonthBy(1);
+            }
+        });
+        Button minus = new Button("-");
+        minus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                monthPanel.changeMonthBy(-1);
+            }
+        });
+        mNavigationPanel.add(plus);
+        mNavigationPanel.add(minus);
 
         /*ActionListener mTimerListener = new ActionListener() {
             @Override
