@@ -8,8 +8,6 @@ package jingleheimercalendar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
@@ -23,6 +21,7 @@ public class JingleheimerCalendar extends JFrame {
     // these will have to adjusted/tested
     public static final int MINIMUM_WIDTH = 800;
     public static final int MINIMUM_HEIGHT = 450;
+    public static final int MINIMUM_VIEW_HEIGHT = MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT;
 
     //Constant for time-delay of mTimer in miliseconds
     //Want 1 minute = 60 seconds * 1000 miliseconds/second = 60,000 ms
@@ -34,17 +33,24 @@ public class JingleheimerCalendar extends JFrame {
     private NavigationPanel mNavigationPanel;
     private CategoryPanel mCategoryPanel;
 
+    //Structure used for holding and accessing the different content views
+    private ViewPanel[] views;
+
+    //Constants relating to managing the current view
+    private static final int NUM_VIEWS = 4;
+    private static final int DAY_VIEW_INDEX = 0;
+    private static final int WEEK_VIEW_INDEX = 1;
+    private static final int MONTH_VIEW_INDEX = 2;
+    private static final int YEAR_VIEW_INDEX = 3;
+
     static JLayeredPane layeredPane;
-    static DayPanel dayPanel;
-    static WeekPanel weekPanel;
-    static MonthPanel monthPanel;
-    static YearPanel yearPanel;
+    private DayView dayView;
+    private WeekView weekView;
+    private MonthView monthView;
+    private YearView yearView;
 
-
-    private JLabel topLabel, bottomLabel;
     private static Font customFont;
-    private Font sans;
-    SpringLayout springLayout, springLayeredPane;
+    SpringLayout springLayoutRoot, springLayeredPane;
 
     public static void main(String[] args) {
         System.setProperty("awt.useSystemAAFontSettings","on");
@@ -58,12 +64,12 @@ public class JingleheimerCalendar extends JFrame {
     }
     
     private static void createAndShowGUI() {
-        try {
+        /*try {
             UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Tahoma", Font.BOLD, 28));
             //System.out.println("Success - but it's actually not");
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         new JingleheimerCalendar();
         // Forgive my terrible names
             //@nstemmle - Renamed and forgiven
@@ -84,7 +90,7 @@ public class JingleheimerCalendar extends JFrame {
         this.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
         pack();
 
-        Insets windowInsets = getScreenInsets(null);
+        Insets windowInsets = getInsets();
         Rectangle workableBounds = getScreenBounds(null);
         int prefHeight = PREFERRED_HEIGHT + windowInsets.top + windowInsets.bottom;
         int prefWidth = PREFERRED_WIDTH + windowInsets.left + windowInsets.right;
@@ -92,98 +98,68 @@ public class JingleheimerCalendar extends JFrame {
         int minHeight = MINIMUM_HEIGHT + windowInsets.top + windowInsets.bottom;
         int minWidth = MINIMUM_WIDTH + windowInsets.left + windowInsets.right;
 
-        int initialHeight, initialWidth, panelWidth, panelHeight;
+        int initialHeight, initialWidth, viewWidth, viewHeight;
         boolean maxWidth = false;
+        boolean maxHeight = false;
         if (workableBounds.width <= prefWidth) {
             maxWidth = true;
+            viewWidth = MINIMUM_WIDTH;
             initialWidth = minWidth;
-            panelWidth = MINIMUM_WIDTH;
-        } else
+        } else {
+            viewWidth = PREFERRED_WIDTH;
             initialWidth = prefWidth;
-            panelWidth = PREFERRED_WIDTH;
-        boolean maxHeight = false;
+        }
         if (workableBounds.height <= prefHeight) {
             maxHeight = true;
-            panelHeight = MINIMUM_HEIGHT;
+            viewHeight = MINIMUM_HEIGHT;
             initialHeight = minHeight;
-        } else
-            panelHeight = PREFERRED_HEIGHT;
+        } else {
+            viewHeight = PREFERRED_HEIGHT;
             initialHeight = prefHeight;
+        }
+
 
         this.setPreferredSize(new Dimension(initialWidth, initialHeight));
         pack();
-        springLayout = new SpringLayout();
-        getContentPane().setLayout(springLayout);
+
+        springLayoutRoot = new SpringLayout();
+        getContentPane().setLayout(springLayoutRoot);
 
         //Set default location to center of default screen device
-        this.setLocationRelativeTo(null);
+        //this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setTitle("Jingleheimer Dingleheimer");
+        this.setTitle("Jingleheimer-Schmidt Calendar");
 
-        mNavigationPanel = new NavigationPanel(panelWidth);
-        mCategoryPanel = new CategoryPanel(panelWidth);
+        mNavigationPanel = new NavigationPanel(viewWidth);
+        mCategoryPanel = new CategoryPanel(viewWidth);
+
+        //Initialize array of views
+        views = new ViewPanel[NUM_VIEWS];
 
         //Pass the size of the monthPanel to be constructed to its constructor
-        monthPanel = new MonthPanel(panelWidth, panelHeight - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT,0);
-        topLabel    = new JLabel("Top navigation area (custom font)");
-        bottomLabel = new JLabel("Bottom navigation area (Arial Bold 20pt)");
+        dayView = new DayView(viewWidth, viewHeight);
+        views[DAY_VIEW_INDEX] = dayView;
+        weekView = new WeekView(viewWidth, viewHeight);
+        views[WEEK_VIEW_INDEX] = weekView;
+        monthView = new MonthView(viewWidth, viewHeight);
+        views[MONTH_VIEW_INDEX] = monthView;
+        yearView = new YearView(viewWidth, viewHeight);
+        views[YEAR_VIEW_INDEX] = yearView;
+
 
         springLayeredPane = new SpringLayout();
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(springLayeredPane);
-        layeredPane.add(monthPanel);
+        layeredPane.add(yearView);
+        layeredPane.add(monthView);
+        layeredPane.add(weekView);
+        layeredPane.add(dayView);
         layeredPane.setOpaque(false);
-        layeredPane.moveToFront(monthPanel);
+        //layeredPane.moveToFront(dayView);
+        layeredPane.moveToFront(monthView);
 
-
-
-        
-        sans = new Font("Arial", Font.BOLD,20);
-
-        topLabel.setFont(customFont);
-        bottomLabel.setFont(sans);
-
-        mNavigationPanel.add(topLabel);
-        mCategoryPanel.add(bottomLabel);
-
-
-        add(mNavigationPanel);
-        springLayout.putConstraint(SpringLayout.NORTH, mNavigationPanel, 0, SpringLayout.NORTH, getContentPane());
-        springLayout.putConstraint(SpringLayout.WEST, mNavigationPanel, 0, SpringLayout.WEST, getContentPane());
-        springLayout.putConstraint(SpringLayout.EAST, mNavigationPanel, 0, SpringLayout.EAST, getContentPane());
-
-        add(mCategoryPanel);
-        springLayout.putConstraint(SpringLayout.SOUTH, mCategoryPanel, 0, SpringLayout.SOUTH, getContentPane());
-        springLayout.putConstraint(SpringLayout.WEST, mCategoryPanel, 0, SpringLayout.WEST, getContentPane());
-        springLayout.putConstraint(SpringLayout.EAST, mCategoryPanel, 0, SpringLayout.EAST, getContentPane());
-
-        add(layeredPane);
-        springLayout.putConstraint(SpringLayout.NORTH, layeredPane, 0, SpringLayout.SOUTH, mNavigationPanel);
-        springLayout.putConstraint(SpringLayout.WEST, layeredPane, 0, SpringLayout.WEST, getContentPane());
-        springLayout.putConstraint(SpringLayout.EAST, layeredPane, 0, SpringLayout.EAST, getContentPane());
-        springLayout.putConstraint(SpringLayout.SOUTH, layeredPane, 0, SpringLayout.NORTH, mCategoryPanel);
-
-        springLayeredPane.putConstraint(SpringLayout.NORTH, monthPanel, 0, SpringLayout.NORTH, layeredPane);
-        springLayeredPane.putConstraint(SpringLayout.WEST, monthPanel, 0, SpringLayout.WEST, layeredPane);
-        springLayeredPane.putConstraint(SpringLayout.EAST, monthPanel, 0, SpringLayout.EAST, layeredPane);
-        springLayeredPane.putConstraint(SpringLayout.SOUTH, monthPanel, 0, SpringLayout.SOUTH, layeredPane);
-
-        Button plus = new Button("+");
-        plus.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                monthPanel.changeMonthBy(1);
-            }
-        });
-        Button minus = new Button("-");
-        minus.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                monthPanel.changeMonthBy(-1);
-            }
-        });
-        mNavigationPanel.add(plus);
-        mNavigationPanel.add(minus);
+        //Set constraints for frame components
+        initializeViewSprings();
 
         /*ActionListener mTimerListener = new ActionListener() {
             @Override
@@ -250,5 +226,34 @@ public class JingleheimerCalendar extends JFrame {
                             .getDefaultConfiguration());
         }
         return screenInsets;
+    }
+
+    void bringViewToFront(int viewIndex) {
+        layeredPane.moveToFront(views[viewIndex]);
+    }
+
+    private void initializeViewSprings() {
+        add(mNavigationPanel);
+        springLayoutRoot.putConstraint(SpringLayout.NORTH, mNavigationPanel, 0, SpringLayout.NORTH, getContentPane());
+        springLayoutRoot.putConstraint(SpringLayout.WEST, mNavigationPanel, 0, SpringLayout.WEST, getContentPane());
+        springLayoutRoot.putConstraint(SpringLayout.EAST, mNavigationPanel, 0, SpringLayout.EAST, getContentPane());
+
+        add(mCategoryPanel);
+        springLayoutRoot.putConstraint(SpringLayout.SOUTH, mCategoryPanel, 0, SpringLayout.SOUTH, getContentPane());
+        springLayoutRoot.putConstraint(SpringLayout.WEST, mCategoryPanel, 0, SpringLayout.WEST, getContentPane());
+        springLayoutRoot.putConstraint(SpringLayout.EAST, mCategoryPanel, 0, SpringLayout.EAST, getContentPane());
+
+        add(layeredPane);
+        springLayoutRoot.putConstraint(SpringLayout.NORTH, layeredPane, 0, SpringLayout.SOUTH, mNavigationPanel);
+        springLayoutRoot.putConstraint(SpringLayout.WEST, layeredPane, 0, SpringLayout.WEST, getContentPane());
+        springLayoutRoot.putConstraint(SpringLayout.EAST, layeredPane, 0, SpringLayout.EAST, getContentPane());
+        springLayoutRoot.putConstraint(SpringLayout.SOUTH, layeredPane, 0, SpringLayout.NORTH, mCategoryPanel);
+
+        for (ViewPanel viewPanel : views) {
+            springLayeredPane.putConstraint(SpringLayout.NORTH, viewPanel, 0, SpringLayout.NORTH, layeredPane);
+            springLayeredPane.putConstraint(SpringLayout.WEST, viewPanel, 0, SpringLayout.WEST, layeredPane);
+            springLayeredPane.putConstraint(SpringLayout.EAST, viewPanel, 0, SpringLayout.EAST, layeredPane);
+            springLayeredPane.putConstraint(SpringLayout.SOUTH, viewPanel, 0, SpringLayout.SOUTH, layeredPane);
+        }
     }
 }

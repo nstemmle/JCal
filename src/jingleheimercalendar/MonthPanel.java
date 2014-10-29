@@ -1,5 +1,9 @@
 package jingleheimercalendar;
 
+/**
+ * Created by Nathan on 10/21/2014.
+ */
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
@@ -8,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Random;
 
 class MonthPanel extends JPanel {
     public static final int DAYS_IN_WEEK = 7;
@@ -72,7 +75,6 @@ class MonthPanel extends JPanel {
 
     private int currentWeekday;
     private int currentDate;
-
     //This value is 0 based; i.e. Calendar.JANUARY = 0 & Calendar.DECEMBER = 11
     private int currentMonth;
     private int currentYear;
@@ -83,10 +85,10 @@ class MonthPanel extends JPanel {
     private String fontPathOrdinals = "/font/Nexa_Bold.ttf";
 
     private Font fontHeaders;
-    private int fontSizeHeaders = 54;
+    private int fontSizeHeaders = 48;
 
     private Font fontOrdinals;
-    private int fontSizeOrdinals = 54;
+    private int fontSizeOrdinals = 48;
 
     private DayPane selectedPanel;
     private DayPane currentDayPanel;
@@ -101,8 +103,6 @@ class MonthPanel extends JPanel {
         columnPane.setLayout(gridColumnLabels);
         columnPane.setPreferredSize(new Dimension(width,COLUMN_PANE_HEIGHT));
         columnPane.setBackground(DEFAULT_PANEL_BACKGROUND);
-        //columnPane.setOpaque(false);
-        //columnPane.addComponentListener(new textSizeListener());
 
         dayPane = new JPanel();
         this.add(dayPane);
@@ -126,7 +126,7 @@ class MonthPanel extends JPanel {
         //Start by getting current system date
         updateDateFields();
 
-        initiliazeDayPaneDates();
+        initializeDayPaneDates();
 
         springMonthPanel = new SpringLayout();
         this.setLayout(springMonthPanel);
@@ -154,7 +154,7 @@ class MonthPanel extends JPanel {
         currentDayPanel.setIsCurrentDay(true);
     }
 
-    private void initiliazeDayPaneDates() {
+    private void initializeDayPaneDates() {
         for (DayPane dayPane1 : dayPanes) {
             dayPane1.initiliazeDate();
         }
@@ -168,6 +168,7 @@ class MonthPanel extends JPanel {
         DayPane() {
             super();
             //Default date context to current values
+            //initiliazeDate();
         }
 
         void initiliazeDate() {
@@ -178,7 +179,7 @@ class MonthPanel extends JPanel {
         void setMonth(int monthDelta) {
             if (monthDelta == 0)
                 return;
-            switch ((month + monthDelta) % 11) {
+            switch ((month + monthDelta) % 12) {
                 case Calendar.JANUARY:
                     month = Calendar.JANUARY;
                     break;
@@ -238,22 +239,104 @@ class MonthPanel extends JPanel {
         }
     }
 
+    public int getCurrentWeekday() {
+        return currentWeekday;
+    }
+
+    public String getCurrentWeekdayString() {
+        switch (currentWeekday) {
+            case Calendar.SUNDAY:
+                return "SUNDAY";
+            case Calendar.MONDAY:
+                return "MONDAY";
+            case Calendar.TUESDAY:
+                return "TUESDAY";
+            case Calendar.WEDNESDAY:
+                return "WEDNESDAY";
+            case Calendar.THURSDAY:
+                return "THURSDAY";
+            case Calendar.FRIDAY:
+                return "FRIDAY";
+            case Calendar.SATURDAY:
+                return "SATURDAY";
+            default:
+                return "";
+        }
+    }
+
+    public int getCurrentDate() {
+        return currentDate;
+    }
+
+    public int getCurrentMonth() {
+        return currentMonth;
+    }
+
+    public String getCurrentMonthString() {
+        switch (currentMonth) {
+            case Calendar.JANUARY:
+                return "JANUARY";
+            case Calendar.FEBRUARY:
+                return "FEBRUARY";
+            case Calendar.MARCH:
+                return "MARCH";
+            case Calendar.APRIL:
+                return "APRIL";
+            case Calendar.MAY:
+                return "MAY";
+            case Calendar.JUNE:
+                return "JUNE";
+            case Calendar.JULY:
+                return "JULY";
+            case Calendar.AUGUST:
+                return "AUGUST";
+            case Calendar.SEPTEMBER:
+                return "SEPTEMBER";
+            case Calendar.OCTOBER:
+                return "OCTOBER";
+            case Calendar.NOVEMBER:
+                return "NOVEMBER";
+            case Calendar.DECEMBER:
+                return "DECEMBER";
+            default:
+                return "";
+        }
+    }
+
+    public int getCurrentYear() {
+        return currentYear;
+    }
+
+    public int getNumDaysCurrentMonth() {
+        return numDaysCurrentMonth;
+    }
+
+    public int getNumDaysInPreviousMonth() {
+        return numDaysInPreviousMonth;
+    }
+
     private class MonthViewDayPanelClickedListener implements MouseListener{
         //Fired upon successful press + release;
         //Called after mouseReleased
         @Override
         public void mouseClicked(MouseEvent e) {
-            //Insert logic for switching views here
-            //JingleheimerCalendar.layeredPane.moveToBack(e.getComponent().getParent().getParent());
-            //JingleheimerCalendar.layeredPane.moveToFront(JingleheimerCalendar.dayPanel);
-            //JingleheimerCalendar.dayPanel.setDay or some such
+            if (e.getClickCount() == 2) {
+                //Insert logic for switching views here
+                //JingleheimerCalendar.layeredPane.moveToBack(e.getComponent().getParent().getParent());
+                //JingleheimerCalendar.layeredPane.moveToFront(JingleheimerCalendar.dayPanel);
+                //JingleheimerCalendar.dayPanel.setDay or some such
+            } else {
+                //TODO
+                //Work in progress to change current month
+                DayPane parent = (DayPane) e.getComponent();
+                System.out.println("parent.getMonth() + " + parent.getMonth());
+                if (parent.getMonth() != currentMonth) {
+                    changeMonthBy(parent.getMonth() - currentMonth);
+                    MonthView.monthHeader.updateMonthLabel();
+                }
+            }
 
-            //Work in progress to change current month
-            //DayPane parent = (DayPane) e.getComponent();
-            //System.out.println("parent.getMonth() + " + parent.getMonth());
-            //if (parent.getMonth() != currentMonth) {
-            //    changeMonthBy(parent.getMonth() - currentMonth);
-            //}
+
         }
 
         //Fired upon mouse press
@@ -437,16 +520,25 @@ class MonthPanel extends JPanel {
         //Same month and year was passed as current Calendar object
         if (monthDelta == 0)
             return;
+        System.out.println("Month before add: " + currentMonth);
         monthCalendar.add(Calendar.MONTH, monthDelta);
+        System.out.println("Month after add: " + currentMonth);
         updateDateFields();
+        updateDayPanes(monthDelta);
         updateDayOrdinals();
+    }
+
+    private void updateDayPanes(int monthDelta) {
+        for (DayPane dayPane1 : dayPanes){
+            dayPane1.setMonth(monthDelta);
+        }
     }
 
     //Call this when the month displayed would be changed
     private void updateDateFields() {
+        currentMonth = monthCalendar.get(Calendar.MONTH);
         currentWeekday = monthCalendar.get(Calendar.DAY_OF_WEEK);
         currentDate = monthCalendar.get(Calendar.DATE);
-        currentMonth = monthCalendar.get(Calendar.MONTH);
         System.out.println("current month: " + currentMonth);
         currentYear = monthCalendar.get(Calendar.YEAR);
         numDaysCurrentMonth = monthCalendar.getActualMaximum(Calendar.DATE);
@@ -551,7 +643,7 @@ class MonthPanel extends JPanel {
         int paneHeight = (height - COLUMN_PANE_HEIGHT) / NUM_ROWS;
         int overflowPixelsHeight = (height - COLUMN_PANE_HEIGHT) % NUM_ROWS;
 
-        Random r = new Random();
+        //Random r = new Random();
 
         SpringLayout sl = new SpringLayout();
         dayOrdinalLabels = new JLabel[NUM_DAYS_DISPLAYED];
@@ -589,7 +681,7 @@ class MonthPanel extends JPanel {
     private void updateDayOrdinals() {
         int labelsIndex;
 
-        System.out.println("Previous Month Days: ");
+        //System.out.println("Previous Month Days: ");
         //Previous month labels
         for (labelsIndex = 0; labelsIndex < numDaysPreviousMonthDisplayed; labelsIndex++) {
             dayOrdinalLabels[labelsIndex].setText(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex));
@@ -600,11 +692,12 @@ class MonthPanel extends JPanel {
             //System.out.println(dayPanes[labelsIndex].getMonth());
         }
 
-        System.out.println("Current Month Days: ");
+        //System.out.println("Current Month Days: ");
         //Current month labels
         for (; labelsIndex < (numDaysCurrentMonth + numDaysPreviousMonthDisplayed); labelsIndex++) {
-            if (labelsIndex == currentDate){
-                changeSelectedPanel(dayPanes[labelsIndex]);
+            //System.out.println("labelsIndex: " + labelsIndex + " - " + " numDayPreviousMonthDisplayed: " + numDaysPreviousMonthDisplayed + " ==  " + "currentDate: " + currentDate);
+            if ((labelsIndex - numDaysPreviousMonthDisplayed) == currentDate){
+                changeSelectedPanel(dayPanes[labelsIndex - 1]);
             }
             dayOrdinalLabels[labelsIndex].setText(String.valueOf(1 + labelsIndex - numDaysPreviousMonthDisplayed));
             dayOrdinalLabels[labelsIndex].setForeground(Color.BLACK);
@@ -612,7 +705,7 @@ class MonthPanel extends JPanel {
             //System.out.println(dayPanes[labelsIndex].getMonth());
         }
 
-        System.out.println("Next Month days: ");
+        //System.out.println("Next Month days: ");
         //Next month labels
         for (int i = 1; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++,i++) {
             dayOrdinalLabels[labelsIndex].setText(String.valueOf(i));
