@@ -49,9 +49,10 @@ class DayPanel extends JPanel {
         topContent = new javax.swing.JPanel();
         datePanel = new javax.swing.JPanel();
         dateText = new javax.swing.JLabel();
-        dateInc = new javax.swing.JButton();
-        dateDec = new javax.swing.JButton();
-    monthPanel = new MonthPanel(300,300,0,MonthPanel.CONTEXT_DAY);
+        dateInc = new javax.swing.JButton(">");
+        dateDec = new javax.swing.JButton("<");
+        monthPanel = new MonthPanel(300,300,0,MonthPanel.CONTEXT_DAY);
+        //monthPanel.setBackground(Color.WHITE);
         monthPanel.setFontSizeOrdinals(16);
         monthPanel.setFontSizeHeaders(16);
         weekdayTextPanel = new javax.swing.JPanel();
@@ -89,8 +90,17 @@ class DayPanel extends JPanel {
         dateText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         dateText.setPreferredSize(new java.awt.Dimension(32, 116));
 
-        dateInc.setLabel(">");
-        dateDec.setLabel("<");
+        dateInc.setFont(customFont.deriveFont(48f));
+        //dateInc.setPreferredSize(new Dimension(50,50));
+        dateInc.setBackground(new Color(238,238,238));
+        dateInc.setForeground(Color.BLACK);
+        dateInc.setBorderPainted(false);
+
+        dateDec.setFont(customFont.deriveFont(48f));
+        //dateDec.setPreferredSize(new Dimension(50,50));
+        dateDec.setBackground(new Color(238,238,238));
+        dateDec.setForeground(Color.BLACK);
+        dateDec.setBorderPainted(false);
 
         javax.swing.GroupLayout datePanelLayout = new javax.swing.GroupLayout(datePanel);
         datePanel.setLayout(datePanelLayout);
@@ -98,11 +108,13 @@ class DayPanel extends JPanel {
                 datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(dateDec, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                //.addComponent(dateDec, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dateDec)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dateText, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, 0)
-                                .addComponent(dateInc, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                //.addComponent(dateInc, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dateInc)
                                 .addContainerGap())
         );
         datePanelLayout.setVerticalGroup(
@@ -111,12 +123,13 @@ class DayPanel extends JPanel {
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(dateInc)
-                                        .addComponent(dateDec))
-                                .addGap(55, 55, 55))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(dateText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+                                        .addComponent(dateDec)
+                                        .addComponent(dateText))
+                                .addGap(55, 110, 110))
+                        //.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePanelLayout.createSequentialGroup()
+                        //        .addContainerGap()
+                        //        .addComponent(dateText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        //        .addContainerGap())
         );
 
         //monthPanel.setBackground(new java.awt.Color(102, 102, 102));
@@ -536,7 +549,7 @@ class DayPanel extends JPanel {
     private javax.swing.JButton dateDec;
     private javax.swing.JButton dateInc;
     private javax.swing.JPanel datePanel;
-    private javax.swing.JLabel dateText;
+    javax.swing.JLabel dateText;
     private javax.swing.JPanel eventContentPanel;
     private javax.swing.JPanel eventContentPanelFooter;
     private javax.swing.JPanel eventHeader;
@@ -545,7 +558,7 @@ class DayPanel extends JPanel {
     private javax.swing.JScrollPane eventScroller;
     private javax.swing.JPanel eventScrollerPanel;
     private MonthPanel monthPanel;
-    private javax.swing.JLabel monthText;
+    javax.swing.JLabel monthText;
     private javax.swing.JPanel monthTextPanel;
     private javax.swing.JPanel taskContentPanel;
     private javax.swing.JPanel taskContentPanelFooter;
@@ -556,10 +569,10 @@ class DayPanel extends JPanel {
     private javax.swing.JPanel taskScrollerPanel;
     private javax.swing.JPanel topContent;
     private javax.swing.JPanel topPanel;
-    private javax.swing.JLabel weekdayText;
+    javax.swing.JLabel weekdayText;
     private javax.swing.JPanel weekdayTextPanel;
-    private ArrayList<EventPanel> eventPanelList = new ArrayList();
-    private ArrayList<TaskPanel> taskPanelList = new ArrayList();
+    private ArrayList<EventPanel> eventPanelList = new ArrayList<>();
+    private ArrayList<TaskPanel> taskPanelList = new ArrayList<>();
     // End of variables declaration                                                                     
 
     public String getMonth(int month) {

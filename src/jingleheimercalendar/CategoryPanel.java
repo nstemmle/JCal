@@ -24,10 +24,11 @@ public class CategoryPanel extends JPanel {
 
     public static final Color COLOR_BACKGROUND_DEFAULT = Color.WHITE;
 
-    public static final Color COLOR_TEXT_SELECTED = Color.BLACK;
+    public static final Color COLOR_TEXT_SELECTED = Color.WHITE;
+    //public static final Color COLOR_TEXT_SELECTED = Color.BLACK;
     public static final Color COLOR_TEXT_DEFAULT = new Color(128,128,128);
 
-    public static final Color COLOR_CAT_ONE_DEFAULT = new Color(255,183,0,64);
+    /*public static final Color COLOR_CAT_ONE_DEFAULT = new Color(255,183,0,64);
     public static final Color COLOR_CAT_ONE_SELECTED = new Color(240,200,0);
     public static final Color COLOR_CAT_TWO_DEFAULT = new Color(90,255,0,64);
     public static final Color COLOR_CAT_TWO_SELECTED = new Color(90,255,0);
@@ -36,6 +37,19 @@ public class CategoryPanel extends JPanel {
     public static final Color COLOR_CAT_FOUR_DEFAULT = new Color(0,200,255,64);
     public static final Color COLOR_CAT_FOUR_SELECTED = new Color(0,200,255);
     public static final Color COLOR_CAT_FIVE_DEFAULT = new Color(196,0,255,64);
+    public static final Color COLOR_CAT_FIVE_SELECTED = new Color(196,0,255);*/
+
+    public static final Color COLOR_CAT_ONE_DEFAULT = new Color(63,169,245);
+    public static final Color COLOR_CAT_TWO_DEFAULT = new Color(255,147,30);
+    public static final Color COLOR_CAT_THREE_DEFAULT = new Color(122,201,67);
+    public static final Color COLOR_CAT_FOUR_DEFAULT = new Color(102,45,145);
+    public static final Color COLOR_CAT_FIVE_DEFAULT = new Color(196,0,255,64);
+
+
+    public static final Color COLOR_CAT_ONE_SELECTED = new Color(171,216,244);
+    public static final Color COLOR_CAT_TWO_SELECTED = new Color(255,217,179);
+    public static final Color COLOR_CAT_THREE_SELECTED = new Color(165,198,139);
+    public static final Color COLOR_CAT_FOUR_SELECTED = new Color(120,95,142);
     public static final Color COLOR_CAT_FIVE_SELECTED = new Color(196,0,255);
 
     private Font fontLabels;
@@ -136,6 +150,7 @@ public class CategoryPanel extends JPanel {
         buttonPlus.setPreferredSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
         buttonPlus.setBackground(COLOR_BACKGROUND_DEFAULT);
         buttonPlus.setDefaultCapable(false);
+        buttonPlus.setBorder(BorderFactory.createMatteBorder(5,0,0,0,COLOR_TEXT_DEFAULT));
         buttonPlus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -162,12 +177,13 @@ public class CategoryPanel extends JPanel {
                 springLayout.putConstraint(SpringLayout.WEST, categoryLabels[i], 0, SpringLayout.EAST, categoryLabels[i - 1]);
             springLayout.putConstraint(SpringLayout.NORTH, categoryLabels[i], 0, SpringLayout.NORTH, this);
         }
-        springLayout.putConstraint(SpringLayout.NORTH, buttonRight, 0, SpringLayout.NORTH, this);
-        springLayout.putConstraint(SpringLayout.WEST, buttonRight, 0, SpringLayout.EAST, categoryLabels[categoryLabels.length - 1]);
 
-        springLayout.putConstraint(SpringLayout.WEST, buttonPlus, 0, SpringLayout.EAST, buttonRight);
+        springLayout.putConstraint(SpringLayout.WEST, buttonPlus, 0, SpringLayout.EAST, categoryLabels[categoryLabels.length - 1]);
         springLayout.putConstraint(SpringLayout.NORTH, buttonPlus, 0, SpringLayout.NORTH, this);
-        springLayout.putConstraint(SpringLayout.EAST, buttonPlus, 0, SpringLayout.EAST, this);
+
+        springLayout.putConstraint(SpringLayout.NORTH, buttonRight, 0, SpringLayout.NORTH, this);
+        springLayout.putConstraint(SpringLayout.WEST, buttonRight, 0, SpringLayout.EAST, buttonPlus);
+        springLayout.putConstraint(SpringLayout.EAST, buttonRight, 0, SpringLayout.EAST, this);
     }
 
     private void initializeCategories(int numCats, int width) {
@@ -179,7 +195,8 @@ public class CategoryPanel extends JPanel {
             if (i < NUM_DISPLAYED_CATEGORIES) {
                 categoryLabels[i] = new JLabel(categories[i], SwingConstants.CENTER);
                 categoryLabels[i].setPreferredSize(new Dimension((width - (3 * MIN_BUTTON_WIDTH)) / 4, CategoryPanel.MINIMUM_HEIGHT ));
-                categoryLabels[i].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+                //categoryLabels[i].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+                categoryLabels[i].setBorder(BorderFactory.createMatteBorder(5, 0, 0, 0, cats[i].getColor()));
                 categoryLabels[i].setOpaque(true);
                 add(categoryLabels[i]);
                 //if (i == 0) {

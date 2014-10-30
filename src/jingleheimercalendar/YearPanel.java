@@ -7,9 +7,10 @@ import java.util.Calendar;
 
 class YearPanel extends JPanel {
     public static int NUM_MONTHS = 12;
-    private MonthPanel[] monthPanels;
+    private static MonthPanel[] monthPanels;
     private GridLayout gridLayout;
     private int currentMonth;
+    private static int currentYear;
 
     YearPanel(int width, int height) {
         setBackground(Color.WHITE);
@@ -24,5 +25,26 @@ class YearPanel extends JPanel {
         }
         gridLayout = new GridLayout(3,4,10,10);
         this.setLayout(gridLayout);
+        currentYear = monthPanels[0].getCurrentYear();
+    }
+
+    private static void updateMonthPanels(int monthDelta) {
+        if (monthDelta != 0) {
+            for (MonthPanel mPanel : monthPanels) {
+                mPanel.changeMonthBy(monthDelta*12);
+            }
+        }
+
+    }
+
+    static void changeYearBy(int yearDelta) {
+        if (yearDelta != 0) {
+            updateMonthPanels(yearDelta*12);
+        }
+        currentYear = monthPanels[0].getCurrentYear();
+    }
+
+    public static int getCurrentYear() {
+        return currentYear;
     }
 }

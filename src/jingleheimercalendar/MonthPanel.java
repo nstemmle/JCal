@@ -163,7 +163,7 @@ class MonthPanel extends JPanel {
 
     private void initializeDayPaneDates() {
         for (DayPane dayPane1 : dayPanes) {
-            dayPane1.initiliazeDate();
+            dayPane1.initializeDate();
         }
     }
 
@@ -175,10 +175,10 @@ class MonthPanel extends JPanel {
         DayPane() {
             super();
             //Default date context to current values
-            //initiliazeDate();
+            initializeDate();
         }
 
-        void initiliazeDate() {
+        void initializeDate() {
             this.month = currentMonth;
             this.year = currentYear;
         }
@@ -523,7 +523,7 @@ class MonthPanel extends JPanel {
         if (monthDelta == 0)
             return;
         monthCalendar.add(Calendar.MONTH, monthDelta);
-        //if
+        updateDateFields();
         updateDayOrdinals();
     }
 
@@ -585,9 +585,6 @@ class MonthPanel extends JPanel {
         int overflowPixelsWidth = width % NUM_COLUMNS;
         int columnLabelHeight = COLUMN_PANE_HEIGHT;
 
-        //Want these headers to be 50 px at all times
-        //int minWidth = 0;
-        //int minHeight = COLUMN_PANE_HEIGHT;
         columnLabels = new JLabel[DAYS_IN_WEEK];
         for (int i = 0; i < DAYS_IN_WEEK; i++,overflowPixelsWidth--) {
             columnLabels[i] = new JLabel("", SwingConstants.CENTER);
@@ -636,10 +633,8 @@ class MonthPanel extends JPanel {
     private void createDayOrdinals(int width, int height) {
         //Calculate preferred size of each label/panel (Same size for now)
         int paneWidth = width / NUM_COLUMNS;
-        int overflowPixelsWidth = width % NUM_COLUMNS;
 
         int paneHeight = (height - COLUMN_PANE_HEIGHT) / NUM_ROWS;
-        int overflowPixelsHeight = (height - COLUMN_PANE_HEIGHT) % NUM_ROWS;
 
         //Random r = new Random();
 
@@ -666,15 +661,15 @@ class MonthPanel extends JPanel {
     }
 
     private void changeSelectedPanel(DayPane panel) {
-        if (viewContext != CONTEXT_MONTH)
-            return;
-        panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, BLUE_SELECTED, BLUE_SELECTED_DARK));
-        panel.setBackground(BLUE_SELECTED_MEDIUM);
-        if (selectedPanel != null) {
-            selectedPanel.setBackground(DEFAULT_PANEL_BACKGROUND);
-            selectedPanel.setBorder(null);
+        if (viewContext == CONTEXT_MONTH){
+            panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, BLUE_SELECTED, BLUE_SELECTED_DARK));
+            panel.setBackground(BLUE_SELECTED_MEDIUM);
+            if (selectedPanel != null) {
+                selectedPanel.setBackground(DEFAULT_PANEL_BACKGROUND);
+                selectedPanel.setBorder(null);
+            }
+            selectedPanel = panel;
         }
-        selectedPanel = panel;
     }
 
     //Update the text of the Ordinal Day labels
