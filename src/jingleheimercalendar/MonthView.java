@@ -4,7 +4,7 @@ import javax.swing.SpringLayout;
 import java.awt.Dimension;
 
 /**
- * Created by Roach on 10/28/2014.
+ * Created by Nathan on 10/28/2014.
  */
 public class MonthView extends ViewPanel {
     static MonthPanel monthPanel;
@@ -17,10 +17,11 @@ public class MonthView extends ViewPanel {
 
     //
     MonthView(int width, int height) {
+        this.value = "monthView";
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_VIEW_HEIGHT));
 
-        monthPanel = new MonthPanel(width, height - MonthHeader.HEADER_MINIMUM_HEIGHT, 0);
+        monthPanel = new MonthPanel(width, height - MonthHeader.HEADER_MINIMUM_HEIGHT, 0, MonthPanel.CONTEXT_MONTH);
         monthHeader = new MonthHeader(width, MonthHeader.HEADER_MINIMUM_HEIGHT);
         //monthHeader.setBackground(Color.BLACK);
 

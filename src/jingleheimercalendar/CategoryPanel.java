@@ -12,7 +12,7 @@ import java.net.URL;
  */
 public class CategoryPanel extends JPanel {
     public static final int MINIMUM_WIDTH = 800;
-    public static final int MINIMUM_HEIGHT = 35;
+    public static final int MINIMUM_HEIGHT = 40;
     public static final int MIN_BUTTON_WIDTH = 50;
     public static final int NUM_DEFAULT_CATEGORIES = 5;
     public static final int NUM_DISPLAYED_CATEGORIES = 4;
@@ -22,15 +22,15 @@ public class CategoryPanel extends JPanel {
     public static final int PADDING_HORIZONTAL_CONTAINER_EDGE = 25;
     public static final int PADDING_HORIZONTAL_BUTTON_LABEL = 10;
 
-    public static final Color DEFAULT_COMPONENT_BACKGROUND = Color.WHITE;
+    public static final Color COLOR_BACKGROUND_DEFAULT = Color.WHITE;
 
     public static final Color COLOR_TEXT_SELECTED = Color.BLACK;
     public static final Color COLOR_TEXT_DEFAULT = new Color(128,128,128);
 
     public static final Color COLOR_CAT_ONE_DEFAULT = new Color(255,183,0,64);
-    public static final Color COLOR_CAT_ONE_SELECTED = new Color(255,183,0);
-    public static final Color COLOR_CAT_TWO_DEFAULT = new Color(106,255,0,64);
-    public static final Color COLOR_CAT_TWO_SELECTED = new Color(102,255,0);
+    public static final Color COLOR_CAT_ONE_SELECTED = new Color(240,200,0);
+    public static final Color COLOR_CAT_TWO_DEFAULT = new Color(90,255,0,64);
+    public static final Color COLOR_CAT_TWO_SELECTED = new Color(90,255,0);
     public static final Color COLOR_CAT_THREE_DEFAULT = new Color(255,68,0,64);
     public static final Color COLOR_CAT_THREE_SELECTED = new Color(255,68,0);
     public static final Color COLOR_CAT_FOUR_DEFAULT = new Color(0,200,255,64);
@@ -40,18 +40,18 @@ public class CategoryPanel extends JPanel {
 
     private Font fontLabels;
     private int fontSizeLabels = 36;
-    private String fontPathLabels = "/font/Nexa_Bold.ttf";
+    private String fontPathLabels = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     private Font fontButtons;
-    private int fontSizeButtons = 30;
-    private String fontPathButtons = "/font/Nexa_Bold.ttf";
+    private int fontSizeButtons = 28;
+    private String fontPathButtons = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     public static enum Categories {
-        SCHOOL ("SCHOOL", COLOR_CAT_ONE_DEFAULT, COLOR_CAT_ONE_SELECTED),
-        FAMILY ("FAMILY", COLOR_CAT_TWO_DEFAULT, COLOR_CAT_TWO_SELECTED),
-        WORK ("WORK", COLOR_CAT_THREE_DEFAULT, COLOR_CAT_THREE_SELECTED),
-        WELLNESS ("WELLNESS", COLOR_CAT_FOUR_DEFAULT, COLOR_CAT_FOUR_SELECTED),
-        FUN ("FUN", COLOR_CAT_FIVE_DEFAULT, COLOR_CAT_FIVE_SELECTED);
+        SCHOOL ("School", COLOR_CAT_ONE_DEFAULT, COLOR_CAT_ONE_SELECTED),
+        FAMILY ("Family", COLOR_CAT_TWO_DEFAULT, COLOR_CAT_TWO_SELECTED),
+        WORK ("Work", COLOR_CAT_THREE_DEFAULT, COLOR_CAT_THREE_SELECTED),
+        WELLNESS ("Wellness", COLOR_CAT_FOUR_DEFAULT, COLOR_CAT_FOUR_SELECTED),
+        FUN ("Fun", COLOR_CAT_FIVE_DEFAULT, COLOR_CAT_FIVE_SELECTED);
 
         private final String text;
         private final Color color;
@@ -86,7 +86,7 @@ public class CategoryPanel extends JPanel {
     public CategoryPanel(int width) {
         setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
         setPreferredSize(new Dimension(width, MINIMUM_HEIGHT));
-        setBackground(Color.WHITE);
+        setBackground(COLOR_BACKGROUND_DEFAULT);
         setBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK));
 
         springLayout = new SpringLayout();
@@ -108,7 +108,7 @@ public class CategoryPanel extends JPanel {
         buttonLeft = new JButton("<");
         buttonLeft.setMinimumSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
         buttonLeft.setPreferredSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
-        buttonLeft.setBackground(DEFAULT_COMPONENT_BACKGROUND);
+        buttonLeft.setBackground(COLOR_BACKGROUND_DEFAULT);
         buttonLeft.setDefaultCapable(false);
         buttonLeft.addActionListener(new ActionListener() {
             @Override
@@ -121,7 +121,7 @@ public class CategoryPanel extends JPanel {
         buttonRight = new JButton(">");
         buttonRight.setMinimumSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
         buttonRight.setPreferredSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
-        buttonRight.setBackground(DEFAULT_COMPONENT_BACKGROUND);
+        buttonRight.setBackground(COLOR_BACKGROUND_DEFAULT);
         buttonRight.setDefaultCapable(false);
         buttonRight.addActionListener(new ActionListener() {
             @Override
@@ -134,7 +134,7 @@ public class CategoryPanel extends JPanel {
         buttonPlus = new JButton("+");
         buttonPlus.setMinimumSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
         buttonPlus.setPreferredSize(new Dimension(MIN_BUTTON_WIDTH, MINIMUM_HEIGHT));
-        buttonPlus.setBackground(DEFAULT_COMPONENT_BACKGROUND);
+        buttonPlus.setBackground(COLOR_BACKGROUND_DEFAULT);
         buttonPlus.setDefaultCapable(false);
         buttonPlus.addActionListener(new ActionListener() {
             @Override
@@ -182,13 +182,13 @@ public class CategoryPanel extends JPanel {
                 categoryLabels[i].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
                 categoryLabels[i].setOpaque(true);
                 add(categoryLabels[i]);
-                if (i == 0) {
+                //if (i == 0) {
+                //    categoryLabels[i].setBackground(cats[i].getColorSelected());
+                //    categoryLabels[i].setForeground(COLOR_TEXT_SELECTED);
+                //} else {
                     categoryLabels[i].setBackground(cats[i].getColorSelected());
                     categoryLabels[i].setForeground(COLOR_TEXT_SELECTED);
-                } else {
-                    categoryLabels[i].setBackground(cats[i].getColor());
-                    categoryLabels[i].setForeground(COLOR_TEXT_DEFAULT);
-                }
+                //}
                 indexLastDisplayedCategory = i;
             }
         }

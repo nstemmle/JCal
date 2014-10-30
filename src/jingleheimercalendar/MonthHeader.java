@@ -25,11 +25,11 @@ public class MonthHeader extends JPanel {
 
     private Font fontLabels;
     private int fontSizeLabels = 48;
-    private String fontPathLabels = "/font/Nexa_Bold.ttf";
+    private String fontPathLabels = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     private Font fontButtons;
     private int fontSizeButtons = 30;
-    private String fontPathButtons = "/font/Nexa_Bold.ttf";
+    private String fontPathButtons = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     private JButton buttonLeft;
     private JButton buttonRight;
@@ -55,7 +55,7 @@ public class MonthHeader extends JPanel {
 
         buttonLeft = new JButton("<");
         buttonLeft.setBackground(DEFAULT_COMPONENT_BACKGROUND);
-        buttonLeft.setDefaultCapable(false);
+        buttonLeft.setBorderPainted(false);
         buttonLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,7 +67,7 @@ public class MonthHeader extends JPanel {
 
         buttonRight = new JButton(">");
         buttonRight.setBackground(DEFAULT_COMPONENT_BACKGROUND);
-        buttonRight.setDefaultCapable(false);
+        buttonRight.setBorderPainted(false);
         buttonRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,8 +110,6 @@ public class MonthHeader extends JPanel {
         springHeader.putConstraint(SpringLayout.SOUTH, buttonRight, 0, SpringLayout.SOUTH, monthLabel);
 
         springHeader.putConstraint(SpringLayout.NORTH, yearLabel, PADDING_VERTICAL_CONTAINER_EDGE, SpringLayout.NORTH, this);
-
-
 
         springHeader.putConstraint(SpringLayout.WEST, buttonLeft, PADDING_HORIZONTAL_CONTAINER_EDGE, SpringLayout.WEST, this);
         springHeader.putConstraint(SpringLayout.WEST, monthLabel, PADDING_HORIZONTAL_BUTTON_LABEL, SpringLayout.EAST, buttonLeft);

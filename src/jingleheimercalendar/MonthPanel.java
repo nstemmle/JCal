@@ -19,6 +19,10 @@ class MonthPanel extends JPanel {
     public static final int NUM_COLUMNS = 7;
     public static final int NUM_DAYS_DISPLAYED = NUM_ROWS  * NUM_COLUMNS;
 
+    public static final int CONTEXT_DAY = 1;
+    public static final int CONTEXT_MONTH = 2;
+    public static final int CONTEXT_YEAR = 3;
+
     private static final int COLUMN_PANE_HEIGHT = 50; //50 px
 
     public static final Color BLUE_SELECTED = new Color(76, 200, 237, 64);
@@ -81,22 +85,23 @@ class MonthPanel extends JPanel {
     private int numDaysCurrentMonth;
     private int numDaysInPreviousMonth;
 
-    private String fontPathHeaders = "/font/Nexa_Bold.ttf";
-    private String fontPathOrdinals = "/font/Nexa_Bold.ttf";
-
+    private String fontPathHeaders = JingleheimerCalendar.PATH_FONT_KALINGA;
     private Font fontHeaders;
     private int fontSizeHeaders = 48;
 
     private Font fontOrdinals;
     private int fontSizeOrdinals = 48;
+    private String fontPathOrdinals = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     private DayPane selectedPanel;
     private DayPane currentDayPanel;
 
+    private int viewContext;
 
-    MonthPanel(int width, int height, int monthDelta){
+    MonthPanel(int width, int height, int monthDelta, int context){
         setPreferredSize(new Dimension(width, height));
 
+        viewContext = context;
         //Begin creating components
         columnPane = new JPanel();
         this.add(columnPane);
@@ -147,11 +152,13 @@ class MonthPanel extends JPanel {
         updateDayColumnHeaders();
 
         //Set the day ordinal labels text
-        updateDayOrdinals();
+        initializeDayOrdinals();
 
         //Initialize the currentDayPanel to the current selectedPanel
-        currentDayPanel = selectedPanel;
-        currentDayPanel.setIsCurrentDay(true);
+        if (viewContext == CONTEXT_MONTH) {
+            currentDayPanel = selectedPanel;
+            currentDayPanel.setIsCurrentDay(true);
+        }
     }
 
     private void initializeDayPaneDates() {
@@ -320,23 +327,18 @@ class MonthPanel extends JPanel {
         //Called after mouseReleased
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() == 2) {
-                //Insert logic for switching views here
-                //JingleheimerCalendar.layeredPane.moveToBack(e.getComponent().getParent().getParent());
-                //JingleheimerCalendar.layeredPane.moveToFront(JingleheimerCalendar.dayPanel);
-                //JingleheimerCalendar.dayPanel.setDay or some such
+            if (e.getClickCount() == 2 && viewContext == CONTEXT_MONTH) {
+                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                //Implement logic for changing context to current day here
             } else {
                 //TODO
                 //Work in progress to change current month
                 DayPane parent = (DayPane) e.getComponent();
-                System.out.println("parent.getMonth() + " + parent.getMonth());
                 if (parent.getMonth() != currentMonth) {
                     changeMonthBy(parent.getMonth() - currentMonth);
                     MonthView.monthHeader.updateMonthLabel();
                 }
             }
-
-
         }
 
         //Fired upon mouse press
@@ -520,11 +522,8 @@ class MonthPanel extends JPanel {
         //Same month and year was passed as current Calendar object
         if (monthDelta == 0)
             return;
-        System.out.println("Month before add: " + currentMonth);
         monthCalendar.add(Calendar.MONTH, monthDelta);
-        System.out.println("Month after add: " + currentMonth);
-        updateDateFields();
-        updateDayPanes(monthDelta);
+        //if
         updateDayOrdinals();
     }
 
@@ -539,7 +538,6 @@ class MonthPanel extends JPanel {
         currentMonth = monthCalendar.get(Calendar.MONTH);
         currentWeekday = monthCalendar.get(Calendar.DAY_OF_WEEK);
         currentDate = monthCalendar.get(Calendar.DATE);
-        System.out.println("current month: " + currentMonth);
         currentYear = monthCalendar.get(Calendar.YEAR);
         numDaysCurrentMonth = monthCalendar.getActualMaximum(Calendar.DATE);
 
@@ -668,6 +666,8 @@ class MonthPanel extends JPanel {
     }
 
     private void changeSelectedPanel(DayPane panel) {
+        if (viewContext != CONTEXT_MONTH)
+            return;
         panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, BLUE_SELECTED, BLUE_SELECTED_DARK));
         panel.setBackground(BLUE_SELECTED_MEDIUM);
         if (selectedPanel != null) {
@@ -678,7 +678,46 @@ class MonthPanel extends JPanel {
     }
 
     //Update the text of the Ordinal Day labels
+    //TODO
+    //Bug in navigation is in here; calling setMonth twice for first and last labels
     private void updateDayOrdinals() {
+        int labelsIndex;
+
+        //System.out.println("Previous Month Days: ");
+        //Previous month labels
+        for (labelsIndex = 0; labelsIndex < numDaysPreviousMonthDisplayed; labelsIndex++) {
+            dayOrdinalLabels[labelsIndex].setText(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex));
+            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
+            dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
+            //System.out.println(dayPanes[labelsIndex].getMonth());
+            //System.out.println(dayPanes[labelsIndex].getMonth());
+        }
+
+        //System.out.println("Current Month Days: ");
+        //Current month labels
+        for (; labelsIndex < (numDaysCurrentMonth + numDaysPreviousMonthDisplayed); labelsIndex++) {
+            //System.out.println("labelsIndex: " + labelsIndex + " - " + " numDayPreviousMonthDisplayed: " + numDaysPreviousMonthDisplayed + " ==  " + "currentDate: " + currentDate);
+            if ((labelsIndex - numDaysPreviousMonthDisplayed) == currentDate && viewContext == CONTEXT_MONTH) {
+                changeSelectedPanel(dayPanes[labelsIndex - 1]);
+            }
+            dayOrdinalLabels[labelsIndex].setText(String.valueOf(1 + labelsIndex - numDaysPreviousMonthDisplayed));
+            dayOrdinalLabels[labelsIndex].setForeground(Color.BLACK);
+            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
+            //System.out.println(dayPanes[labelsIndex].getMonth());
+        }
+
+        //System.out.println("Next Month days: ");
+        //Next month labels
+        for (int i = 1; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++, i++) {
+            dayOrdinalLabels[labelsIndex].setText(String.valueOf(i));
+            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
+            dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
+            //System.out.println(dayPanes[labelsIndex].getMonth());
+            //System.out.println(dayPanes[labelsIndex].getMonth());
+        }
+    }
+
+    private void initializeDayOrdinals() {
         int labelsIndex;
 
         //System.out.println("Previous Month Days: ");
