@@ -1,11 +1,8 @@
 package jingleheimercalendar;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -26,19 +23,19 @@ import java.util.ArrayList;
  */
 public class WeekPanel extends JPanel {
     private Font fontSmall;
-    private String fontPathSmall = JingleheimerCalendar.PATH_FONT_KALINGA;
+    private String fontPathSmall = JingleheimerCalendar.PATH_FONT_HELVETICA;
     private int fontSizeSmall = 18;
 
     private Font fontMedium;
-    private String fontPathMedium = JingleheimerCalendar.PATH_FONT_KALINGA;
+    private String fontPathMedium = JingleheimerCalendar.PATH_FONT_HELVETICA;
     private int fontSizeMedium = 24;
     
     private Font fontLarge;
-    private String fontPathLarge = JingleheimerCalendar.PATH_FONT_KALINGA;
+    private String fontPathLarge = JingleheimerCalendar.PATH_FONT_HELVETICA;
     private int fontSizeLarge = 48;
 
     private Font fontExtraLarge;
-    private String fontPathExtraLarge = JingleheimerCalendar.PATH_FONT_KALINGA;
+    private String fontPathExtraLarge = JingleheimerCalendar.PATH_FONT_HELVETICA;
     private int fontSizeExtraLarge = 60;
     
     private ArrayList<JComponent> labelsMediumFont;

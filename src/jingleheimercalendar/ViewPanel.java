@@ -19,4 +19,6 @@ public class ViewPanel extends JPanel {
     public String getStringValue() {
         return value;
     }
+
+    public static void refresh(){}
 }

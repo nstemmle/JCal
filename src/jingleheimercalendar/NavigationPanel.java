@@ -1,21 +1,30 @@
 package jingleheimercalendar;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URL;
+import java.util.Calendar;
 
 /**
- * Created by Roach on 10/24/2014.
+ * Created by Nathan on 10/24/2014.
  */
 public class NavigationPanel extends JPanel {
     public static final int MINIMUM_WIDTH = 800;
     public static final int MINIMUM_HEIGHT = 40;
 
-    public static final int PADDING_HORIZONTAL_CONTAINER_EDGE = 25;
-    public static final int PADDING_VERTICAL_CONTAINER_EDGE = 10;
+    //Constant for time-delay of mTimer in miliseconds
+    //Want 1 minute = 60 seconds * 1000 miliseconds/second = 60,000 ms
+    private static final int DELAY_INTERVAL = 60000;
 
     public static final String TEXT_BUTTON_TODAY = "Today";
     public static final String TEXT_BUTTON_DAY = "Day";
@@ -23,35 +32,25 @@ public class NavigationPanel extends JPanel {
     public static final String TEXT_BUTTON_MONTH = "Month";
     public static final String TEXT_BUTTON_YEAR = "Year";
 
-
-    public static final Color COLOR_BACKGROUND_BUTTON = new Color(192,192,192);
+    public static final Color COLOR_BUTTON_DEFAULT = new Color(128,128,128);
+    public static final Color COLOR_BUTTON_SELECTED = new Color(192,192,192);
     public static final Color COLOR_BACKGROUND_DEFAULT = Color.WHITE;
 
     private Font fontLabels;
     private int fontSizeLabels = 16;
-    private String fontPathLabels = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     private Font fontButtons;
     private int fontSizeButtons = 16;
-    private String fontPathButtons = JingleheimerCalendar.PATH_FONT_KALINGA;
 
-    private int gridPaddingHorizontal = 10;
-    private int gridPaddingVertical = 10;
-
-    private GridBagLayout gridBagLayout;
-
-    private JPanel todayButtonPane;
     private JButton buttonToday;
 
-    private JPanel timeLabelPane;
     private JLabel labelTime;
 
-    private JPanel navButtonsPane;
-    private GridLayout gridLayout;
     private JButton buttonDay;
     private JButton buttonWeek;
     private JButton buttonMonth;
     private JButton buttonYear;
+    private JButton lastSelected;
 
     public NavigationPanel(int width) {
         setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
@@ -59,22 +58,17 @@ public class NavigationPanel extends JPanel {
         setBackground(COLOR_BACKGROUND_DEFAULT);
         //setBorder(BorderFactory.createMatteBorder(0,0,2,0,Color.BLACK));
 
-        gridBagLayout = new GridBagLayout();
+        GridBagLayout gridBagLayout = new GridBagLayout();
         this.setLayout(gridBagLayout);
 
         GridBagConstraints gbConstraints = new GridBagConstraints();
 
         //Set custom font
-        try {
-            fontLabels = loadFont(fontSizeLabels,fontPathLabels);
-            fontButtons = loadFont(fontSizeButtons,fontPathButtons);
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            fontLabels = fontButtons = new Font("Times New Roman", Font.BOLD,60);
-        }
+        fontLabels = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeLabels);
+        fontButtons = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeButtons);
 
 
-        todayButtonPane = new JPanel();
+        JPanel todayButtonPane = new JPanel();
         todayButtonPane.setBackground(COLOR_BACKGROUND_DEFAULT);
         //todayButtonPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLUE));
         todayButtonPane.setPreferredSize(new Dimension(width / 4, MINIMUM_HEIGHT));
@@ -90,7 +84,7 @@ public class NavigationPanel extends JPanel {
 
         buttonToday = new JButton(TEXT_BUTTON_TODAY);
         buttonToday.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonToday.setBackground(COLOR_BACKGROUND_BUTTON);
+        buttonToday.setBackground(COLOR_BUTTON_DEFAULT);
         buttonToday.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,7 +98,7 @@ public class NavigationPanel extends JPanel {
         //buttonToday.setLocation(PADDING_HORIZONTAL_CONTAINER_EDGE, PADDING_VERTICAL_CONTAINER_EDGE);
 
 
-        navButtonsPane = new JPanel();
+        JPanel navButtonsPane = new JPanel();
         navButtonsPane.setBackground(COLOR_BACKGROUND_DEFAULT);
         //navButtonsPane.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.GREEN));
         navButtonsPane.setPreferredSize(new Dimension(width / 2, MINIMUM_HEIGHT));
@@ -117,49 +111,69 @@ public class NavigationPanel extends JPanel {
 
         buttonDay = new JButton(TEXT_BUTTON_DAY);
         buttonDay.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonDay.setBackground(COLOR_BACKGROUND_BUTTON);
+        buttonDay.setBackground(COLOR_BUTTON_DEFAULT);
         buttonDay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                buttonDay.setBackground(COLOR_BUTTON_SELECTED);
+                if (lastSelected != buttonDay) {
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
+                }
+                lastSelected = buttonDay;
             }
         });
         navButtonsPane.add(buttonDay);
 
         buttonWeek = new JButton(TEXT_BUTTON_WEEK);
         buttonWeek.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonWeek.setBackground(COLOR_BACKGROUND_BUTTON);
+        buttonWeek.setBackground(COLOR_BUTTON_DEFAULT);
         buttonWeek.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_WEEK_VIEW);
+                buttonWeek.setBackground(COLOR_BUTTON_SELECTED);
+                if (lastSelected != buttonWeek) {
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_WEEK_VIEW);
+                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
+                }
+                lastSelected = buttonWeek;
             }
         });
         navButtonsPane.add(buttonWeek);
 
         buttonMonth = new JButton(TEXT_BUTTON_MONTH);
         buttonMonth.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonMonth.setBackground(COLOR_BACKGROUND_BUTTON);
+        buttonMonth.setBackground(COLOR_BUTTON_DEFAULT);
         buttonMonth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_MONTH_VIEW);
+                buttonMonth.setBackground(COLOR_BUTTON_SELECTED);
+                if (lastSelected != buttonMonth) {
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_MONTH_VIEW);
+                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
+                }
+                lastSelected = buttonMonth;
             }
         });
         navButtonsPane.add(buttonMonth);
 
         buttonYear = new JButton(TEXT_BUTTON_YEAR);
         buttonYear.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonYear.setBackground(COLOR_BACKGROUND_BUTTON);
+        buttonYear.setBackground(COLOR_BUTTON_DEFAULT);
         buttonYear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_YEAR_VIEW);
+                buttonYear.setBackground(COLOR_BUTTON_SELECTED);
+                if (lastSelected != buttonYear) {
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_YEAR_VIEW);
+                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
+                }
+                lastSelected = buttonYear;
             }
         });
         navButtonsPane.add(buttonYear);
 
-        timeLabelPane = new JPanel();
+        JPanel timeLabelPane = new JPanel();
         timeLabelPane.setBackground(COLOR_BACKGROUND_DEFAULT);
         //timeLabelPane.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.PINK));
         timeLabelPane.setPreferredSize(new Dimension(width / 4, MINIMUM_HEIGHT));
@@ -171,13 +185,48 @@ public class NavigationPanel extends JPanel {
         gbConstraints.ipadx = 150;
         add(timeLabelPane, gbConstraints);
 
-        labelTime = new JLabel("11:30 AM", SwingConstants.CENTER);
+        Calendar a  = Calendar.getInstance();
+        String time = "";
+        int min = a.get(Calendar.MINUTE);
+        time = time.concat(String.valueOf(a.get(Calendar.HOUR))).concat(":");
+        time = time.concat(min < 10 ? "0" + String.valueOf(min) : String.valueOf(min));
+        time = time.concat((a.get(Calendar.AM_PM ) == Calendar.AM ? " AM" : " PM"));
+        labelTime = new JLabel(time, SwingConstants.CENTER);
         timeLabelPane.add(labelTime);
 
-        updateLabelFonts();
+        Timer timer = new Timer(DELAY_INTERVAL, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Calendar c  = Calendar.getInstance();
+                String time = "";
+                int min = c.get(Calendar.MINUTE);
+                time = time.concat(String.valueOf(c.get(Calendar.HOUR))).concat(":");
+                time = time.concat(min < 10 ? "0" + String.valueOf(min) : String.valueOf(min));
+                time = time.concat((c.get(Calendar.AM_PM ) == Calendar.AM ? " AM" : " PM"));
+                labelTime.setText(time);
+            }
+        });
 
+        Calendar c = Calendar.getInstance();
+        int second = c.get(Calendar.SECOND);
+        int millis = c.get(Calendar.MILLISECOND);
+        int delay = (((59 - second) * 1000) + (1000 - millis));
+        timer.setInitialDelay(delay);
+        timer.start();
+
+        updateLabelFonts();
         updateButtonFonts();
 
+        lastSelected = buttonDay;
+    }
+
+    public static String getTimeStamp() {
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        int second = c.get(Calendar.SECOND);
+        int milis = c.get(Calendar.MILLISECOND);
+        return hour + ":" + minute + ":" + second + "." + milis;
     }
 
     //TODO
@@ -220,34 +269,4 @@ public class NavigationPanel extends JPanel {
         fontButtons = fontButtons.deriveFont(((float) fontSizeButtons));
         updateButtonFonts();
     }
-
-    public void setFontPathLabels(String path) {
-        fontPathLabels = path;
-        try {
-            fontLabels = loadFont(fontSizeLabels,fontPathLabels);
-            updateLabelFonts();
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            fontLabels = new Font("Times New Roman", Font.BOLD,60);
-        }
-    }
-
-    public void setFontPathButtons(String path) {
-        fontPathButtons = path;
-        try {
-            fontButtons = loadFont(fontSizeButtons,fontPathButtons);
-            updateButtonFonts();
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            fontButtons = new Font("Times New Roman", Font.BOLD,60);
-        }
-    }
-
-    private Font loadFont(int fSize, String fPath) throws FontFormatException, IOException  {
-        URL fontUrl = getClass().getResource(fPath);
-        Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
-        font = font.deriveFont(Font.PLAIN, fSize);
-        return font;
-    }
-
 }

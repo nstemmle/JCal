@@ -1,33 +1,46 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package jingleheimercalendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.*;
-import java.io.IOException;
-import java.net.URL;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-
-class DayPanel extends JPanel {
-
-
-
-    Calendar c = Calendar.getInstance();
-    private Font customFont;
-    private int fontSizeDefault = 16;
+import java.util.Date;
+/**
+ *
+ * @author Brandon
+ */
+public class DayPanel extends javax.swing.JPanel {
+    static Calendar c = Calendar.getInstance();
+    
     /**
-     * Creates new form DayPanel
+     * Creates new form DayView
      */
-    public DayPanel() {
-        initComponents();
-        dateText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+    public DayPanel(int width, int height) {
+        c.set(Calendar.MILLISECOND,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.HOUR_OF_DAY,0);
+
+
+        initComponents(width, height);
+        dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
         monthText.setText(getMonth(c.get(Calendar.MONTH)));
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
+        
+       
+        refresh();
     }
-
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,587 +48,530 @@ class DayPanel extends JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
-
-        //Set custom font
-        try {
-            customFont = loadFont(fontSizeDefault, JingleheimerCalendar.PATH_FONT_KALINGA);
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            customFont = new Font("Times New Roman", Font.BOLD,60);
-        }
+    private void initComponents(int width, int height) {
 
         topPanel = new javax.swing.JPanel();
-        topContent = new javax.swing.JPanel();
-        datePanel = new javax.swing.JPanel();
-        dateText = new javax.swing.JLabel();
-        dateInc = new javax.swing.JButton(">");
-        dateDec = new javax.swing.JButton("<");
-        monthPanel = new MonthPanel(300,300,0,MonthPanel.CONTEXT_DAY);
-        //monthPanel.setBackground(Color.WHITE);
-        monthPanel.setFontSizeOrdinals(16);
-        monthPanel.setFontSizeHeaders(16);
-        weekdayTextPanel = new javax.swing.JPanel();
+        dateInfoPanel = new javax.swing.JPanel();
+        dayNumText = new javax.swing.JLabel();
+        increment = new javax.swing.JLabel();
+        decrement = new javax.swing.JLabel();
         weekdayText = new javax.swing.JLabel();
-        monthTextPanel = new javax.swing.JPanel();
         monthText = new javax.swing.JLabel();
+        alldayEventText = new javax.swing.JLabel();
+        //TODO: change this to custom monthPanel
+        //I can't seem to get this to work
+        //monthPanel = new javax.swing.JPanel();
+        //MonthPanel monthPanelDayView = new MonthPanel(width, height, 0);
+        //monthPanel.add(monthPanelDayView);
+        monthPanel = new MonthPanel(372, 155, 0);
+
         bottomPanel = new javax.swing.JPanel();
         eventPanel = new javax.swing.JPanel();
-        eventHeader = new javax.swing.JPanel();
+        eventHeaderPanel = new javax.swing.JPanel();
         eventHeaderText = new javax.swing.JLabel();
-        eventContentPanel = new javax.swing.JPanel();
-        eventContentPanelFooter = new javax.swing.JPanel();
-        addEventButton = new javax.swing.JButton();
+        eventContetPanel = new javax.swing.JPanel();
+        eventScroll = new javax.swing.JScrollPane();
+        eventScrollContentPanel = new javax.swing.JPanel();
         addEventText = new javax.swing.JLabel();
-        eventScrollerPanel = new javax.swing.JPanel();
-        eventScroller = new javax.swing.JScrollPane();
-
         taskPanel = new javax.swing.JPanel();
-        taskHeader = new javax.swing.JPanel();
+        taskHeaderPanel = new javax.swing.JPanel();
         taskHeaderText = new javax.swing.JLabel();
         taskContentPanel = new javax.swing.JPanel();
-        taskContentPanelFooter = new javax.swing.JPanel();
-        addTaskButton = new javax.swing.JButton();
+        taskScroll = new javax.swing.JScrollPane();
+        taskScrollContentPanel = new javax.swing.JPanel();
         addTaskText = new javax.swing.JLabel();
-        taskScroller = new javax.swing.JScrollPane();
-        taskScrollerPanel=new javax.swing.JPanel();
 
-        setPreferredSize(new java.awt.Dimension(1280, 620));
-        setSize(new java.awt.Dimension(1280, 620));
+        setPreferredSize(new java.awt.Dimension(1280, 640));
+        setSize(new java.awt.Dimension(1280, 640));
 
+        topPanel.setBackground(new java.awt.Color(255, 255, 255));
         topPanel.setPreferredSize(new java.awt.Dimension(1280, 279));
 
-        dateText.setFont(customFont.deriveFont(96f)); // NOI18N
-        dateText.setText("ND");
-        dateText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        dateText.setPreferredSize(new java.awt.Dimension(32, 116));
+        dateInfoPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        dateInc.setFont(customFont.deriveFont(48f));
-        //dateInc.setPreferredSize(new Dimension(50,50));
-        dateInc.setBackground(new Color(238,238,238));
-        dateInc.setForeground(Color.BLACK);
-        dateInc.setBorderPainted(false);
+        dayNumText.setFont(JingleheimerCalendar.defaultFont.deriveFont(100f));
+        dayNumText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        dayNumText.setText("18");
 
-        dateDec.setFont(customFont.deriveFont(48f));
-        //dateDec.setPreferredSize(new Dimension(50,50));
-        dateDec.setBackground(new Color(238,238,238));
-        dateDec.setForeground(Color.BLACK);
-        dateDec.setBorderPainted(false);
+        increment.setFont(JingleheimerCalendar.defaultFont.deriveFont(18f));
+        increment.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        increment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightArrow32.png"))); // NOI18N
+        increment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                incrementMouseClicked(evt);
+            }
+        });
 
-        javax.swing.GroupLayout datePanelLayout = new javax.swing.GroupLayout(datePanel);
-        datePanel.setLayout(datePanelLayout);
-        datePanelLayout.setHorizontalGroup(
-                datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                //.addComponent(dateDec, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(dateDec)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dateText, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                //.addComponent(dateInc, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(dateInc)
-                                .addContainerGap())
+        decrement.setFont(JingleheimerCalendar.defaultFont.deriveFont(18f));
+        decrement.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        decrement.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftArrow32.png"))); // NOI18N
+        decrement.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                decrementMouseClicked(evt);
+            }
+        });
+
+        weekdayText.setFont(JingleheimerCalendar.defaultFont.deriveFont(36f));
+        weekdayText.setText("Thursday");
+        weekdayText.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+
+        monthText.setFont(JingleheimerCalendar.defaultFont.deriveFont(24f));
+        monthText.setText("November");
+        monthText.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        alldayEventText.setFont(JingleheimerCalendar.defaultFont.deriveFont(14f));
+        alldayEventText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        alldayEventText.setText("");
+        
+
+        javax.swing.GroupLayout dateInfoPanelLayout = new javax.swing.GroupLayout(dateInfoPanel);
+        dateInfoPanel.setLayout(dateInfoPanelLayout);
+        dateInfoPanelLayout.setHorizontalGroup(
+            dateInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dateInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(dateInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(alldayEventText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(dateInfoPanelLayout.createSequentialGroup()
+                        .addComponent(decrement, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dayNumText, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(increment, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(dateInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(weekdayText, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                            .addComponent(monthText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
-        datePanelLayout.setVerticalGroup(
-                datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(datePanelLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(dateInc)
-                                        .addComponent(dateDec)
-                                        .addComponent(dateText))
-                                .addGap(55, 110, 110))
-                        //.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePanelLayout.createSequentialGroup()
-                        //        .addContainerGap()
-                        //        .addComponent(dateText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        //        .addContainerGap())
+        dateInfoPanelLayout.setVerticalGroup(
+            dateInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dateInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(dateInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(increment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(decrement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dayNumText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dateInfoPanelLayout.createSequentialGroup()
+                        .addComponent(weekdayText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(monthText, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(alldayEventText, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-
-        //monthPanel.setBackground(new java.awt.Color(102, 102, 102));
 
         javax.swing.GroupLayout monthPanelLayout = new javax.swing.GroupLayout(monthPanel);
         monthPanel.setLayout(monthPanelLayout);
         monthPanelLayout.setHorizontalGroup(
-                monthPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 282, Short.MAX_VALUE)
+            monthPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 372, Short.MAX_VALUE)
         );
         monthPanelLayout.setVerticalGroup(
-                monthPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        weekdayText.setFont(customFont.deriveFont(36f)); // NOI18N
-        weekdayText.setText("Day_Week");
-
-        javax.swing.GroupLayout weekdayTextPanelLayout = new javax.swing.GroupLayout(weekdayTextPanel);
-        weekdayTextPanel.setLayout(weekdayTextPanelLayout);
-        weekdayTextPanelLayout.setHorizontalGroup(
-                weekdayTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(weekdayTextPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(weekdayText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-        weekdayTextPanelLayout.setVerticalGroup(
-                weekdayTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, weekdayTextPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(weekdayText, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
-        );
-
-        monthText.setFont(customFont.deriveFont(24f)); // NOI18N
-        monthText.setText("Name_of_Month");
-
-        javax.swing.GroupLayout monthTextPanelLayout = new javax.swing.GroupLayout(monthTextPanel);
-        monthTextPanel.setLayout(monthTextPanelLayout);
-        monthTextPanelLayout.setHorizontalGroup(
-                monthTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(monthTextPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(monthText, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-        monthTextPanelLayout.setVerticalGroup(
-                monthTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, monthTextPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(monthText, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout topContentLayout = new javax.swing.GroupLayout(topContent);
-        topContent.setLayout(topContentLayout);
-        topContentLayout.setHorizontalGroup(
-                topContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(topContentLayout.createSequentialGroup()
-                                .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(topContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(weekdayTextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(monthTextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(18, 18, Short.MAX_VALUE)
-                                .addComponent(monthPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        topContentLayout.setVerticalGroup(
-                topContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(monthPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(topContentLayout.createSequentialGroup()
-                                .addComponent(weekdayTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(monthTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(datePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            monthPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
         topPanel.setLayout(topPanelLayout);
         topPanelLayout.setHorizontalGroup(
-                topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(topPanelLayout.createSequentialGroup()
-                                .addContainerGap(243, Short.MAX_VALUE)
-                                .addComponent(topContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(243, Short.MAX_VALUE))
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addGap(155, 155, 155)
+                .addComponent(dateInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                .addComponent(monthPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(155, 155, 155))
         );
         topPanelLayout.setVerticalGroup(
-                topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
-                                .addContainerGap(68, Short.MAX_VALUE)
-                                .addComponent(topContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(66, Short.MAX_VALUE))
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addContainerGap(49, Short.MAX_VALUE)
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(monthPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dateInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
-        bottomPanel.setPreferredSize(new java.awt.Dimension(1280, 341));
+        eventPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        eventPanel.setPreferredSize(new java.awt.Dimension(649, 300));
 
-        eventPanel.setPreferredSize(new java.awt.Dimension(640, 341));
+        eventHeaderPanel.setBackground(new java.awt.Color(102, 102, 102));
 
-        eventHeader.setBackground(new java.awt.Color(102, 102, 102));
-        eventHeader.setPreferredSize(new java.awt.Dimension(640, 50));
+        eventHeaderText.setFont(JingleheimerCalendar.defaultFont.deriveFont(24f));
+        eventHeaderText.setForeground(new java.awt.Color(255, 255, 255));
+        eventHeaderText.setText("Events");
 
-        eventHeaderText.setFont(customFont.deriveFont(24f)); // NOI18N
-        eventHeaderText.setForeground(Color.WHITE);
-        eventHeaderText.setText("Event");
-
-        javax.swing.GroupLayout eventHeaderLayout = new javax.swing.GroupLayout(eventHeader);
-        eventHeader.setLayout(eventHeaderLayout);
-        eventHeaderLayout.setHorizontalGroup(
-                eventHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(eventHeaderLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(eventHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+        javax.swing.GroupLayout eventHeaderPanelLayout = new javax.swing.GroupLayout(eventHeaderPanel);
+        eventHeaderPanel.setLayout(eventHeaderPanelLayout);
+        eventHeaderPanelLayout.setHorizontalGroup(
+            eventHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventHeaderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(eventHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        eventHeaderLayout.setVerticalGroup(
-                eventHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(eventHeaderLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(eventHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                                .addContainerGap())
+        eventHeaderPanelLayout.setVerticalGroup(
+            eventHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(eventHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        eventContentPanel.setBackground(new java.awt.Color(255, 255, 255));
+        eventContetPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        eventContentPanelFooter.setBackground(new java.awt.Color(255, 255, 255));
+        eventScroll.setHorizontalScrollBar(null);
 
-        addEventButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        addEventButton.setLabel("+");
-        addEventButton.setPreferredSize(new java.awt.Dimension(29, 29));
-
-        addEventText.setText("Click '+' to Add a New Event");
-        addEventText.setFont(customFont.deriveFont(12f));
-        javax.swing.GroupLayout eventContentPanelFooterLayout = new javax.swing.GroupLayout(eventContentPanelFooter);
-        eventContentPanelFooter.setLayout(eventContentPanelFooterLayout);
-        eventContentPanelFooterLayout.setHorizontalGroup(
-                eventContentPanelFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventContentPanelFooterLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(addEventText)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-        );
-        eventContentPanelFooterLayout.setVerticalGroup(
-                eventContentPanelFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(eventContentPanelFooterLayout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addGroup(eventContentPanelFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(addEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(addEventText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        eventScroller.setHorizontalScrollBar(null);
-
-        javax.swing.BoxLayout eventScrollerPanelLayout = new javax.swing.BoxLayout(eventScrollerPanel,BoxLayout.Y_AXIS);
-
-        eventScrollerPanel.setLayout(eventScrollerPanelLayout);
-        JPanel centerPanel = new JPanel();
+        javax.swing.BoxLayout eventScrollerPanelLayout = new javax.swing.BoxLayout(eventScrollContentPanel,BoxLayout.Y_AXIS);
+       
+        eventScrollContentPanel.setLayout(eventScrollerPanelLayout);
+        JPanel centerPanel = new JPanel(); 
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBackground(Color.WHITE);
         javax.swing.JLabel noEventMessage = new javax.swing.JLabel("No Scheduled Events.");
-        noEventMessage.setFont(customFont.deriveFont(12f));
+        noEventMessage.setFont(JingleheimerCalendar.defaultFont.deriveFont(12f));
         noEventMessage.setHorizontalAlignment(SwingConstants.CENTER);
-        centerPanel.add(noEventMessage, BorderLayout.CENTER);
+        centerPanel.add(noEventMessage, BorderLayout.CENTER); 
 
-        eventScrollerPanel.add(centerPanel);
+        eventScrollContentPanel.add(centerPanel);
+        
+        eventScroll.setViewportView(eventScrollContentPanel);
+        
+        eventScroll.setBorder(null);
 
-        eventScroller.setViewportView(eventScrollerPanel);
+        addEventText.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        addEventText.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addIcon15x15.png"))); // NOI18N
+        addEventText.setToolTipText("Create New Event");
+        addEventText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addEventTextMouseClicked(evt);
+            }
+        });
 
-        eventScroller.setBorder(null);
-
-        javax.swing.GroupLayout eventContentPanelLayout = new javax.swing.GroupLayout(eventContentPanel);
-        eventContentPanel.setLayout(eventContentPanelLayout);
-        eventContentPanelLayout.setHorizontalGroup(
-                eventContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(eventContentPanelFooter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(eventContentPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(eventScroller)
-                                .addContainerGap())
+        javax.swing.GroupLayout eventContetPanelLayout = new javax.swing.GroupLayout(eventContetPanel);
+        eventContetPanel.setLayout(eventContetPanelLayout);
+        eventContetPanelLayout.setHorizontalGroup(
+            eventContetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(eventScroll)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventContetPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addEventText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
-        eventContentPanelLayout.setVerticalGroup(
-                eventContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventContentPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(eventScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(eventContentPanelFooter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        eventContetPanelLayout.setVerticalGroup(
+            eventContetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventContetPanelLayout.createSequentialGroup()
+                .addComponent(eventScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(addEventText)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout eventPanelLayout = new javax.swing.GroupLayout(eventPanel);
         eventPanel.setLayout(eventPanelLayout);
         eventPanelLayout.setHorizontalGroup(
-                eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(eventContentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(eventHeader, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(eventHeaderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(eventContetPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         eventPanelLayout.setVerticalGroup(
-                eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(eventPanelLayout.createSequentialGroup()
-                                .addComponent(eventHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(eventContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventPanelLayout.createSequentialGroup()
+                .addComponent(eventHeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(eventContetPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        taskHeader.setBackground(new java.awt.Color(102, 102, 102));
-        taskHeader.setPreferredSize(new java.awt.Dimension(640, 50));
+        taskPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        taskPanel.setPreferredSize(new java.awt.Dimension(649, 300));
 
-        taskHeaderText.setFont(customFont.deriveFont(24f));
-        taskHeaderText.setForeground(Color.WHITE);// NOI18N
+        taskHeaderPanel.setBackground(new java.awt.Color(102, 102, 102));
+
+        taskHeaderText.setFont(JingleheimerCalendar.defaultFont.deriveFont(24f));
+        taskHeaderText.setForeground(new java.awt.Color(255, 255, 255));
         taskHeaderText.setText("Tasks");
 
-        javax.swing.GroupLayout taskHeaderLayout = new javax.swing.GroupLayout(taskHeader);
-        taskHeader.setLayout(taskHeaderLayout);
-        taskHeaderLayout.setHorizontalGroup(
-                taskHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(taskHeaderLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(taskHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+        javax.swing.GroupLayout taskHeaderPanelLayout = new javax.swing.GroupLayout(taskHeaderPanel);
+        taskHeaderPanel.setLayout(taskHeaderPanelLayout);
+        taskHeaderPanelLayout.setHorizontalGroup(
+            taskHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taskHeaderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(taskHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        taskHeaderLayout.setVerticalGroup(
-                taskHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(taskHeaderLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(taskHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                                .addContainerGap())
+        taskHeaderPanelLayout.setVerticalGroup(
+            taskHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(taskHeaderText, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
         taskContentPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        taskContentPanelFooter.setBackground(new java.awt.Color(255, 255, 255));
+        taskScroll.setHorizontalScrollBar(null);
 
-        addTaskButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        addTaskButton.setLabel("+");
-        addTaskButton.setPreferredSize(new java.awt.Dimension(29, 29));
-
-        addTaskText.setText("Click '+' to Add a New Task");
-        addTaskText.setFont(customFont.deriveFont(12));
-        javax.swing.GroupLayout taskContentPanelFooterLayout = new javax.swing.GroupLayout(taskContentPanelFooter);
-        taskContentPanelFooter.setLayout(taskContentPanelFooterLayout);
-        taskContentPanelFooterLayout.setHorizontalGroup(
-                taskContentPanelFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taskContentPanelFooterLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(addTaskText)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addTaskButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-        );
-        taskContentPanelFooterLayout.setVerticalGroup(
-                taskContentPanelFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(taskContentPanelFooterLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(taskContentPanelFooterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(addTaskButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(addTaskText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        taskScroller.setHorizontalScrollBar(null);
-
-        javax.swing.BoxLayout taskScrollerPanelLayout = new javax.swing.BoxLayout(taskScrollerPanel,BoxLayout.Y_AXIS);
-
-        taskScrollerPanel.setLayout(taskScrollerPanelLayout);
-        JPanel centerTaskPanel = new JPanel();
+        javax.swing.BoxLayout taskScrollerPanelLayout = new javax.swing.BoxLayout(taskScrollContentPanel,BoxLayout.Y_AXIS);
+       
+        taskScrollContentPanel.setLayout(taskScrollerPanelLayout);
+        JPanel centerTaskPanel = new JPanel(); 
         centerTaskPanel.setLayout(new BorderLayout());
         centerTaskPanel.setBackground(Color.WHITE);
         javax.swing.JLabel noTaskMessage = new javax.swing.JLabel("No Tasks to Complete.");
-        noTaskMessage.setFont(customFont.deriveFont(12f));
+        noTaskMessage.setFont(JingleheimerCalendar.defaultFont.deriveFont(12f));
         noTaskMessage.setHorizontalAlignment(SwingConstants.CENTER);
-        centerTaskPanel.add(noTaskMessage, BorderLayout.CENTER);
+        centerTaskPanel.add(noTaskMessage, BorderLayout.CENTER); 
 
-        taskScrollerPanel.add(centerTaskPanel);
+        taskScrollContentPanel.add(centerTaskPanel);
+       
+        taskScroll.setViewportView(taskScrollContentPanel);
+        taskScroll.setBorder(null);
 
-        taskScroller.setViewportView(taskScrollerPanel);
-        taskScroller.setBorder(null);
+        addTaskText.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        addTaskText.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addIcon15x15.png"))); // NOI18N
+        addTaskText.setToolTipText("Create New Task");
+        addTaskText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addTaskTextMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout taskContentPanelLayout = new javax.swing.GroupLayout(taskContentPanel);
         taskContentPanel.setLayout(taskContentPanelLayout);
         taskContentPanelLayout.setHorizontalGroup(
-                taskContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(taskContentPanelFooter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(taskContentPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(taskScroller)
-                                .addContainerGap())
+            taskContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(taskScroll)
+            .addGroup(taskContentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addTaskText, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         taskContentPanelLayout.setVerticalGroup(
-                taskContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taskContentPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(taskScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(taskContentPanelFooter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            taskContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(taskContentPanelLayout.createSequentialGroup()
+                .addComponent(taskScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(addTaskText)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout taskPanelLayout = new javax.swing.GroupLayout(taskPanel);
         taskPanel.setLayout(taskPanelLayout);
         taskPanelLayout.setHorizontalGroup(
-                taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(taskContentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(taskHeader, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(taskHeaderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(taskContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         taskPanelLayout.setVerticalGroup(
-                taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(taskPanelLayout.createSequentialGroup()
-                                .addComponent(taskHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(taskContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            taskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(taskPanelLayout.createSequentialGroup()
+                .addComponent(taskHeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(taskContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
         bottomPanel.setLayout(bottomPanelLayout);
         bottomPanelLayout.setHorizontalGroup(
-                bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(bottomPanelLayout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addComponent(eventPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(0, 0, 0)
-                                .addComponent(taskPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bottomPanelLayout.createSequentialGroup()
+                .addComponent(eventPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(taskPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         bottomPanelLayout.setVerticalGroup(
-                bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(bottomPanelLayout.createSequentialGroup()
-                                .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(eventPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                                        .addComponent(taskPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE))
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(eventPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+            .addComponent(taskPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        dateInc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dateIncActionPerformed(evt);
-            }
-        });
-
-        dateDec.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dateDecActionPerformed(evt);
-            }
-        });
-
-        addEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addEventButtonActionPerformed(evt);
-            }
-        });
-
-        addTaskButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addTaskButtonActionPerformed(evt);
-            }
-        });
-
-        //this.setComponentZOrder(monthPanel,getComponentCount() - 1);
     }// </editor-fold>                        
 
-    private void dateIncActionPerformed(java.awt.event.ActionEvent evt) {
-        resetEventPanel();
-        c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);
-        dateText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
-        monthText.setText(getMonth(c.get(Calendar.MONTH)));
-        weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
-    }
-
-    private void dateDecActionPerformed(java.awt.event.ActionEvent evt) {
-        resetEventPanel();
+    private void decrementMouseClicked(java.awt.event.MouseEvent evt) {                                       
         c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 1);
-        dateText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+        dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
         monthText.setText(getMonth(c.get(Calendar.MONTH)));
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
-    }
+        refresh();
+    }                                      
 
-    private void addEventButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        if(eventPanelList.isEmpty()){
-            eventScrollerPanel.remove(eventScrollerPanel.getComponent(0));
-        }
-        CreateEventPanel newEvent = new CreateEventPanel(eventScrollerPanel,eventPanelList);
-        eventScrollerPanel.add(newEvent);
+    private void incrementMouseClicked(java.awt.event.MouseEvent evt) {                                       
+        c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);
+        dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+        monthText.setText(getMonth(c.get(Calendar.MONTH)));
+        weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
+        refresh();
+    }                                      
+
+    private void addEventTextMouseClicked(java.awt.event.MouseEvent evt) { 
+        if(eventPanelList.isEmpty())
+            eventScrollContentPanel.removeAll();
+        CreateEventPanel t = new CreateEventPanel(eventScrollContentPanel,alldayEventText,this,c);
+        eventScrollContentPanel.add(t);
+       
         validate();
-    }
+         javax.swing.JScrollBar vertical = eventScroll.getVerticalScrollBar();
+        vertical.setValue( vertical.getMaximum() );
+    }                                         
 
-    private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        if(taskPanelList.isEmpty()){
-            taskScrollerPanel.remove(taskScrollerPanel.getComponent(0));
-        }
-        CreateTaskPanel newTask = new CreateTaskPanel(taskScrollerPanel,taskPanelList);
-        taskScrollerPanel.add(newTask);
+    private void addTaskTextMouseClicked(java.awt.event.MouseEvent evt) { 
+        
+        taskScrollContentPanel.removeAll();
+        CreateTaskPanel t = new CreateTaskPanel(taskScrollContentPanel,this);
+        taskScrollContentPanel.add(t);
+        
         validate();
-    }
-
-
+        javax.swing.JScrollBar vertical = taskScroll.getVerticalScrollBar();
+        vertical.setValue( vertical.getMaximum() );
+    }                                        
 
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton addEventButton;
     private javax.swing.JLabel addEventText;
-    private javax.swing.JButton addTaskButton;
     private javax.swing.JLabel addTaskText;
+    private static javax.swing.JLabel alldayEventText;
     private javax.swing.JPanel bottomPanel;
-    private javax.swing.JButton dateDec;
-    private javax.swing.JButton dateInc;
-    private javax.swing.JPanel datePanel;
-    javax.swing.JLabel dateText;
-    private javax.swing.JPanel eventContentPanel;
-    private javax.swing.JPanel eventContentPanelFooter;
-    private javax.swing.JPanel eventHeader;
+    private javax.swing.JPanel dateInfoPanel;
+    private javax.swing.JLabel dayNumText;
+    private javax.swing.JLabel decrement;
+    private javax.swing.JPanel eventContetPanel;
+    private javax.swing.JPanel eventHeaderPanel;
     private javax.swing.JLabel eventHeaderText;
     private javax.swing.JPanel eventPanel;
-    private javax.swing.JScrollPane eventScroller;
-    private javax.swing.JPanel eventScrollerPanel;
+    private javax.swing.JScrollPane eventScroll;
+    private javax.swing.JPanel eventScrollContentPanel;
+    private javax.swing.JLabel increment;
+    //private javax.swing.JPanel monthPanel;
     private MonthPanel monthPanel;
-    javax.swing.JLabel monthText;
-    private javax.swing.JPanel monthTextPanel;
+    private javax.swing.JLabel monthText;
     private javax.swing.JPanel taskContentPanel;
-    private javax.swing.JPanel taskContentPanelFooter;
-    private javax.swing.JPanel taskHeader;
+    private javax.swing.JPanel taskHeaderPanel;
     private javax.swing.JLabel taskHeaderText;
     private javax.swing.JPanel taskPanel;
-    private javax.swing.JScrollPane taskScroller;
-    private javax.swing.JPanel taskScrollerPanel;
-    private javax.swing.JPanel topContent;
+    private javax.swing.JScrollPane taskScroll;
+    private javax.swing.JPanel taskScrollContentPanel;
     private javax.swing.JPanel topPanel;
-    javax.swing.JLabel weekdayText;
-    private javax.swing.JPanel weekdayTextPanel;
-    private ArrayList<EventPanel> eventPanelList = new ArrayList<>();
-    private ArrayList<TaskPanel> taskPanelList = new ArrayList<>();
+    private javax.swing.JLabel weekdayText;
+    private ArrayList<EventPanel> eventPanelList = new ArrayList<EventPanel>();
     // End of variables declaration                                                                     
-
+    
     public String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month];
     }
     public String getWeekDay(int dayOfWeek) {
         return new DateFormatSymbols().getWeekdays()[dayOfWeek];
-    }
-
+    } 
+    
     public Dimension getPreferredSize() {
-        return new Dimension(1280,620);
+                return new Dimension(1280,620);
     }
-
+    
     public void resetEventPanel(){
-        eventScrollerPanel.removeAll();
-        JPanel centerPanel = new JPanel();
+        eventScrollContentPanel.removeAll();
+        JPanel centerPanel = new JPanel(); 
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBackground(Color.WHITE);
         javax.swing.JLabel noEventMessage = new javax.swing.JLabel("No Scheduled Events.");
-        noEventMessage.setFont(customFont.deriveFont(12f));
+        noEventMessage.setFont(JingleheimerCalendar.defaultFont.deriveFont(12f));
         noEventMessage.setHorizontalAlignment(SwingConstants.CENTER);
         centerPanel.add(noEventMessage, BorderLayout.CENTER);
         eventPanelList.clear();
-        eventScrollerPanel.add(centerPanel);
+        eventScrollContentPanel.add(centerPanel);
     }
-
+    
     public void resetTaskPanel(){
-        taskScrollerPanel.removeAll();
-        JPanel centerTaskPanel = new JPanel();
+        taskScrollContentPanel.removeAll();
+        JPanel centerTaskPanel = new JPanel(); 
         centerTaskPanel.setLayout(new BorderLayout());
         centerTaskPanel.setBackground(Color.WHITE);
         javax.swing.JLabel noTaskMessage = new javax.swing.JLabel("No Tasks To Complete.");
-        noTaskMessage.setFont(customFont.deriveFont(12f));
+        noTaskMessage.setFont(JingleheimerCalendar.defaultFont.deriveFont(12f));
         noTaskMessage.setHorizontalAlignment(SwingConstants.CENTER);
-        centerTaskPanel.add(noTaskMessage, BorderLayout.CENTER);
-        taskPanelList.clear();
-        taskScrollerPanel.add(centerTaskPanel);
+        centerTaskPanel.add(noTaskMessage, BorderLayout.CENTER); 
+        taskScrollContentPanel.add(centerTaskPanel);
     }
-
-    private Font loadFont(int fSize, String fPath) throws FontFormatException, IOException  {
-        URL fontUrl = getClass().getResource(fPath);
-        Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
-        font = font.deriveFont(Font.PLAIN, fSize);
-        return font;
+    
+    public static void updateAllDayText(Date d){
+        ArrayList<Event> e = UserCalendar.getInstance().getAllDayEventsByDate(d);
+        String text ="";
+        for(int i =0; i< e.size(); i++){
+            int color = e.get(i).getCategoryColor().getRGB();
+            String hex = Integer.toHexString(color).substring(2);
+            String name = e.get(i).getName();
+            if(text.equals("")){
+            text = text+"<font color=#"+hex+">"+name+"</font>&nbsp&nbsp&nbsp ";
+            } else {
+                text = text+"|<font color=#"+hex+">&nbsp&nbsp&nbsp "+name+"</font>&nbsp&nbsp&nbsp";
+            }
+        }
+        text = "<html>"+text+"</html>";
+        alldayEventText.setText(text);
+    }
+    
+    public void removeTask(Task t){
+       UserCalendar.getInstance().removeTasks(t);
+       refreshTaskPanel();
+    }
+    
+    public void refreshTaskPanel(){
+        System.out.println("CALLED REFRESH");
+        taskScrollContentPanel.removeAll();
+        validate();
+        
+        if(UserCalendar.getInstance().getTasks().size() == 0){
+           resetTaskPanel();
+        }
+       
+       for(int i = 0 ; i < UserCalendar.getInstance().getTasks().size() ; i++){
+           TaskPanel newPanel = new TaskPanel(UserCalendar.getInstance().getTasks().get(i));
+           newPanel.checkCompleteness();
+           if(i%2==0){
+            newPanel.setBackground(new Color(255,255,255));
+           }else{
+            newPanel.setBackground(new Color(245,245,245));
+           }
+           taskScrollContentPanel.add(newPanel);
+        }
+       validate();
+    }
+    
+    
+    public void refreshEventPanel(){
+        System.out.println("CALLED REFRESH");
+        eventScrollContentPanel.removeAll();
+        validate();
+        
+        if(UserCalendar.getInstance().getEventsByDate(c.getTime()).size() == 0){
+           resetEventPanel();
+        }
+       
+       for(int i = 0 ; i < UserCalendar.getInstance().getEventsByDate(c.getTime()).size() ; i++){
+           EventPanel newPanel = new EventPanel(UserCalendar.getInstance().getEventsByDate(c.getTime()).get(i));
+           if(i%2==0){
+            newPanel.setBackground(new Color(255,255,255));
+           }else{
+            newPanel.setBackground(new Color(245,245,245));
+           }
+           eventScrollContentPanel.add(newPanel);
+        }
+       validate();
+    }
+    
+  
+    
+    public void refresh(){
+       refreshEventPanel();
+       refreshTaskPanel();
+        System.out.println("Date:"+c.getTime().toString());
+       updateAllDayText(c.getTime());
+       revalidate();
     }
 }

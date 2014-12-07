@@ -1,14 +1,19 @@
 package jingleheimercalendar;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URL;
 
 /**
- * Created by Roach on 10/24/2014.
+ * Created by Nathan on 10/24/2014.
  */
 public class CategoryPanel extends JPanel {
     public static final int MINIMUM_WIDTH = 800;
@@ -54,11 +59,14 @@ public class CategoryPanel extends JPanel {
 
     private Font fontLabels;
     private int fontSizeLabels = 36;
-    private String fontPathLabels = JingleheimerCalendar.PATH_FONT_KALINGA;
 
     private Font fontButtons;
-    private int fontSizeButtons = 28;
-    private String fontPathButtons = JingleheimerCalendar.PATH_FONT_KALINGA;
+    private int fontSizeButtons = 24;
+
+    public class Category {
+
+    }
+
 
     public static enum Categories {
         SCHOOL ("School", COLOR_CAT_ONE_DEFAULT, COLOR_CAT_ONE_SELECTED),
@@ -107,13 +115,8 @@ public class CategoryPanel extends JPanel {
         this.setLayout(springLayout);
 
         //Set custom font
-        try {
-            fontLabels = loadFont(fontSizeLabels,fontPathLabels);
-            fontButtons = loadFont(fontSizeButtons,fontPathButtons);
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            fontLabels = fontButtons = new Font("Times New Roman", Font.BOLD,60);
-        }
+        fontLabels = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeLabels);
+        fontButtons = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeButtons);
 
         //This line will have to change when we want to implement persistence
         //For now just use defaults
@@ -253,34 +256,5 @@ public class CategoryPanel extends JPanel {
         fontSizeButtons = size;
         fontButtons = fontButtons.deriveFont(((float) fontSizeButtons));
         updateButtonFonts();
-    }
-
-    public void setFontPathLabels(String path) {
-        fontPathLabels = path;
-        try {
-            fontLabels = loadFont(fontSizeLabels,fontPathLabels);
-            updateLabelFonts();
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            fontLabels = new Font("Times New Roman", Font.BOLD,60);
-        }
-    }
-
-    public void setFontPathButtons(String path) {
-        fontPathButtons = path;
-        try {
-            fontButtons = loadFont(fontSizeButtons,fontPathButtons);
-            updateButtonFonts();
-        } catch (FontFormatException |IOException e) {
-            System.err.println("Error loading custom font. Using Times.");
-            fontButtons = new Font("Times New Roman", Font.BOLD,60);
-        }
-    }
-
-    private Font loadFont(int fSize, String fPath) throws FontFormatException, IOException  {
-        URL fontUrl = getClass().getResource(fPath);
-        Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
-        font = font.deriveFont(Font.PLAIN, fSize);
-        return font;
     }
 }

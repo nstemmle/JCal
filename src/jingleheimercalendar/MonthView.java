@@ -9,27 +9,23 @@ import java.awt.Dimension;
 public class MonthView extends ViewPanel {
     static MonthPanel monthPanel;
     static MonthHeader monthHeader;
-    private SpringLayout springPanelAndHeader;
 
-    private int gridPaddingHorizontal = 0;
-    private int gridPaddingVertical = 0;
-
-
-    //
     MonthView(int width, int height) {
-        this.value = "monthView";
+        this.value = JingleheimerCalendar.VIEW_MONTH;
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_VIEW_HEIGHT));
 
-        monthPanel = new MonthPanel(width, height - MonthHeader.HEADER_MINIMUM_HEIGHT, 0, MonthPanel.CONTEXT_MONTH);
+        monthPanel = new MonthPanelMonthView(width, height - MonthHeader.HEADER_MINIMUM_HEIGHT, 0);
         monthHeader = new MonthHeader(width, MonthHeader.HEADER_MINIMUM_HEIGHT);
-        //monthHeader.setBackground(Color.BLACK);
 
-        springPanelAndHeader = new SpringLayout();
+        SpringLayout springPanelAndHeader = new SpringLayout();
         this.setLayout(springPanelAndHeader);
 
         add(monthHeader);
         add(monthPanel);
+
+        int gridPaddingVertical = 0;
+        int gridPaddingHorizontal = 0;
 
         springPanelAndHeader.putConstraint(SpringLayout.NORTH, monthHeader, gridPaddingVertical, SpringLayout.NORTH, this);
         springPanelAndHeader.putConstraint(SpringLayout.WEST, monthHeader, gridPaddingHorizontal, SpringLayout.WEST, this);

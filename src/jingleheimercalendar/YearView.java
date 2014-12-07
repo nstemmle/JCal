@@ -15,7 +15,7 @@ public class YearView extends ViewPanel {
     private int gridPaddingVertical = 0;
 
     YearView(int width, int height) {
-        this.value = "yearView";
+        this.value = JingleheimerCalendar.VIEW_YEAR;
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_VIEW_HEIGHT));
         setBackground(Color.WHITE);

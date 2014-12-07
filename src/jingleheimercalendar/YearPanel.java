@@ -5,6 +5,10 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.Calendar;
 
+/**
+ * Created by Nathan on 10/29/2014.
+ */
+
 class YearPanel extends JPanel {
     public static int NUM_MONTHS = 12;
     private static MonthPanel[] monthPanels;
@@ -18,7 +22,7 @@ class YearPanel extends JPanel {
         currentMonth = c.get(Calendar.MONTH);
         monthPanels = new MonthPanel[NUM_MONTHS];
         for (int i = 0; i < NUM_MONTHS; i++) {
-            monthPanels[i] = new MonthPanel((width / 4) - 10, (height / 3) - 10, -currentMonth + i, MonthPanel.CONTEXT_YEAR);
+            monthPanels[i] = new MonthPanel((width / 4) - 10, (height / 3) - 10, -currentMonth + i);
             monthPanels[i].setFontSizeHeaders(16);
             monthPanels[i].setFontSizeOrdinals(16);
             add(monthPanels[i]);

@@ -1,16 +1,22 @@
-/*
-Mockup layout for Calendar application
-If you hate this we don't have to use any of it - just trying to get the ball rolling
-*/
-
 package jingleheimercalendar;
 
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.SpringLayout;
+import javax.swing.UIManager;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Timer;
 
 public class JingleheimerCalendar extends JFrame {
     //Constants for preferred/target screen width and height
@@ -23,27 +29,21 @@ public class JingleheimerCalendar extends JFrame {
     public static final int MINIMUM_HEIGHT = 450;
     public static final int MINIMUM_VIEW_HEIGHT = MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT;
 
-    //Constant for time-delay of mTimer in miliseconds
-    //Want 1 minute = 60 seconds * 1000 miliseconds/second = 60,000 ms
-    private static final int DELAY_INTERVAL = 60000;
-
-    //
-    public static final String PATH_FONT_KALINGA = "/font/kalinga.ttf";
-    public static final String PATH_FONT_NEXA = "/font/Nexa_Bold.ttf";
+    public static final String PATH_FONT_HELVETICA = "/font/HelveticaNeue.ttf";
 
     // Class variables
     private Timer mTimer;
     private Calendar mCalendar;
-    private NavigationPanel mNavigationPanel;
-    private CategoryPanel mCategoryPanel;
+    private static NavigationPanel mNavigationPanel;
+    private static CategoryPanel mCategoryPanel;
 
     //Structure used for holding and accessing the different content views
     private static ViewPanel[] views;
 
-    public static final String DAY_VIEW = "dayView";
-    public static final String WEEK_VIEW = "dayView";
-    public static final String MONTH_VIEW = "dayView";
-    public static final String YEAR_VIEW = "dayView";
+    public static final String VIEW_WEEK = "WeekView";
+    public static final String VIEW_DAY = "DayView";
+    public static final String VIEW_MONTH = "MonthView";
+    public static final String VIEW_YEAR = "YearView";
 
     //Constants relating to managing the current view
     public static final int NUM_VIEWS = 4;
@@ -55,8 +55,10 @@ public class JingleheimerCalendar extends JFrame {
 
     private static ViewPanel viewPanel;
 
-    private static Font customFont;
-    SpringLayout springLayoutRoot, springLayeredPane;
+    private int viewWidth, viewHeight;
+
+    public static Font defaultFont;
+    SpringLayout springLayoutRoot;
     private static CardLayout cardViewLayout;
 
     public static void main(String[] args) {
@@ -69,84 +71,65 @@ public class JingleheimerCalendar extends JFrame {
             }
         });
     }
-    
+
     private static void createAndShowGUI() {
-        try {
-            UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Arial", Font.BOLD, 28));
-            //System.out.println("Success - but it's actually not");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         new JingleheimerCalendar();
         // Forgive my terrible names
-            //@nstemmle - Renamed and forgiven
+        //@nstemmle - Renamed and forgiven
     }
 
     public JingleheimerCalendar() {
-        //@nstemmle
-        //Get optimal initial bounds of window while accommodating available screen real estate where
-        // initialWidth preferred is 1280 px (target)
-        // initialHeight preferred is 720 px (target)
-        // Feel free to adjust these parameters
-        // This will currently set the initial size of the window to be the full workable screen real estate
-        // e.g. If screen is 1280x720 it will be set to 1280x~680 or so
-        // this means the application is essentially full screen without actually being maximized
-
-        //Taken from the following stackoverflow
-        //http://stackoverflow.com/questions/1936566/how-do-you-get-the-screen-width-in-java/8101318#8101318
-        this.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+        this.getContentPane().setMinimumSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+        this.getContentPane().setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         pack();
 
         Insets windowInsets = getInsets();
-        Rectangle workableBounds = getScreenBounds(null);
         int prefHeight = PREFERRED_HEIGHT + windowInsets.top + windowInsets.bottom;
         int prefWidth = PREFERRED_WIDTH + windowInsets.left + windowInsets.right;
 
-        int minHeight = MINIMUM_HEIGHT + windowInsets.top + windowInsets.bottom;
-        int minWidth = MINIMUM_WIDTH + windowInsets.left + windowInsets.right;
+        this.setSize(prefWidth, prefHeight);
+        this.setPreferredSize(new Dimension(prefWidth, prefHeight));
+        System.out.println(this.getBounds());
+        System.out.println(getContentPane().getBounds());
+        this.setResizable(false);
 
-        int initialHeight, initialWidth, viewWidth, viewHeight;
-        boolean maxWidth = false;
-        boolean maxHeight = false;
-        if (workableBounds.width <= prefWidth) {
-            maxWidth = true;
-            viewWidth = MINIMUM_WIDTH;
-            initialWidth = minWidth;
-        } else {
-            viewWidth = PREFERRED_WIDTH;
-            initialWidth = prefWidth;
-        }
-        if (workableBounds.height <= prefHeight) {
-            maxHeight = true;
-            viewHeight = MINIMUM_HEIGHT;
-            initialHeight = minHeight;
-        } else {
-            viewHeight = PREFERRED_HEIGHT - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT;
-            initialHeight = prefHeight;
-        }
-
-
-        this.setPreferredSize(new Dimension(initialWidth, initialHeight));
-        pack();
+        viewWidth = PREFERRED_WIDTH;
+        viewHeight = PREFERRED_HEIGHT - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT;
+        System.out.println("viewWidth: " + viewWidth + ", viewHeight: " + viewHeight);
 
         springLayoutRoot = new SpringLayout();
         getContentPane().setLayout(springLayoutRoot);
 
         //Set default location to center of default screen device
         //this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Jingleheimer-Schmidt Calendar");
 
-        //Initialize Navigation and Category Panels
-        mNavigationPanel = new NavigationPanel(viewWidth);
-        mCategoryPanel = new CategoryPanel(viewWidth);
+        defaultFont = null;
+        try {
+            defaultFont = loadFont(PATH_FONT_HELVETICA);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
 
-        //Initialize LayeredPane
-        springLayeredPane = new SpringLayout();
+        if (defaultFont == null)
+            System.out.println("FUUUUUUUU!!!!");
+
+        //Initialize Navigation and Category Panels
+        Insets nullInsets = new Insets(0,0,0,0);
+        mNavigationPanel = new NavigationPanel(viewWidth);
+        mNavigationPanel.setBorder(null);
+        mNavigationPanel.getInsets(nullInsets);
+
+        mCategoryPanel = new CategoryPanel(viewWidth);
+        mCategoryPanel.setBorder(null);
+        mCategoryPanel.getInsets(null);
+
         cardViewLayout = new CardLayout();
         viewPanel = new ViewPanel(cardViewLayout);
-        //getContentPane().setLayout(springLayeredPane);
         viewPanel.setOpaque(false);
+        viewPanel.setBorder(null);
+        viewPanel.getInsets(nullInsets);
 
         //Initialize views array
         initializeViews(viewWidth, viewHeight);
@@ -157,31 +140,56 @@ public class JingleheimerCalendar extends JFrame {
         //Set constraints for frame components
         initializeViewSprings();
 
-        /*ActionListener mTimerListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
-        };
-        mTimer = new Timer(DELAY_INTERVAL,mTimerListener);*/
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+        }
 
+
+        mNavigationPanel.setBackground(Color.BLUE);
+        mCategoryPanel.setBackground(Color.PINK);
+        //getContentPane().setBackground(Color.WHITE);
+        //viewPanel.setBackground(Color.WHITE);
+        //this.setBackground(Color.WHITE);
         pack();
         this.setVisible(true);
         this.validate();
-        //If the application window size is set to the maximum workable bounds, then maximize the application
-        //Take from the following stackoverflow
-        //http://stackoverflow.com/questions/479523/java-swing-maximize-window
-        if (maxWidth && maxHeight) {
-            this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        }
+
+        System.out.println("NavigationPanel.bounds: " + mNavigationPanel.getBounds().toString());
+        System.out.println("NavigationPanel.x: " + mNavigationPanel.getX());
+        System.out.println("NavigationPanel.y: " + mNavigationPanel.getY());
+
+        System.out.println("viewPanel.bounds: " + viewPanel.getBounds().toString());
+        System.out.println("viewPanel.width: " + viewPanel.getWidth());
+        System.out.println("viewPanel.height: " + viewPanel.getHeight());
+        System.out.println("viewPanel.insets: " + viewPanel.getInsets());
+        System.out.println("viewPanel.border: " + viewPanel.getBorder());
+        System.out.println("viewPanel.x: " + viewPanel.getX());
+        System.out.println("viewPanel.y: " + viewPanel.getY());
+
+        System.out.println("CategoryPanel.bounds: " + mCategoryPanel.getBounds().toString());
+        System.out.println("CategoryPanel.x: " + mCategoryPanel.getX());
+        System.out.println("CategoryPanel.y: " + mCategoryPanel.getY());
+
+        //if (maxWidth && maxHeight)
+        //    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
+
+
     }
-    
-    private Font loadFont() throws FontFormatException, IOException  {
-        URL fontUrl = getClass().getResource("/font/Nexa_Bold.ttf");
+
+    private Font loadFont(String path) throws FontFormatException, IOException  {
+        URL fontUrl = getClass().getResource(path);
         Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
-        font = font.deriveFont(Font.PLAIN,60);
+        font = font.deriveFont(Font.PLAIN, 24f);
         return font;
+        //return Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream()).deriveFont(Font.PLAIN, 24f);
     }
 
     static Rectangle getScreenBounds(Window currentWindow) {
@@ -227,57 +235,150 @@ public class JingleheimerCalendar extends JFrame {
     private void initializeViews(int viewWidth, int viewHeight) {
         //Initialize array of views
         views = new ViewPanel[NUM_VIEWS];
+        views[0] = new DayView(viewWidth, viewHeight);
+        views[1] = new WeekView(viewWidth, viewHeight, viewPanel);
+        views[2] = new MonthView(viewWidth, viewHeight);
+        views[3] = new YearView(viewWidth, viewHeight);
+
         for (int i = 0; i < NUM_VIEWS; i++) {
-            switch (i) {
-                case INDEX_DAY_VIEW:
-                    views[i] = new DayView(viewWidth, viewHeight);
-                    break;
-                case INDEX_WEEK_VIEW:
-                    views[i] = new WeekView(viewWidth, viewHeight, viewPanel);
-                    break;
-                case INDEX_MONTH_VIEW:
-                    views[i] = new MonthView(viewWidth, viewHeight);
-                    break;
-                case INDEX_YEAR_VIEW:
-                    views[i] = new YearView(viewWidth, viewHeight);
-                    break;
-            }
             viewPanel.add(views[i], views[i].getStringValue());
         }
-
-    }
-
-    public static void displayView(int viewIndex) {
-        cardViewLayout.show(viewPanel,views[viewIndex].getStringValue());
-        setIndexDisplayedview(viewIndex);
     }
 
     private void initializeViewSprings() {
         add(mNavigationPanel);
+        /*SpringLayout.Constraints nav = springLayoutRoot.getConstraints(mNavigationPanel);
+        nav.setX(Spring.constant(0));
+        nav.setY(Spring.constant(0));
+        nav.setWidth(Spring.constant(PREFERRED_WIDTH));
+        nav.setHeight(Spring.constant(NavigationPanel.MINIMUM_HEIGHT));
+        //nav.getConstraint(SpringLayout.WEST).setValue();*/
+
         springLayoutRoot.putConstraint(SpringLayout.NORTH, mNavigationPanel, 0, SpringLayout.NORTH, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.WEST, mNavigationPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, mNavigationPanel, 0, SpringLayout.EAST, getContentPane());
 
         add(mCategoryPanel);
+        /*SpringLayout.Constraints cat = springLayoutRoot.getConstraints(mCategoryPanel);
+        cat.setX(Spring.constant(0));
+        cat.setY(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT));
+        cat.setWidth(Spring.constant(PREFERRED_WIDTH));
+        cat.setHeight(Spring.constant(CategoryPanel.MINIMUM_HEIGHT));*/
         springLayoutRoot.putConstraint(SpringLayout.SOUTH, mCategoryPanel, 0, SpringLayout.SOUTH, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.WEST, mCategoryPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, mCategoryPanel, 0, SpringLayout.EAST, getContentPane());
 
         add(viewPanel);
+        /*SpringLayout.Constraints view = springLayoutRoot.getConstraints(viewPanel);
+        view.setX(Spring.constant(0));
+        view.setY(Spring.constant(NavigationPanel.MINIMUM_HEIGHT));
+        view.setWidth(Spring.constant(PREFERRED_WIDTH));
+        view.setHeight(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT));*/
         springLayoutRoot.putConstraint(SpringLayout.NORTH, viewPanel, 0, SpringLayout.SOUTH, mNavigationPanel);
         springLayoutRoot.putConstraint(SpringLayout.WEST, viewPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, viewPanel, 0, SpringLayout.EAST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.SOUTH, viewPanel, 0, SpringLayout.NORTH, mCategoryPanel);
 
-        for (ViewPanel view : views) {
-            springLayoutRoot.putConstraint(SpringLayout.NORTH, view, 0, SpringLayout.SOUTH, mNavigationPanel);
-            springLayoutRoot.putConstraint(SpringLayout.WEST, view, 0, SpringLayout.WEST, getContentPane());
-            springLayoutRoot.putConstraint(SpringLayout.EAST, view, 0, SpringLayout.EAST, getContentPane());
-            springLayoutRoot.putConstraint(SpringLayout.SOUTH, view, 0, SpringLayout.NORTH, mCategoryPanel);
+        for (ViewPanel v : views) {
+            springLayoutRoot.putConstraint(SpringLayout.NORTH, v, 0, SpringLayout.SOUTH, mNavigationPanel);
+            springLayoutRoot.putConstraint(SpringLayout.WEST, v, 0, SpringLayout.WEST, getContentPane());
+            springLayoutRoot.putConstraint(SpringLayout.EAST, v, 0, SpringLayout.EAST, getContentPane());
+            springLayoutRoot.putConstraint(SpringLayout.SOUTH, v, 0, SpringLayout.NORTH, mCategoryPanel);
         }
     }
 
-    private static void setIndexDisplayedview(int index) {
-       indexDisplayedview = index;
+    public static void displayView(int viewIndex) {
+        cardViewLayout.show(viewPanel,views[viewIndex].getStringValue());
+        views[viewIndex].refresh();
+        setIndexDisplayedview(viewIndex);
     }
+
+    private static void setIndexDisplayedview(int index) {
+        indexDisplayedview = index;
+    }
+
+    private static ViewPanel getDisplayedView() {
+        return views[indexDisplayedview];
+    }
+
+    public static void refreshCurrentView() {
+        getDisplayedView().refresh();
+    }
+
+    public static void refreshCategoryBar() {
+        //mCategoryPanel.refresh();
+    }
+
+    /*private void initializeComponents() {
+        viewPanel.setAlignmentX(0.0f);
+        viewPanel.setAlignmentY(0.0f);
+        Dimension viewDimens = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT);
+        viewPanel.setMaximumSize(viewDimens);
+        viewPanel.setMinimumSize(viewDimens);
+        viewPanel.setPreferredSize(viewDimens);
+
+        GroupLayout viewPanelLayout = new GroupLayout(viewPanel);
+        viewPanel.setLayout(viewPanelLayout);
+        viewPanelLayout.setHorizontalGroup(
+                viewPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1280, Short.MAX_VALUE)
+        );
+        viewPanelLayout.setVerticalGroup(
+                viewPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 640, Short.MAX_VALUE)
+        );
+
+        mNavigationPanel.setAlignmentX(0.0f);
+        mNavigationPanel.setAlignmentY(0.0f);
+        Dimension navDimens = new Dimension(PREFERRED_WIDTH, NavigationPanel.MINIMUM_HEIGHT);
+        mNavigationPanel.setMaximumSize(navDimens);
+        mNavigationPanel.setMinimumSize(navDimens);
+        mNavigationPanel.setPreferredSize(navDimens);
+
+        GroupLayout navigationPanelLayout = new GroupLayout(mNavigationPanel);
+        mNavigationPanel.setLayout(navigationPanelLayout);
+        navigationPanelLayout.setHorizontalGroup(
+                navigationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1280, Short.MAX_VALUE)
+        );
+        navigationPanelLayout.setVerticalGroup(
+                navigationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        mCategoryPanel.setAlignmentX(0.0f);
+        mCategoryPanel.setAlignmentY(0.0f);
+        mCategoryPanel.setMaximumSize(navDimens);
+        mCategoryPanel.setMinimumSize(navDimens);
+        mCategoryPanel.setPreferredSize(navDimens);
+
+        GroupLayout CategoryPanelLayout = new GroupLayout(mCategoryPanel);
+        mCategoryPanel.setLayout(CategoryPanelLayout);
+        CategoryPanelLayout.setHorizontalGroup(
+                CategoryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1280, Short.MAX_VALUE)
+        );
+        CategoryPanelLayout.setVerticalGroup(
+                CategoryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(viewPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mNavigationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mCategoryPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(mNavigationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(viewPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(mCategoryPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        );
+    }*/
 }
