@@ -20,7 +20,7 @@ public class CategoryBar extends javax.swing.JPanel {
     Category cat2;
     Category cat3;
     Category cat4;
-    
+    public static final int MINIMUM_HEIGHT = 50;
     
     /**
      * Creates new form NewJPanel

@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 class YearPanel extends JPanel {
     public static int NUM_MONTHS = 12;
-    private static MonthPanel[] monthPanels;
+    private static MonthPanelYearView[] monthPanels;
     private GridLayout gridLayout;
     private int currentMonth;
     private static int currentYear;
@@ -20,9 +20,9 @@ class YearPanel extends JPanel {
         setBackground(Color.WHITE);
         Calendar c = Calendar.getInstance();
         currentMonth = c.get(Calendar.MONTH);
-        monthPanels = new MonthPanel[NUM_MONTHS];
+        monthPanels = new MonthPanelYearView[NUM_MONTHS];
         for (int i = 0; i < NUM_MONTHS; i++) {
-            monthPanels[i] = new MonthPanel((width / 4) - 10, (height / 3) - 10, -currentMonth + i);
+            monthPanels[i] = new MonthPanelYearView((width / 4) - 10, (height / 3) - 10, -currentMonth + i);
             monthPanels[i].setFontSizeHeaders(16);
             monthPanels[i].setFontSizeOrdinals(16);
             add(monthPanels[i]);

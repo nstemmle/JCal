@@ -24,29 +24,15 @@ class MonthPanel extends JPanel {
     private static final int COLUMN_PANE_HEIGHT = 50; //50 px
 
     public static final Color BLUE_SELECTED = new Color(76, 200, 237, 64);
-    public static final Color BLUE_SELECTED_A25 = new Color(76, 200, 237, 64);
+    public static final Color BLUE_SELECTED_A25 = new Color(0,150,191);
+    //public static final Color BLUE_SELECTED_A25 = new Color(76, 200, 237, 64);
     public static final Color BLUE_SELECTED_DARK = new Color(0,100,128);
-    public static final Color BLUE_SELECTED_MEDIUM = new Color(0,150,191);
+    public static final Color BLUE_SELECTED_MEDIUM = new Color(76, 200, 237, 196);
+    //public static final Color BLUE_SELECTED_MEDIUM = new Color(0,150,191);
     public static final Color DEFAULT_PANEL_BACKGROUND = Color.WHITE;
-    public static final Color GRAY_CURRENT_DAY_BACKGROUND = Color.GRAY;
+    public static final Color GRAY_CURRENT_DAY_BACKGROUND = new Color(128,128,128,128);
     public static final Color TEXT_BLACK = Color.BLACK;
     public static final Color TEXT_GRAY = Color.LIGHT_GRAY;
-
-    public static enum DayLabels {
-        SUNDAY ("SUN"),
-        MONDAY ("MON"),
-        TUESDAY ("TUE"),
-        WEDNESDAY ("WED"),
-        THURSDAY ("THU"),
-        FRIDAY ("FRI"),
-        SATURDAY ("SAT");
-
-        private final String label;
-        DayLabels(String label) {
-            this.label = label;
-        }
-        private String getLabel() { return label; }
-    }
 
     private int gridPaddingHorizontal = 0;
     private int gridPaddingVertical = 0;
@@ -88,6 +74,8 @@ class MonthPanel extends JPanel {
 
     private Font fontOrdinals;
     private int fontSizeOrdinals = 48;
+
+    private DayPane currentDay;
 
     MonthPanel(int width, int height, int monthDelta){
         setPreferredSize(new Dimension(width, height));
@@ -132,19 +120,47 @@ class MonthPanel extends JPanel {
        fontOrdinals = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeOrdinals);
 
         //Set the column headers text
-        updateDayColumnHeaders();
+        updateDayColumnHeaders(DAY_LABELS_MONTHVIEW_CONTEXT);
 
         //Set the day ordinal labels text
         initializeDayOrdinals();
-
-        //Initialize the currentDayPanel to the current selectedPanel
-        //currentDayPanel = selectedPanel;
-        //currentDayPanel.setIsCurrentDay(true);
     }
 
     void updateDayPanelClickListener(MouseListener mouseListener) {
         for (DayPane dayPane : dayPanes) {
             dayPane.addMouseListener(mouseListener);
+        }
+    }
+
+    protected void setColumnPaneSize(int width, int height) {
+        columnPane.setPreferredSize(new Dimension(width, height));
+        int columnLabelWidth = width / NUM_COLUMNS;
+        int overflowPixelsWidth = width % NUM_COLUMNS;
+        for (int i = 0; i < DAYS_IN_WEEK; i++,overflowPixelsWidth--) {
+            if (overflowPixelsWidth > 0)
+                columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth + 1,height));
+            else
+                columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth, height));
+        }
+    }
+
+    //Create the column header labels
+    private void createColumnHeaders(int width, int height) {
+        //Calculate preferred size of each label
+        int columnLabelWidth = width / NUM_COLUMNS;
+        int overflowPixelsWidth = width % NUM_COLUMNS;
+        int columnLabelHeight = COLUMN_PANE_HEIGHT;
+
+        columnLabels = new JLabel[DAYS_IN_WEEK];
+        for (int i = 0; i < DAYS_IN_WEEK; i++,overflowPixelsWidth--) {
+            columnLabels[i] = new JLabel("", SwingConstants.CENTER);
+            columnLabels[i].setVerticalAlignment(SwingConstants.CENTER);
+            columnLabels[i].setForeground(TEXT_BLACK);
+            if (overflowPixelsWidth > 0)
+                columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth + 1,columnLabelHeight));
+            else
+                columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth, columnLabelHeight));
+            columnPane.add(columnLabels[i]);
         }
     }
 
@@ -184,29 +200,29 @@ class MonthPanel extends JPanel {
     public String getCurrentMonthString() {
         switch (currentMonth) {
             case Calendar.JANUARY:
-                return "JANUARY";
+                return "January";
             case Calendar.FEBRUARY:
-                return "FEBRUARY";
+                return "February";
             case Calendar.MARCH:
-                return "MARCH";
+                return "March";
             case Calendar.APRIL:
-                return "APRIL";
+                return "April";
             case Calendar.MAY:
-                return "MAY";
+                return "May";
             case Calendar.JUNE:
-                return "JUNE";
+                return "June";
             case Calendar.JULY:
-                return "JULY";
+                return "July";
             case Calendar.AUGUST:
-                return "AUGUST";
+                return "August";
             case Calendar.SEPTEMBER:
-                return "SEPTEMBER";
+                return "September";
             case Calendar.OCTOBER:
-                return "OCTOBER";
+                return "October";
             case Calendar.NOVEMBER:
-                return "NOVEMBER";
+                return "November";
             case Calendar.DECEMBER:
-                return "DECEMBER";
+                return "December";
             default:
                 return "";
         }
@@ -345,52 +361,86 @@ class MonthPanel extends JPanel {
 
     }
 
-    //Create the column header labels
-    private void createColumnHeaders(int width, int height) {
-        //Calculate preferred size of each label
-        int columnLabelWidth = width / NUM_COLUMNS;
-        int overflowPixelsWidth = width % NUM_COLUMNS;
-        int columnLabelHeight = COLUMN_PANE_HEIGHT;
-
-        columnLabels = new JLabel[DAYS_IN_WEEK];
-        for (int i = 0; i < DAYS_IN_WEEK; i++,overflowPixelsWidth--) {
-            columnLabels[i] = new JLabel("", SwingConstants.CENTER);
-            columnLabels[i].setVerticalAlignment(SwingConstants.CENTER);
-            columnLabels[i].setForeground(TEXT_BLACK);
-            if (overflowPixelsWidth > 0)
-                columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth + 1,columnLabelHeight));
-            else
-                columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth, columnLabelHeight));
-            columnPane.add(columnLabels[i]);
-        }
-    }
+    public static final int DAY_LABELS_MONTHVIEW_CONTEXT = 0;
+    public static final int DAY_LABELS_DAYVIEW_CONTEXT = 1;
+    public static final int DAY_LABELS_YEARVIEW_CONTEXT = 2;
 
     //Used to set the values of the text of the column header labels
-    private void updateDayColumnHeaders() {
+    void updateDayColumnHeaders(int context) {
         String dayLabel = "";
         for (int i = 0; i < DAYS_IN_WEEK; i++) {
-            switch ( (firstDayOfWeek + i) % DAYS_IN_WEEK) {
-                case Calendar.SUNDAY:
-                    dayLabel = DayLabels.SUNDAY.getLabel();
-                    break;
-                case Calendar.MONDAY:
-                    dayLabel = DayLabels.MONDAY.getLabel();
-                    break;
-                case Calendar.TUESDAY:
-                    dayLabel = DayLabels.TUESDAY.getLabel();
-                    break;
-                case Calendar.WEDNESDAY:
-                    dayLabel = DayLabels.WEDNESDAY.getLabel();
-                    break;
-                case Calendar.THURSDAY:
-                    dayLabel = DayLabels.THURSDAY.getLabel();
-                    break;
-                case Calendar.FRIDAY:
-                    dayLabel = DayLabels.FRIDAY.getLabel();
-                    break;
-                case 0: //Calendar.SATURDAY = 7 so 7 % 7 = 0
-                    dayLabel = DayLabels.SATURDAY.getLabel();
-                    break;
+            if (context == DAY_LABELS_MONTHVIEW_CONTEXT) {
+                switch ( (firstDayOfWeek + i) % DAYS_IN_WEEK) {
+                    case Calendar.SUNDAY:
+                        dayLabel = "Sun";
+                        break;
+                    case Calendar.MONDAY:
+                        dayLabel = "Mon";
+                        break;
+                    case Calendar.TUESDAY:
+                        dayLabel = "Tue";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        dayLabel = "Wed";
+                        break;
+                    case Calendar.THURSDAY:
+                        dayLabel = "Thu";
+                        break;
+                    case Calendar.FRIDAY:
+                        dayLabel = "Fri";
+                        break;
+                    case 0: //Calendar.SATURDAY = 7 so 7 % 7 = 0
+                        dayLabel = "Sat";
+                        break;
+                }
+            } else if (context == DAY_LABELS_DAYVIEW_CONTEXT) {
+                switch ( (firstDayOfWeek + i) % DAYS_IN_WEEK) {
+                    case Calendar.SUNDAY:
+                        dayLabel = "Su";
+                        break;
+                    case Calendar.MONDAY:
+                        dayLabel = "Mo";
+                        break;
+                    case Calendar.TUESDAY:
+                        dayLabel = "Tu";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        dayLabel = "We";
+                        break;
+                    case Calendar.THURSDAY:
+                        dayLabel = "Th";
+                        break;
+                    case Calendar.FRIDAY:
+                        dayLabel = "Fr";
+                        break;
+                    case 0: //Calendar.SATURDAY = 7 so 7 % 7 = 0
+                        dayLabel = "Sa";
+                        break;
+                }
+            } else if (context == DAY_LABELS_YEARVIEW_CONTEXT) {
+                switch ( (firstDayOfWeek + i) % DAYS_IN_WEEK) {
+                    case Calendar.SUNDAY:
+                        dayLabel = "S";
+                        break;
+                    case Calendar.MONDAY:
+                        dayLabel = "M";
+                        break;
+                    case Calendar.TUESDAY:
+                        dayLabel = "T";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        dayLabel = "W";
+                        break;
+                    case Calendar.THURSDAY:
+                        dayLabel = "R";
+                        break;
+                    case Calendar.FRIDAY:
+                        dayLabel = "F";
+                        break;
+                    case 0: //Calendar.SATURDAY = 7 so 7 % 7 = 0
+                        dayLabel = "S";
+                        break;
+                }
             }
             columnLabels[i].setText(dayLabel);
             columnLabels[i].setFont(fontHeaders);
@@ -409,25 +459,19 @@ class MonthPanel extends JPanel {
         dayOrdinalLabels = new JLabel[NUM_DAYS_DISPLAYED];
         dayPanes = new DayPane[NUM_DAYS_DISPLAYED];
         for (int i = 0; i < NUM_DAYS_DISPLAYED; i++) {
-            dayPanes[i] = new DayPane(this);
-            dayPanes[i].setPreferredSize(new Dimension(paneWidth,paneHeight));
-            dayPanes[i].setLayout(sl);
-            dayPanes[i].setBackground(DEFAULT_PANEL_BACKGROUND);
             dayOrdinalLabels[i] = new JLabel("",SwingConstants.CENTER);
             dayOrdinalLabels[i].setVerticalAlignment(SwingConstants.CENTER);
+            dayPanes[i] = new DayPane(this, paneWidth, paneHeight, dayOrdinalLabels[i]);
             //Testing line to set random borders on each JLabel
             //dayOrdinalLabels[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256))));
-            dayPanes[i].add(dayOrdinalLabels[i]);
-            sl.putConstraint(SpringLayout.NORTH, dayOrdinalLabels[i], 0, SpringLayout.NORTH, dayPanes[i]);
-            sl.putConstraint(SpringLayout.SOUTH, dayOrdinalLabels[i], 0, SpringLayout.SOUTH, dayPanes[i]);
-            sl.putConstraint(SpringLayout.WEST, dayOrdinalLabels[i], 0, SpringLayout.WEST, dayPanes[i]);
-            sl.putConstraint(SpringLayout.EAST, dayOrdinalLabels[i], 0, SpringLayout.EAST, dayPanes[i]);
             dayPane.add(dayPanes[i]);
         }
     }
 
     //Update the text of the Ordinal Day labels
     private void updateDayOrdinals() {
+        if (currentDay != null)
+            currentDay.setIsCurrentDay(false);
         int labelsIndex;
 
         //Previous month labels
@@ -453,6 +497,8 @@ class MonthPanel extends JPanel {
             dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
             dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_NEXT_MONTH);
         }
+
+        markCurrentDay();
     }
 
     private void initializeDayOrdinals() {
@@ -481,6 +527,17 @@ class MonthPanel extends JPanel {
             dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
             dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_NEXT_MONTH);
         }
+
+        markCurrentDay();
     }
 
+    private void markCurrentDay() {
+        //Logic for marking current day
+        Calendar temp = Calendar.getInstance();
+        if (temp.get(Calendar.MONTH) == currentMonth && temp.get(Calendar.YEAR) == currentYear) {
+            int day = temp.get(Calendar.DATE);
+            dayPanes[numDaysPreviousMonthDisplayed + day - 1].setIsCurrentDay(true);
+            currentDay = dayPanes[numDaysPreviousMonthDisplayed + day - 1];
+        }
+    }
 }

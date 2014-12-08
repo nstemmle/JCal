@@ -8,12 +8,11 @@ import java.awt.event.MouseListener;
  */
 public class MonthPanelDayView extends MonthPanel {
     private DayPane lastClicked;
-    private DayPane lastHovered;
-    private DayPane currentDay;
 
     public MonthPanelDayView(int width, int height, int monthDelta) {
         super(width, height, monthDelta);
         updateDayPanelClickListener(new DayViewDayPanelClickedListener());
+        updateDayColumnHeaders(MonthPanel.DAY_LABELS_DAYVIEW_CONTEXT);
     }
 
     private class DayViewDayPanelClickedListener implements MouseListener {
@@ -21,10 +20,21 @@ public class MonthPanelDayView extends MonthPanel {
         //Called after mouseReleased
         @Override
         public void mouseClicked(MouseEvent e) {
+            DayPane parent = (DayPane) e.getComponent();
+            //First recolor
+            if (lastClicked !=  null && parent != lastClicked) {
+                parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
+                if (lastClicked.isCurrentDay())
+                    lastClicked.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+                else
+                    lastClicked.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
+            }
+            lastClicked = parent;
+            //Check to see if an action needs to be performed
             if (e.getClickCount() == 2) {
-                //TODO: Implement logic for changing context to current day here
+                //TODO: Implement logic for changing context to day clicked here
             } else {
-                DayPane parent = (DayPane) e.getComponent();
+                //TODO: Implement logic for changing the current day displayed
                 int context = parent.getMonthContext();
                 if (context == DayPane.SWITCH_NEXT_MONTH) {
                     changeMonthBy(1);
@@ -34,25 +44,6 @@ public class MonthPanelDayView extends MonthPanel {
                     MonthView.monthHeader.update();
                 }
             }
-        }
-
-        //Fired upon mouse press
-        @Override
-        public void mousePressed(MouseEvent e) {
-            DayPane parent = (DayPane) e.getComponent();
-            if (lastClicked != null) {
-                //lastClicked.setBorder(null);
-                lastClicked.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
-            }
-            //parent.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, MonthPanel.BLUE_SELECTED, MonthPanel.BLUE_SELECTED_DARK));
-            parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
-            lastClicked = parent;
-        }
-
-        //Fired upon mouse depress
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
         }
 
         //Fired upon mouse cursor entering bounds of component
@@ -66,10 +57,24 @@ public class MonthPanelDayView extends MonthPanel {
         @Override
         public void mouseExited(MouseEvent e) {
             DayPane parent = (DayPane) e.getComponent();
-            if (parent != lastClicked)
-                parent.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
-            else
+            if (lastClicked != null && parent == lastClicked ) {
                 parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
+            } else if (parent.isCurrentDay()) {
+                parent.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+            } else {
+                parent.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
+            }
+        }
+
+        //Fired upon mouse press
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        //Fired upon mouse depress
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
         }
     }
 }

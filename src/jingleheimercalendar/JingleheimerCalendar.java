@@ -27,7 +27,7 @@ public class JingleheimerCalendar extends JFrame {
     // these will have to adjusted/tested
     public static final int MINIMUM_WIDTH = 800;
     public static final int MINIMUM_HEIGHT = 450;
-    public static final int MINIMUM_VIEW_HEIGHT = MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT;
+    public static final int MINIMUM_VIEW_HEIGHT = MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryBar.MINIMUM_HEIGHT;
 
     public static final String PATH_FONT_HELVETICA = "/font/HelveticaNeue.ttf";
 
@@ -56,8 +56,6 @@ public class JingleheimerCalendar extends JFrame {
     public static int indexDisplayedview;
 
     private static ViewPanel viewPanel;
-
-    private int viewWidth, viewHeight;
 
     public static Font defaultFont;
     SpringLayout springLayoutRoot;
@@ -95,8 +93,8 @@ public class JingleheimerCalendar extends JFrame {
         System.out.println(getContentPane().getBounds());
         this.setResizable(false);
 
-        viewWidth = PREFERRED_WIDTH;
-        viewHeight = PREFERRED_HEIGHT - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT;
+        int viewWidth = PREFERRED_WIDTH;
+        int viewHeight = PREFERRED_HEIGHT - CategoryBar.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT;
         System.out.println("viewWidth: " + viewWidth + ", viewHeight: " + viewHeight);
 
         springLayoutRoot = new SpringLayout();
@@ -264,7 +262,7 @@ public class JingleheimerCalendar extends JFrame {
         cat.setX(Spring.constant(0));
         cat.setY(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT));
         cat.setWidth(Spring.constant(PREFERRED_WIDTH));
-        cat.setHeight(Spring.constant(CategoryPanel.MINIMUM_HEIGHT));*/
+        cat.setHeight(Spring.constant(CategoryBar.MINIMUM_HEIGHT));*/
         springLayoutRoot.putConstraint(SpringLayout.SOUTH, mCategoryPanel, 0, SpringLayout.SOUTH, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.WEST, mCategoryPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, mCategoryPanel, 0, SpringLayout.EAST, getContentPane());
@@ -274,7 +272,7 @@ public class JingleheimerCalendar extends JFrame {
         view.setX(Spring.constant(0));
         view.setY(Spring.constant(NavigationPanel.MINIMUM_HEIGHT));
         view.setWidth(Spring.constant(PREFERRED_WIDTH));
-        view.setHeight(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryPanel.MINIMUM_HEIGHT));*/
+        view.setHeight(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryBar.MINIMUM_HEIGHT));*/
         springLayoutRoot.putConstraint(SpringLayout.NORTH, viewPanel, 0, SpringLayout.SOUTH, mNavigationPanel);
         springLayoutRoot.putConstraint(SpringLayout.WEST, viewPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, viewPanel, 0, SpringLayout.EAST, getContentPane());
