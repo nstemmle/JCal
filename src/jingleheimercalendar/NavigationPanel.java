@@ -1,9 +1,6 @@
 package jingleheimercalendar;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -81,7 +78,6 @@ public class NavigationPanel extends JPanel {
         gbConstraints.gridx = 0;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.EAST;
-        //TODO: see if you can fix navigation objects layout
         gbConstraints.ipadx = 0;
 
         add(todayButtonPane, gbConstraints);
@@ -89,7 +85,7 @@ public class NavigationPanel extends JPanel {
         MouseListener navButtonListener = new NavButtonMouseListener();
 
         //NavButton replacement
-        buttonToday = new NavButton(TEXT_BUTTON_TODAY, JingleheimerCalendar.VIEW_DAY, width / 10, BUTTON_HEIGHT);
+        buttonToday = new NavButton(TEXT_BUTTON_TODAY, JingleheimerCalendar.VIEW_TODAY, width / 10, BUTTON_HEIGHT);
         //buttonToday.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
         buttonToday.addMouseListener(navButtonListener);
         todayButtonPane.setLayout(new FlowLayout());
@@ -133,8 +129,8 @@ public class NavigationPanel extends JPanel {
         JPanel timeLabelPane = new JPanel();
         timeLabelPane.setBackground(COLOR_BACKGROUND_DEFAULT);
         //timeLabelPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.PINK));
-        timeLabelPane.setPreferredSize(new Dimension(width / 5, BUTTON_HEIGHT));
-        timeLabelPane.setMinimumSize(new Dimension(width / 5, BUTTON_HEIGHT));
+        timeLabelPane.setPreferredSize(new Dimension(width / 5, 40));
+        timeLabelPane.setMinimumSize(new Dimension(width / 5, 40));
 
         gbConstraints.gridx = 2;
         gbConstraints.gridy = 0;
@@ -196,19 +192,12 @@ public class NavigationPanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             NavButton clicked = (NavButton) e.getComponent();
-            if (lastSelected != clicked) {
+            System.out.println(clicked.getViewIndex());
+            if (lastSelected != clicked && lastSelected != buttonToday) {
                 JingleheimerCalendar.displayView(clicked.getViewIndex());
+            } else if (lastSelected == buttonToday) {
+                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_TODAY_VIEW);
             }
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
         }
 
         @Override
@@ -224,6 +213,16 @@ public class NavigationPanel extends JPanel {
                 hovered.setColor(NavigationPanel.COLOR_BUTTON_SELECTED);
             else
                 hovered.setColor(NavigationPanel.COLOR_BUTTON_DEFAULT);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
         }
     }
 

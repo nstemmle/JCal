@@ -79,9 +79,7 @@ public class CustomInfoEventWindow extends JDialog {
             this.add(e);
             e.setBounds(0, 0, 250, 315);
             this.setSize(x, y);
-            this.setOpaque(true);
-            
-            
+            this.setOpaque(false);
         }
         
         @Override

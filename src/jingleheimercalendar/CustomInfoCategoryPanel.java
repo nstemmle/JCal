@@ -27,7 +27,9 @@ public class CustomInfoCategoryPanel extends JPanel{
             this.add(new MoreCategoryInfoPanel(cat));
             
             this.setBounds(x, 720-300, 275, 300);
-            this.setBackground(new Color(0,0,0,0));
+            //this.setBackground(new Color(0,0,0,0));
+      //setBackground(Color.BLUE);
+      setOpaque(false);
   } 
         
 @Override

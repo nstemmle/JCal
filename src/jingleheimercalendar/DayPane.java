@@ -20,9 +20,11 @@ class DayPane extends JPanel {
     private MonthPanel parentPanel;
     private boolean isCurrentDay;
     private Color currentColor;
+    private JLabel ordinalLabel;
 
     DayPane(MonthPanel parentPanel, int width, int height, JLabel ordinalLabel) {
         super();
+        this.ordinalLabel = ordinalLabel;
         this.parentPanel = parentPanel;
         setBackground(MonthPanel.DEFAULT_PANEL_BACKGROUND);
         currentColor = MonthPanel.DEFAULT_PANEL_BACKGROUND;
@@ -36,6 +38,14 @@ class DayPane extends JPanel {
         sl.putConstraint(SpringLayout.SOUTH, ordinalLabel, 0, SpringLayout.SOUTH, this);
         sl.putConstraint(SpringLayout.WEST, ordinalLabel, 0, SpringLayout.WEST, this);
         sl.putConstraint(SpringLayout.EAST, ordinalLabel, 0, SpringLayout.EAST, this);
+    }
+
+    public void setLabelColor(Color color) {
+        ordinalLabel.setForeground(color);
+    }
+
+    public int getDay() {
+        return Integer.valueOf(ordinalLabel.getText());
     }
 
     void setMonthContext(int monthContext) {
@@ -57,11 +67,11 @@ class DayPane extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        //super.paintComponent(g);
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        //g.setColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
+        //g.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(currentColor);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         g2.dispose();
@@ -69,7 +79,10 @@ class DayPane extends JPanel {
 
     void setIsCurrentDay(boolean isCurrentDay) {
         this.isCurrentDay = isCurrentDay;
-        setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+        if (isCurrentDay)
+            setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_SUBTLE);
+        else
+            setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
     }
 
     public boolean isCurrentDay() {

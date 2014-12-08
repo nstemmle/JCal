@@ -5,11 +5,7 @@
  */
 package jingleheimercalendar;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
@@ -72,25 +68,37 @@ public class EventBox extends JPanel{
                     CustomInfoEventWindow c = new CustomInfoEventWindow(event);
                 }
             });
-        
-        JLabel evName = new JLabel(event.getName());
-        if(event.getCategory().name.equals("No Category")){
+
+        if(height >= 25){
+            JLabel evName = new JLabel(event.getName());
+            evName.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD,12f));
+
+            if(event.getCategory().name.equals("No Category")){
                 evName.setForeground(Color.white);
                 add(evName);
-        }else{
-                evName.setForeground(event.getCategoryColor());
+            }else{
+                evName.setForeground(new Color(69,69,69));
                 add(evName);
+            }
         }
     }
     
     public void paintComponent(Graphics g){
     super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
-        g2.setColor(event.getSecondaryColor());
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        g2.fillRoundRect(0,0, width, height, 25, 25); 
+        Graphics2D g2 = (Graphics2D)g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2.setColor(event.getCategoryColor());
+        g2.fillRoundRect(0, 0, width, height, 25, 25);
+
+        if(event.getCategory().name.equals("No Category")){
+            g2.setColor(new Color(123,123,123));
+        }else{
+            g2.setColor(event.getSecondaryColor());
+        }
+
+        g2.fillRoundRect(4,4, width - 8, height - 8, 23, 23);
+
     }
     
     

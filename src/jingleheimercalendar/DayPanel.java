@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +23,7 @@ import java.util.Date;
  */
 public class DayPanel extends javax.swing.JPanel {
     static Calendar c = Calendar.getInstance();
+    private int currentMonth;
     
     /**
      * Creates new form DayView
@@ -30,10 +33,11 @@ public class DayPanel extends javax.swing.JPanel {
         c.set(Calendar.SECOND,0);
         c.set(Calendar.MINUTE,0);
         c.set(Calendar.HOUR_OF_DAY,0);
-        
+        currentMonth = c.get(Calendar.MONTH);
+
         initComponents(width, height);
         dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
-        monthText.setText(getMonth(c.get(Calendar.MONTH)));
+        monthText.setText(getMonth(c.get(Calendar.MONTH)) + " " + c.get(Calendar.YEAR));
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
        
         refresh();
@@ -398,16 +402,22 @@ public class DayPanel extends javax.swing.JPanel {
     private void decrementMouseClicked(java.awt.event.MouseEvent evt) {                                       
         c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 1);
         dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
-        monthText.setText(getMonth(c.get(Calendar.MONTH)));
+        monthText.setText(getMonth(c.get(Calendar.MONTH)) + " " + c.get(Calendar.YEAR));
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
+        int monthDelta = (c.get(Calendar.MONTH) - monthPanel.getCurrentMonth()) + (12 * (c.get(Calendar.YEAR) - monthPanel.getCurrentYear()));
+        monthPanel.changeMonthBy(monthDelta);
+        changeHighlightedDay();
         refresh();
     }                                      
 
     private void incrementMouseClicked(java.awt.event.MouseEvent evt) {                                       
         c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);
         dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
-        monthText.setText(getMonth(c.get(Calendar.MONTH)));
+        monthText.setText(getMonth(c.get(Calendar.MONTH)) + " " + c.get(Calendar.YEAR));
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
+        int monthDelta = (c.get(Calendar.MONTH) - monthPanel.getCurrentMonth()) + (12 * (c.get(Calendar.YEAR) - monthPanel.getCurrentYear()));
+        monthPanel.changeMonthBy(monthDelta);
+        changeHighlightedDay();
         refresh();
     }                                      
 
@@ -450,7 +460,7 @@ public class DayPanel extends javax.swing.JPanel {
     private javax.swing.JPanel eventScrollContentPanel;
     private javax.swing.JLabel increment;
    // private javax.swing.JPanel monthPanel;
-    private MonthPanel monthPanel;
+    private MonthPanelDayView monthPanel;
     private javax.swing.JLabel monthText;
     private javax.swing.JPanel taskContentPanel;
     private javax.swing.JPanel taskHeaderPanel;
@@ -473,7 +483,29 @@ public class DayPanel extends javax.swing.JPanel {
     public Dimension getPreferredSize() {
                 return new Dimension(1280,620);
     }
-    
+
+    public void changeHighlightedDay() {
+        monthPanel.changeHighlightedDay(c);
+    }
+
+    public void changeDay(int day, int month, int year) {
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        int m = month + 1;
+        String date = String.valueOf(month >= 10 ? m : "0" + m) + "/" + String.valueOf(day >= 10 ? day : "0" + day)
+                + "/" + String.valueOf(year);
+        try {
+            c.setTime(df.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        refresh();
+        dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+        monthText.setText(getMonth(c.get(Calendar.MONTH)) + " " + c.get(Calendar.YEAR));
+        weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
+        monthPanel.changeMonthBy(day, month, year);
+        monthPanel.changeHighlightedDay(c);
+    }
+
     public void resetEventPanel(){
         eventScrollContentPanel.removeAll();
         JPanel centerPanel = new JPanel(); 
@@ -564,8 +596,6 @@ public class DayPanel extends javax.swing.JPanel {
         }
        validate();
     }
-    
-  
     
     public void refresh(){
        refreshEventPanel();

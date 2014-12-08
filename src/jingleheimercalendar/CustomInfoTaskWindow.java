@@ -75,6 +75,7 @@ public class CustomInfoTaskWindow extends JDialog{
             e.setBounds(0, 0, 250, 300);
             this.setSize(x, y);
             this.setBackground(new Color(0,0,0,0));
+            this.setOpaque(false);
         }
         
         @Override

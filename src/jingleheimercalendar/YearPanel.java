@@ -35,7 +35,8 @@ class YearPanel extends JPanel {
     private static void updateMonthPanels(int monthDelta) {
         if (monthDelta != 0) {
             for (MonthPanel mPanel : monthPanels) {
-                mPanel.changeMonthBy(monthDelta*12);
+                mPanel.changeMonthBy(monthDelta);
+                System.out.println(mPanel.getCurrentYear());
             }
         }
 

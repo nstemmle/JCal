@@ -2,17 +2,35 @@ package jingleheimercalendar;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Calendar;
 
 /**
  * Created by Nathan on 12/7/2014.
  */
 public class MonthPanelDayView extends MonthPanel {
     private DayPane lastClicked;
+    private DayPane currentlyHighlighted;
 
     public MonthPanelDayView(int width, int height, int monthDelta) {
         super(width, height, monthDelta);
         updateDayPanelClickListener(new DayViewDayPanelClickedListener());
         updateDayColumnHeaders(MonthPanel.DAY_LABELS_DAYVIEW_CONTEXT);
+        currentlyHighlighted = getCurrentDayPane();
+        currentlyHighlighted.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+    }
+
+    public void changeHighlightedDay(Calendar c) {
+        if (currentlyHighlighted != null)
+            if (currentlyHighlighted.isCurrentDay()) {
+                currentlyHighlighted.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_SUBTLE);
+            } else if (currentlyHighlighted == lastClicked) {
+                currentlyHighlighted.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
+            }
+            else {
+                currentlyHighlighted.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
+            }
+        currentlyHighlighted = getDayPane(c.get(Calendar.DATE));
+        currentlyHighlighted.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
     }
 
     private class DayViewDayPanelClickedListener implements MouseListener {
@@ -25,24 +43,17 @@ public class MonthPanelDayView extends MonthPanel {
             if (lastClicked !=  null && parent != lastClicked) {
                 parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
                 if (lastClicked.isCurrentDay())
-                    lastClicked.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+                    lastClicked.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_SUBTLE);
                 else
                     lastClicked.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
             }
             lastClicked = parent;
+            if (currentlyHighlighted != null && parent != currentlyHighlighted) {
+                currentlyHighlighted.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+            }
             //Check to see if an action needs to be performed
             if (e.getClickCount() == 2) {
-                //TODO: Implement logic for changing context to day clicked here
-            } else {
-                //TODO: Implement logic for changing the current day displayed
-                int context = parent.getMonthContext();
-                if (context == DayPane.SWITCH_NEXT_MONTH) {
-                    changeMonthBy(1);
-                    MonthView.monthHeader.update();
-                } else if (context == DayPane.SWITCH_PREVIOUS_MONTH) {
-                    changeMonthBy(-1);
-                    MonthView.monthHeader.update();
-                }
+                JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth(), getCurrentYear());
             }
         }
 
@@ -57,10 +68,12 @@ public class MonthPanelDayView extends MonthPanel {
         @Override
         public void mouseExited(MouseEvent e) {
             DayPane parent = (DayPane) e.getComponent();
-            if (lastClicked != null && parent == lastClicked ) {
+            if (lastClicked != null && parent == lastClicked) {
                 parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
+            }else if (currentlyHighlighted != null && parent == currentlyHighlighted) {
+                currentlyHighlighted.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
             } else if (parent.isCurrentDay()) {
-                parent.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+                parent.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_SUBTLE);
             } else {
                 parent.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
             }

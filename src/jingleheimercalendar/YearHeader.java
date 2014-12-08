@@ -1,10 +1,6 @@
 package jingleheimercalendar;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,24 +41,27 @@ public class YearHeader extends JPanel{
         fontLabels = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeLabels);
         fontButtons = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeButtons);
 
-        buttonLeft = new JButton("<");
+        buttonLeft = new JButton();
+        buttonLeft.setIcon(new ImageIcon(getClass().getResource("/images/leftArrow32.png")));
         buttonLeft.setBackground(DEFAULT_COMPONENT_BACKGROUND);
         buttonLeft.setBorderPainted(false);
         buttonLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 YearPanel.changeYearBy(-1);
+                updateYearLabel();
             }
         });
 
-        buttonRight = new JButton(">");
+        buttonRight = new JButton();
+        buttonRight.setIcon(new ImageIcon(getClass().getResource("/images/rightArrow32.png")));
         buttonRight.setBackground(DEFAULT_COMPONENT_BACKGROUND);
         buttonRight.setBorderPainted(false);
         buttonRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 YearPanel.changeYearBy(1);
+                updateYearLabel();
             }
         });
 

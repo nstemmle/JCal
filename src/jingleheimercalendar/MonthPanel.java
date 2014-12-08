@@ -13,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 class MonthPanel extends JPanel {
@@ -31,6 +33,7 @@ class MonthPanel extends JPanel {
     //public static final Color BLUE_SELECTED_MEDIUM = new Color(0,150,191);
     public static final Color DEFAULT_PANEL_BACKGROUND = Color.WHITE;
     public static final Color GRAY_CURRENT_DAY_BACKGROUND = new Color(128,128,128,128);
+    public static final Color GRAY_CURRENT_DAY_SUBTLE = new Color(196, 196, 196, 128);
     public static final Color TEXT_BLACK = Color.BLACK;
     public static final Color TEXT_GRAY = Color.LIGHT_GRAY;
 
@@ -132,6 +135,16 @@ class MonthPanel extends JPanel {
         }
     }
 
+    public DayPane getDayPane(int day) {
+        return dayPanes[numDaysPreviousMonthDisplayed + day - 1];
+    }
+
+    public DayPane getDayPaneAtIndex(int index) {
+        if (index >= 0 && index < NUM_DAYS_DISPLAYED)
+            return dayPanes[index];
+        return null;
+    }
+
     protected void setColumnPaneSize(int width, int height) {
         columnPane.setPreferredSize(new Dimension(width, height));
         int columnLabelWidth = width / NUM_COLUMNS;
@@ -142,6 +155,10 @@ class MonthPanel extends JPanel {
             else
                 columnLabels[i].setPreferredSize(new Dimension(columnLabelWidth, height));
         }
+    }
+
+    protected DayPane getCurrentDayPane() {
+        return currentDay;
     }
 
     //Create the column header labels
@@ -311,6 +328,20 @@ class MonthPanel extends JPanel {
         updateDayOrdinals();
     }
 
+    public void changeMonthBy(int day, int month, int year){
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        int m = month + 1;
+        String date = String.valueOf(month >= 10 ? m : "0" + m) + "/" + String.valueOf(day >= 10 ? day : "0" + day)
+                + "/" + String.valueOf(year);
+        try {
+            monthCalendar.setTime(df.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        updateDateFields();
+        updateDayOrdinals();
+    }
+
     //Call this when the month displayed would be changed
     private void updateDateFields() {
         currentMonth = monthCalendar.get(Calendar.MONTH);
@@ -358,7 +389,6 @@ class MonthPanel extends JPanel {
             tempCalendar.add(Calendar.MONTH, -1);
             numDaysInPreviousMonth = tempCalendar.getActualMaximum(Calendar.DATE);
         }
-
     }
 
     public static final int DAY_LABELS_MONTHVIEW_CONTEXT = 0;
@@ -468,10 +498,19 @@ class MonthPanel extends JPanel {
         }
     }
 
+    public Calendar getCalendarCopy() {
+        return (Calendar)monthCalendar.clone();
+    }
+
+    public int getNumDaysPreviousMonthDisplayed() {
+        return numDaysPreviousMonthDisplayed;
+    }
+
     //Update the text of the Ordinal Day labels
-    private void updateDayOrdinals() {
+    protected void updateDayOrdinals() {
         if (currentDay != null)
             currentDay.setIsCurrentDay(false);
+
         int labelsIndex;
 
         //Previous month labels

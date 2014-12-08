@@ -16,6 +16,7 @@ import java.awt.Window;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 
 public class JingleheimerCalendar extends JFrame {
@@ -335,6 +336,13 @@ public class JingleheimerCalendar extends JFrame {
         }
     }
 
+    public static void changeDayViewDay(int date, int month, int year) {
+        ((DayView)views[INDEX_DAY_VIEW]).changeDay(date, month, year);
+    }
+
+    public static void repaintDisplayedCategoryWindow() {
+        mCategoryPanel.repaintCategoryBar();
+    }
 
     public static void refreshCategoryBar() {
         mCategoryPanel.refresh();

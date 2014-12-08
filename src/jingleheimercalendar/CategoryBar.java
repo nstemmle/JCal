@@ -21,6 +21,7 @@ public class CategoryBar extends javax.swing.JPanel {
     Category cat3;
     Category cat4;
     public static final int MINIMUM_HEIGHT = 50;
+    private static CustomInfoCategoryPanel currentlyDisplayed;
     
     /**
      * Creates new form NewJPanel
@@ -31,6 +32,17 @@ public class CategoryBar extends javax.swing.JPanel {
         cat3 = UserCalendar.getInstance().getCategories().get(3);
         cat4 = UserCalendar.getInstance().getCategories().get(4);
         initComponents();
+    }
+
+    public void repaintCategoryBar() {
+        JingleheimerCalendar f = (JingleheimerCalendar) SwingUtilities.getWindowAncestor(this);
+        if (currentlyDisplayed != null) {
+            f.getGlassPane().setVisible(false);
+        }
+    }
+
+    public static void setCurrentlyDisplayedNull() {
+        currentlyDisplayed = null;
     }
 
     public void refresh(){
@@ -371,11 +383,11 @@ public class CategoryBar extends javax.swing.JPanel {
             .addComponent(category3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(category4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-    }// </editor-fold>                        
+    }// </editor-fold>
 
     private void showCategory1Info(java.awt.event.MouseEvent evt){
         JingleheimerCalendar f = (JingleheimerCalendar) SwingUtilities.getWindowAncestor(this);
-        CustomInfoCategoryPanel c = new CustomInfoCategoryPanel(category1.getX(),cat1);
+        CustomInfoCategoryPanel c = currentlyDisplayed = new CustomInfoCategoryPanel(category1.getX(),cat1);
         JPanel glass = new JPanel();
         glass.setLayout(null); 
         glass.setOpaque(false); 
@@ -387,7 +399,7 @@ public class CategoryBar extends javax.swing.JPanel {
     
     private void showCategory2Info(java.awt.event.MouseEvent evt){
         JingleheimerCalendar f = (JingleheimerCalendar) SwingUtilities.getWindowAncestor(this);
-        CustomInfoCategoryPanel c = new CustomInfoCategoryPanel(category2.getX(),cat2);
+        CustomInfoCategoryPanel c = currentlyDisplayed = new CustomInfoCategoryPanel(category2.getX(),cat2);
         JPanel glass = new JPanel();
         glass.setLayout(null); 
         glass.setOpaque(false); 
@@ -400,7 +412,7 @@ public class CategoryBar extends javax.swing.JPanel {
     private void showCategory3Info(java.awt.event.MouseEvent evt){
         
         JingleheimerCalendar f = (JingleheimerCalendar) SwingUtilities.getWindowAncestor(this);
-        CustomInfoCategoryPanel c = new CustomInfoCategoryPanel(category3.getX(),cat3);
+        CustomInfoCategoryPanel c = currentlyDisplayed = new CustomInfoCategoryPanel(category3.getX(),cat3);
         JPanel glass = new JPanel();
         glass.setLayout(null); 
         glass.setOpaque(false); 
@@ -412,7 +424,7 @@ public class CategoryBar extends javax.swing.JPanel {
     
     private void showCategory4Info(java.awt.event.MouseEvent evt){
         JingleheimerCalendar f = (JingleheimerCalendar) SwingUtilities.getWindowAncestor(this);
-        CustomInfoCategoryPanel c = new CustomInfoCategoryPanel(category4.getX(),cat4);
+        CustomInfoCategoryPanel c = currentlyDisplayed = new CustomInfoCategoryPanel(category4.getX(),cat4);
         JPanel glass = new JPanel();
         glass.setLayout(null); 
         glass.setOpaque(false); 

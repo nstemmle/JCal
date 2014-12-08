@@ -125,6 +125,7 @@ public class MoreCategoryInfoPanel extends javax.swing.JPanel {
     private void closeMouseClicked(java.awt.event.MouseEvent evt) {                                     
         JingleheimerCalendar f = (JingleheimerCalendar) SwingUtilities.getWindowAncestor(this);
         f.getGlassPane().setVisible(false);
+        CategoryBar.setCurrentlyDisplayedNull();
     } 
     
     private void deleteMouseClicked(java.awt.event.MouseEvent evt) {  

@@ -1,7 +1,10 @@
 package jingleheimercalendar;
 
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Nathan on 12/7/2014.
@@ -33,7 +36,7 @@ public class MonthPanelMonthView extends MonthPanel {
             //Check to see if an action needs to be performed
             if (e.getClickCount() == 2) {
                 JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
-                //TODO: Implement logic for changing context to day clicked here
+                JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth(), getCurrentYear());
             } else {
                 int context = parent.getMonthContext();
                 if (context == DayPane.SWITCH_NEXT_MONTH) {
@@ -44,6 +47,7 @@ public class MonthPanelMonthView extends MonthPanel {
                     MonthView.monthHeader.update();
                 }
             }
+            JingleheimerCalendar.repaintDisplayedCategoryWindow();
         }
 
         //Fired upon mouse cursor entering bounds of component
@@ -51,6 +55,7 @@ public class MonthPanelMonthView extends MonthPanel {
         public void mouseEntered(MouseEvent e) {
             DayPane parent = (DayPane) e.getComponent();
             parent.setCurrentColor(MonthPanel.BLUE_SELECTED_A25);
+            JingleheimerCalendar.repaintDisplayedCategoryWindow();
         }
 
         //Fired upon mouse cursor exiting bounds of component
@@ -64,6 +69,7 @@ public class MonthPanelMonthView extends MonthPanel {
             } else {
                 parent.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
             }
+            JingleheimerCalendar.repaintDisplayedCategoryWindow();
         }
 
         //Fired upon mouse press

@@ -10,6 +10,8 @@ import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -63,7 +65,7 @@ public class WeekPanel extends JPanel {
         
         initComponents(contentPane);
         firstThing();
-        
+        setOnClickListeners();
     }
 
     /**
@@ -1934,6 +1936,237 @@ public class WeekPanel extends JPanel {
         return font;
     }
 
+    private void setOnClickListeners() {
+        jPanel7.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE);
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        jPanel16.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE) + 1;
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        jPanel17.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE) + 2;
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        jPanel18.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE) + 3;
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        jPanel19.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE) + 4;
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        jPanel20.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE) + 5;
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        jPanel21.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    int day = cal.get(Calendar.DATE) + 6;
+                    int month = cal.get(Calendar.MONTH);
+                    int year = cal.get(Calendar.YEAR);
+                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
+                    JingleheimerCalendar.changeDayViewDay(day, month, year);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+    }
+
     private void updateLargeFonts() {
        //.setFont(fontLarge);
 
@@ -2032,7 +2265,7 @@ public class WeekPanel extends JPanel {
                 int pxls = (int)holder;
            
                 g.setColor(Color.red);
-                g.drawLine(0, pxls, 168, pxls);
+                g.fillRect(0, pxls, 168, 2);
     }
     
     public void paintEvents(){
@@ -2040,7 +2273,6 @@ public class WeekPanel extends JPanel {
     }
     
     public void firstThing(){
-        
         DateFormat dateFormat = new SimpleDateFormat("dd");
         DateFormat fullDateFormat = new SimpleDateFormat("MMM. dd");
         DateFormat yearFormat = new SimpleDateFormat("YYYY");
@@ -2084,8 +2316,15 @@ public class WeekPanel extends JPanel {
          jPanel8.updateUI();
          jPanel5.removeAll();
          jPanel5.updateUI();
-         
-        
+
+        allDay1.setText("");
+        allDay2.setText("");
+        allDay3.setText("");
+        allDay4.setText("");
+        allDay5.setText("");
+        allDay6.setText("");
+        allDay7.setText("");
+
         for(int i = 0; i < 7; i++){
             addEvent(i);
            /* if(!yearFormat.format(cal.getTime()).equals(yearTemp)){
@@ -2126,8 +2365,7 @@ public class WeekPanel extends JPanel {
         String yearTemp = yearFormat.format(cal.getTime());
         
         cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 7); 
-        
-        
+
         firstThing();
     }
     
@@ -2153,30 +2391,52 @@ public class WeekPanel extends JPanel {
         
         
         ArrayList<Event> e = UserCalendar.getInstance().getEventsByDate(date);
-         
+
         if(!e.isEmpty()){
-        for (int j = 0; j < e.size(); j++) {
-           EventBox ev = new EventBox(e.get(j),2064);
-           if(i == 0){
-               jPanel15.add(ev);
-           }else if (i == 1){
-               jPanel14.add(ev);
-           }else if (i == 2){
-               jPanel13.add(ev);
-           }else if (i == 3){
-               jPanel12.add(ev);
-           }else if (i == 4){
-               jPanel9.add(ev);
-           }else if (i == 5){
-               jPanel5.add(ev);
-           }else if (i == 6){
-               jPanel8.add(ev);
-           }
-        
+            for (int j = e.size() -1; j >= 0; j--) {
+                if (e.get(j).getStartTime().equals("All Day")) {
+                    if(i == 0 && allDay1.getText().isEmpty()){
+                        allDay1.setText(e.get(j).getName());
+                        allDay1.setForeground(e.get(j).getCategoryColor());
+                    }else if (i == 1 && allDay2.getText().isEmpty()){
+                        allDay2.setText(e.get(j).getName());
+                        allDay2.setForeground(e.get(j).getCategoryColor());
+                    }else if (i == 2 && allDay3.getText().isEmpty()){
+                        allDay3.setText(e.get(j).getName());
+                        allDay3.setForeground(e.get(j).getCategoryColor());
+                    }else if (i == 3 && allDay4.getText().isEmpty()){
+                        allDay4.setText(e.get(j).getName());
+                        allDay4.setForeground(e.get(j).getCategoryColor());
+                    }else if (i == 4 && allDay5.getText().isEmpty()){
+                        allDay5.setText(e.get(j).getName());
+                        allDay5.setForeground(e.get(j).getCategoryColor());
+                    }else if (i == 5 && allDay6.getText().isEmpty()){
+                        allDay6.setText(e.get(j).getName());
+                        allDay6.setForeground(e.get(j).getCategoryColor());
+                    }else if (i == 6 && allDay7.getText().isEmpty()){
+                        allDay7.setText(e.get(j).getName());
+                        allDay7.setForeground(e.get(j).getCategoryColor());
+                    }
+                    continue;
+                }
+                EventBox ev = new EventBox(e.get(j),2064);
+                   if(i == 0){
+                       jPanel15.add(ev);
+                   }else if (i == 1){
+                       jPanel14.add(ev);
+                   }else if (i == 2){
+                       jPanel13.add(ev);
+                   }else if (i == 3){
+                       jPanel12.add(ev);
+                   }else if (i == 4){
+                       jPanel9.add(ev);
+                   }else if (i == 5){
+                       jPanel5.add(ev);
+                   }else if (i == 6){
+                       jPanel8.add(ev);
+                   }
+            }
         }
-        }    
-     
-       
     }
     
     public void refresh(){

@@ -22,6 +22,7 @@ public class NavButton extends JPanel {
     NavButton(String text, String context, int width, int height) {
         super();
         this.context = context;
+        setOpaque(false);
         initiliaze(text, width, height);
     }
 
