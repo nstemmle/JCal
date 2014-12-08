@@ -27,7 +27,6 @@ public class CustomAddNewCategoryPanel extends JPanel{
             this.add(e);
             this.setBounds(x - 275 , 720-300, width, 300);
             this.setBackground(new Color(0,0,0,0));
-            
   } 
         
 @Override

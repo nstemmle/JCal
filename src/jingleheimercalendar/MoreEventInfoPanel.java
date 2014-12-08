@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.event.PopupMenuListener;
 
 /**
  *
@@ -25,10 +27,12 @@ import java.util.logging.Logger;
  */
 public class MoreEventInfoPanel extends javax.swing.JPanel {
     private final Event event;
+    JDialog parent;
     /**
      * Creates new form moreEventPanel
      */
-    public MoreEventInfoPanel(Event e) {
+    public MoreEventInfoPanel(Event e, JDialog p) {;
+        parent = p;
         event = e;
         initComponents();
     }
@@ -63,23 +67,22 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel8 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-
+        
         setBackground(new Color(0,0,0,0));
         setPreferredSize(new java.awt.Dimension(250, 350));
         
         Color textColor = new Color(69,69,69);
         
-        if(event.getStartTime().equals("All Day") && event.getCategory().getName().equals("No Category")){
+        if(event.getCategory().getName().equals("No Category")){
            textColor = Color.WHITE;
         }
         jPanel5.setBackground(new Color(0,0,0,0));
 
         name.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 16f));
         name.setForeground(new java.awt.Color(255, 255, 255));
+        name.setOpaque(true);        
         name.setBackground(event.getCategoryColor());
         name.setBorder(null);
-        name.setEnabled(false);
-        name.setDisabledTextColor(Color.white);
         name.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         name.setText(event.getName());
 
@@ -111,7 +114,7 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6.setBackground(new Color(0,0,0,0));
+        jPanel6.setBackground(event.getSecondaryColor());
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -124,7 +127,7 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jPanel7.setBackground(new Color(0,0,0,0));
+        jPanel7.setBackground(event.getSecondaryColor());
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -160,29 +163,23 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
         jLabel5.setText("Category");
 
         date.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.PLAIN, 13f));
-        date.setEnabled(false);
         date.setBackground(event.getSecondaryColor());
         date.setBorder(null);
         date.setForeground(textColor);
-        date.setDisabledTextColor(textColor);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         date.setText(sdf.format(event.getDate()));
 
         startTime.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.PLAIN, 13f));
         startTime.setText(event.getStartTime());
-        startTime.setEnabled(false);
         startTime.setBackground(event.getSecondaryColor());
         startTime.setBorder(null);
         startTime.setForeground(textColor);
-        startTime.setDisabledTextColor(textColor);
         
         endTime.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.PLAIN, 13f));
         endTime.setText(event.getEndTime());
-        endTime.setEnabled(false);
         endTime.setBackground(event.getSecondaryColor());
         endTime.setBorder(null);
         endTime.setForeground(textColor);
-        endTime.setDisabledTextColor(textColor);
         
         category.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.PLAIN, 13f));
         String[] categoriesArray = new String[UserCalendar.getInstance().getCategories().size()];
@@ -190,13 +187,13 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
            categoriesArray[i] = UserCalendar.getInstance().getCategories().get(i).getName();
         }
         category.setModel(new javax.swing.DefaultComboBoxModel(categoriesArray));
-        category.setEnabled(false);
         category.setSelectedIndex(UserCalendar.getInstance().getCategories().indexOf(event.getCategory()));
         category.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changeColor(evt);
             }
         });
+        
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -239,17 +236,15 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
                 .addGap(0, 0, 0))
         );
 
-        jPanel2.setBackground(new Color(0,0,0,0));
+        jPanel2.setBackground(event.getSecondaryColor());
 
         info.setColumns(20);
         info.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.PLAIN, 13f));
         info.setLineWrap(true);
         info.setRows(5);
-        info.setEnabled(false);
         info.setBackground(event.getSecondaryColor());
         info.setBorder(null);
         info.setForeground(textColor);
-        info.setDisabledTextColor(textColor);
         info.setText(event.getInfo());
         
         jScrollPane1.setViewportView(info);
@@ -292,7 +287,7 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
                 deleteMouseClicked(evt);
             }
         });
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/editButton20.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/saveButton20.png"))); // NOI18N
         jLabel7.setBackground(event.getSecondaryColor());
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -362,28 +357,13 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
     }// </editor-fold>                       
 
     private void closeMouseClicked(java.awt.event.MouseEvent evt) {                                     
-        getParent().setVisible(false);
+         parent.dispose();
     } 
     
     private void editMouseClicked(java.awt.event.MouseEvent evt) {                                     
-        if(!startTime.isEnabled()){
-            date.setEnabled(true);
-            startTime.setEnabled(true);
-            endTime.setEnabled(true);
-            date.setEnabled(true);
-            category.setEnabled(true);
-            name.setEnabled(true);
-            info.setEnabled(true);
-            jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/saveButton20.png"))); // SAVE
-            jLabel7.setBackground(event.getSecondaryColor());
-        }else{
+       
             try {
-                date.setEnabled(false);
-                startTime.setEnabled(false);
-                endTime.setEnabled(false);
-                category.setEnabled(false);
-                name.setEnabled(false);
-                info.setEnabled(false);
+                
                 
                 SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");
                 Date possibleNewDate;
@@ -391,30 +371,50 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
                 if(possibleNewDate.equals(event.getDate())){
                     event.update(name.getText(), info.getText(), startTime.getText(), endTime.getText(), UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()),possibleNewDate);
                     UserCalendar.getInstance().sortEvents(event.getDate());
-                    JingleheimerCalendar.refreshCurrentView();
+                    
                 }else{
                     UserCalendar.getInstance().removeEvent(event);
                     Event newE = new Event(name.getText(), info.getText(), startTime.getText(), endTime.getText(), UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()),possibleNewDate);
                     UserCalendar.getInstance().addEventsByDate(newE, possibleNewDate);
                     UserCalendar.getInstance().sortEvents(possibleNewDate);
-                    JingleheimerCalendar.refreshCurrentView();
+                    
                 }
                 
-                jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/editButton20.png")));
             } catch (ParseException ex) {
                 Logger.getLogger(MoreEventInfoPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        parent.dispose();
+        JingleheimerCalendar.refreshCurrentView();
+        
     } 
     
     private void deleteMouseClicked(java.awt.event.MouseEvent evt) { 
+        parent.dispose();
         UserCalendar.getInstance().removeEvent(event);
         JingleheimerCalendar.refreshCurrentView();
-        this.getParent().setVisible(false);
     } 
+    
     
     private void changeColor( java.awt.event.ActionEvent evt ){
         CustomInfoEventWindow w = (CustomInfoEventWindow) SwingUtilities.getWindowAncestor(this);
+        Color textColor;
+        if(category.getSelectedIndex()==0){
+            textColor = Color.white;
+        }else{
+            textColor = new Color (69,69,69);
+        }
+        
+        jLabel2.setForeground(textColor);
+            jLabel3.setForeground(textColor);
+            jLabel4.setForeground(textColor);
+            jLabel5.setForeground(textColor);
+            jLabel6.setForeground(textColor);
+            jLabel7.setForeground(textColor);
+            jLabel8.setForeground(textColor);
+            date.setForeground(textColor);
+            startTime.setForeground(textColor);
+            info.setForeground(textColor);
+            endTime.setForeground(textColor);
         w.updateCategoryColor(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getCategoryColor());
         w.updateSecondaryCategoryColor(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getSecondaryColor());
         date.setBackground(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getSecondaryColor());
@@ -425,6 +425,7 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
         jLabel7.setBackground(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getSecondaryColor());
         jPanel3.setBackground(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getSecondaryColor());
         jPanel1.setBackground(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getSecondaryColor());
+        jPanel2.setBackground(UserCalendar.getInstance().getCategories().get(category.getSelectedIndex()).getSecondaryColor());
         w.repaint();
     }
 

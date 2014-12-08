@@ -29,9 +29,12 @@ public class CustomInfoEventWindow extends JDialog {
     event = e;
     color = event.getCategoryColor();
     secondaryColor = event.getSecondaryColor();
-    add(new MyPanel(250,315));
+    add(new MyPanel(250,315,this));
     setUndecorated(true);
     setBackground(new Color(0,0,0,0));
+    getRootPane ().setOpaque (false);
+    getContentPane ().setBackground (new Color (0, 0, 0, 0));
+    setBackground (new Color (0, 0, 0, 0));
     pack();
     setBounds(300, 300, 250, 315);
     setVisible(true);
@@ -66,15 +69,17 @@ public class CustomInfoEventWindow extends JDialog {
   public class MyPanel extends JPanel{
         private int width;
         private int height;
+        JDialog parent;
         
-        public MyPanel(int x,int y){
+        public MyPanel(int x,int y, JDialog p){
+            parent = p;
             width = x;
             height = y;
-            MoreEventInfoPanel e = new MoreEventInfoPanel(event);
+            MoreEventInfoPanel e = new MoreEventInfoPanel(event,parent);
             this.add(e);
             e.setBounds(0, 0, 250, 315);
             this.setSize(x, y);
-            this.setBackground(new Color(0,0,0,0));
+            this.setOpaque(true);
             
             
         }

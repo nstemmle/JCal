@@ -35,7 +35,7 @@ public class JingleheimerCalendar extends JFrame {
     private Timer mTimer;
     private Calendar mCalendar;
     private static NavigationPanel mNavigationPanel;
-    private static CategoryPanel mCategoryPanel;
+    private static CategoryBar mCategoryPanel;
 
     //Structure used for holding and accessing the different content views
     private static ViewPanel[] views;
@@ -121,13 +121,14 @@ public class JingleheimerCalendar extends JFrame {
         mNavigationPanel.setBorder(null);
         mNavigationPanel.getInsets(nullInsets);
 
-        mCategoryPanel = new CategoryPanel(viewWidth);
+        mCategoryPanel = new CategoryBar();
         mCategoryPanel.setBorder(null);
         mCategoryPanel.getInsets(null);
 
         cardViewLayout = new CardLayout();
         viewPanel = new ViewPanel(cardViewLayout);
-        viewPanel.setOpaque(false);
+        //viewPanel.setOpaque(false);
+        viewPanel.setOpaque(true); ///bcaruso
         viewPanel.setBorder(null);
         viewPanel.getInsets(nullInsets);
 
@@ -153,10 +154,12 @@ public class JingleheimerCalendar extends JFrame {
 
 
         mNavigationPanel.setBackground(Color.BLUE);
-        mCategoryPanel.setBackground(Color.PINK);
-        //getContentPane().setBackground(Color.WHITE);
-        //viewPanel.setBackground(Color.WHITE);
-        //this.setBackground(Color.WHITE);
+        
+        mCategoryPanel.setBackground(Color.WHITE);
+        getContentPane().setBackground(Color.WHITE);
+        viewPanel.setBackground(Color.WHITE);
+        this.setBackground(Color.WHITE);
+
         pack();
         this.setVisible(true);
         this.validate();
@@ -303,11 +306,14 @@ public class JingleheimerCalendar extends JFrame {
 
     public static void refreshCurrentView() {
         getDisplayedView().refresh();
+        
     }
 
     public static void refreshCategoryBar() {
-        //mCategoryPanel.refresh();
+        mCategoryPanel.refresh();
     }
+    
+    
 
     /*private void initializeComponents() {
         viewPanel.setAlignmentX(0.0f);

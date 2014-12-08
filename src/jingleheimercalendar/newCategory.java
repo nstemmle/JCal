@@ -70,6 +70,7 @@ public class newCategory extends javax.swing.JPanel {
         );
 
         setPreferredSize(new java.awt.Dimension(275, 300));
+        setBackground(new Color(238, 238, 238));
 
         jLabel1.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 18f));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -90,7 +91,9 @@ public class newCategory extends javax.swing.JPanel {
                 .addGap(0, 0, 0))
         );
         
-        jTextField1.setBorder(null);
+        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(Color.WHITE));
+
+        jTextField1.setOpaque(true);
 
         jLabel3.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 13f));
         jLabel3.setForeground(new java.awt.Color(69, 69, 69));
@@ -115,7 +118,7 @@ public class newCategory extends javax.swing.JPanel {
         jLabel5.setText("Select a Color");
 
         jPanel6.setLayout(new java.awt.GridLayout(2, 6, 4, 4));
-
+        jPanel6.setBackground(new Color(238, 238, 238));
         jPanel3.setBackground(new java.awt.Color(63, 170, 246));
         jPanel3.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {

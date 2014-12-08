@@ -28,13 +28,12 @@ public class CustomInfoTaskWindow extends JDialog{
     task = e;
     color = task.getCategoryColor();
     secondaryColor=task.getSecondaryColor();
-    add(new MyPanel(250,300));
     setUndecorated(true);
-    setBackground(new Color(0,0,0,0));
+    add(new MyPanel(250,300,this));
     pack();
     setBounds(300, 300, 250, 300);
     setVisible(true);
-    requestFocusInWindow();
+ 
     addMouseMotionListener(new MouseMotionListener() {
     private int mx, my;
 
@@ -66,11 +65,12 @@ public class CustomInfoTaskWindow extends JDialog{
   public class MyPanel extends JPanel{
         private int width;
         private int height;
-        
-        public MyPanel(int x,int y){
+        JDialog parent;
+        public MyPanel(int x,int y, JDialog p){
+            parent = p;
             width = x;
             height = y;
-            MoreTaskInfoPanel e = new MoreTaskInfoPanel(task);
+            MoreTaskInfoPanel e = new MoreTaskInfoPanel(task,parent);
             this.add(e);
             e.setBounds(0, 0, 250, 300);
             this.setSize(x, y);

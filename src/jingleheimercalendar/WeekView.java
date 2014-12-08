@@ -17,4 +17,8 @@ public class WeekView extends ViewPanel {
         weekPanel = new WeekPanel(this);
         add(weekPanel);
     }
+    
+    public void refresh(){
+        weekPanel.refresh();
+    }
 }

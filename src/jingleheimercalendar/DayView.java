@@ -21,4 +21,8 @@ public class DayView extends ViewPanel {
         dayPanel.resetEventPanel();
         dayPanel.resetTaskPanel();
     }
+    
+    public void refresh(){
+        dayPanel.refresh();
+    }
 }

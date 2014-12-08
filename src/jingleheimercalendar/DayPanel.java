@@ -30,13 +30,11 @@ public class DayPanel extends javax.swing.JPanel {
         c.set(Calendar.SECOND,0);
         c.set(Calendar.MINUTE,0);
         c.set(Calendar.HOUR_OF_DAY,0);
-
-
+        
         initComponents(width, height);
         dayNumText.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
         monthText.setText(getMonth(c.get(Calendar.MONTH)));
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
-        
        
         refresh();
     }
@@ -58,13 +56,8 @@ public class DayPanel extends javax.swing.JPanel {
         weekdayText = new javax.swing.JLabel();
         monthText = new javax.swing.JLabel();
         alldayEventText = new javax.swing.JLabel();
-        //TODO: change this to custom monthPanel
-        //I can't seem to get this to work
-        //monthPanel = new javax.swing.JPanel();
-        //MonthPanel monthPanelDayView = new MonthPanel(width, height, 0);
-        //monthPanel.add(monthPanelDayView);
+        
         monthPanel = new MonthPanel(372, 155, 0);
-
         bottomPanel = new javax.swing.JPanel();
         eventPanel = new javax.swing.JPanel();
         eventHeaderPanel = new javax.swing.JPanel();
@@ -81,8 +74,8 @@ public class DayPanel extends javax.swing.JPanel {
         taskScrollContentPanel = new javax.swing.JPanel();
         addTaskText = new javax.swing.JLabel();
 
-        setPreferredSize(new java.awt.Dimension(1280, 640));
-        setSize(new java.awt.Dimension(1280, 640));
+       // setPreferredSize(new java.awt.Dimension(1280, 640));
+      //  setSize(new java.awt.Dimension(1280, 640));
 
         topPanel.setBackground(new java.awt.Color(255, 255, 255));
         topPanel.setPreferredSize(new java.awt.Dimension(1280, 279));
@@ -161,16 +154,22 @@ public class DayPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout monthPanelLayout = new javax.swing.GroupLayout(monthPanel);
-        monthPanel.setLayout(monthPanelLayout);
-        monthPanelLayout.setHorizontalGroup(
+        //javax.swing.GroupLayout monthPanelLayout = new javax.swing.GroupLayout(monthPanel);
+        monthPanel.setLayout(new javax.swing.BoxLayout(monthPanel, BoxLayout.Y_AXIS));
+        //MonthPanel mv = new MonthPanelDayView(monthPanel.getWidth(),monthPanel.getHeight(),0);
+        monthPanel.setFontSizeHeaders(16);
+        monthPanel.setFontSizeOrdinals(16);
+        monthPanel.setBackground(Color.white);
+        //monthPanel.add(mv);
+        
+       /* monthPanelLayout.setHorizontalGroup(
             monthPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 372, Short.MAX_VALUE)
         );
         monthPanelLayout.setVerticalGroup(
             monthPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
-        );
+        );*/
 
         javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
         topPanel.setLayout(topPanelLayout);
@@ -449,7 +448,7 @@ public class DayPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane eventScroll;
     private javax.swing.JPanel eventScrollContentPanel;
     private javax.swing.JLabel increment;
-    //private javax.swing.JPanel monthPanel;
+   // private javax.swing.JPanel monthPanel;
     private MonthPanel monthPanel;
     private javax.swing.JLabel monthText;
     private javax.swing.JPanel taskContentPanel;
@@ -570,7 +569,6 @@ public class DayPanel extends javax.swing.JPanel {
     public void refresh(){
        refreshEventPanel();
        refreshTaskPanel();
-        System.out.println("Date:"+c.getTime().toString());
        updateAllDayText(c.getTime());
        revalidate();
     }

@@ -151,7 +151,7 @@ public class CreateTaskPanel extends javax.swing.JPanel {
         jLabel6.setText("Completion Date (Optional) :");
 
         completionDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
-        completionDate.setText("M/d/yy");
+        completionDate.setText("MM/DD/YY");
         completionDate.setFont(JingleheimerCalendar.defaultFont.deriveFont(13f));
         completionDate.setPreferredSize(new java.awt.Dimension(119, 28));
         completionDate.setSize(new java.awt.Dimension(105, 28));
@@ -281,7 +281,7 @@ public class CreateTaskPanel extends javax.swing.JPanel {
         if(details.equals("(Optional)")){
            details = "No Details Available For This Task";
         }
-        if(cDate.equals("M/d/yy")){
+        if(cDate.equals("MM/DD/YY")){
            cDate = "N/A";
         }
         Task newTask = new Task(name,details,(3 - urgency),category, cDate);

@@ -1,8 +1,11 @@
 package jingleheimercalendar;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -10,7 +13,15 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import javax.swing.SwingConstants;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,11 +52,21 @@ public class WeekPanel extends JPanel {
     private ArrayList<JComponent> labelsMediumFont;
     private ArrayList<JComponent> labelsLargeFont;
     private ArrayList<JComponent> labelsSmallFont;
+    
+    Calendar cal = new GregorianCalendar();
+    
     /**
      * Creates new form WeekView
      */
     public WeekPanel(Container contentPane) {
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        
         initComponents(contentPane);
+        firstThing();
+        
     }
 
     /**
@@ -68,7 +89,7 @@ public class WeekPanel extends JPanel {
             System.err.println("Error loading custom font. Using Times.");
             fontSmall = fontMedium = fontLarge = fontExtraLarge = new Font("Times New Roman", Font.BOLD,60);
         }
-
+       
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -78,6 +99,7 @@ public class WeekPanel extends JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        
         jpanel12am = new javax.swing.JPanel(){
                 @Override
             public void paintComponent(Graphics g)
@@ -86,6 +108,7 @@ public class WeekPanel extends JPanel {
                 g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
             }
         };
+        
         jLabel17 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jpanel2am = new javax.swing.JPanel(){
@@ -316,29 +339,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                drawTheLines(g);
             }
         };
         jPanel8 = new javax.swing.JPanel(){
@@ -346,29 +347,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-               g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+               drawTheLines(g);
             }
         };
         jPanel9 = new javax.swing.JPanel(){
@@ -376,29 +355,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                 g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                drawTheLines(g);
             }
         };
         jPanel12 = new javax.swing.JPanel(){
@@ -406,29 +363,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                 g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                 drawTheLines(g);
             }
         };
         jPanel13 = new javax.swing.JPanel(){
@@ -436,29 +371,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                 g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                 drawTheLines(g);
             }
         };
         jPanel14 = new javax.swing.JPanel(){
@@ -466,29 +379,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                 g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                 drawTheLines(g);
             }
         };
         jPanel15 = new javax.swing.JPanel(){
@@ -496,29 +387,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                 g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
-                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
-                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
-                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
-                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
-                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
-                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
-                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
-                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
-                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
-                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
-                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
-                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
-                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
-                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
-                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
-                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
-                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
-                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
-                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
-                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
-                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
-                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                drawTheLines(g);
             }
         };
         jPanel22 = new javax.swing.JPanel();
@@ -576,7 +445,7 @@ public class WeekPanel extends JPanel {
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g); // Do the original draw
-                g.drawLine(0, 81, 168, 81); // Write here your coordinates
+                g.drawLine(9, 81, 168, 81); // Write here your coordinates
             }
         };
         jPanel20 = new javax.swing.JPanel(){
@@ -691,24 +560,37 @@ public class WeekPanel extends JPanel {
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(fontLarge); // NOI18N
-        jButton1.setText(">");
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightArrow32.png")));
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         labelsLargeFont.add(jButton1);
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(fontLarge); // NOI18N
         jLabel1.setText("APRIL 6 - 12");
+        jLabel1.setVerticalAlignment(SwingConstants.TOP);
         labelsLargeFont.add(jLabel1);
 
 
         jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setFont(fontLarge); // NOI18N
-        jButton2.setText("<");
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftArrow32.png")));
+        jButton2.setVerticalAlignment(SwingConstants.CENTER);
+        jButton1.setVerticalAlignment(SwingConstants.CENTER);
         jButton2.setBorderPainted(false);
         jButton2.setContentAreaFilled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         labelsLargeFont.add(jButton2);
-
+        
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -736,11 +618,7 @@ public class WeekPanel extends JPanel {
                 .addContainerGap(0, Short.MAX_VALUE))
         );
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                jScrollPane2.getVerticalScrollBar().setValue(810);
-            }
-        });
+        
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setBorder(null);
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -761,7 +639,7 @@ public class WeekPanel extends JPanel {
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("am");
         labelsSmallFont.add(jLabel19);
-
+        
         javax.swing.GroupLayout jpanel12amLayout = new javax.swing.GroupLayout(jpanel12am);
         jpanel12am.setLayout(jpanel12amLayout);
         jpanel12amLayout.setHorizontalGroup(
@@ -785,7 +663,7 @@ public class WeekPanel extends JPanel {
 
         jpanel2am.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel22.setFont(fontSmall); // NOI18N
+        jLabel22.setFont(fontSmall); // NOI18Nz
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel22.setText("am");
         labelsSmallFont.add(jLabel22);
@@ -1672,6 +1550,7 @@ public class WeekPanel extends JPanel {
         jPanel3Layout.setHorizontalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(9,9,9)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, 0)
                                 .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1741,7 +1620,7 @@ public class WeekPanel extends JPanel {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("9");
 
-        jLabel10.setFont(fontMedium); // NOI18N
+        jLabel10.setFont(fontSmall); // NOI18N
         jLabel10.setText("WED");
         jLabel10.setUI(new VerticalLabelUI(false));
 
@@ -1755,20 +1634,22 @@ public class WeekPanel extends JPanel {
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 19, Short.MAX_VALUE))
         );
-        jPanel18Layout.setVerticalGroup(
-                jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel18Layout.createSequentialGroup()
-                                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(0, 42, Short.MAX_VALUE))
+       jPanel18Layout.setVerticalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel11.setFont(fontExtraLarge); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("10");
 
-        jLabel12.setFont(fontMedium); // NOI18N
+        jLabel12.setFont(fontSmall); // NOI18N
         jLabel12.setText("THU");
         jLabel12.setUI(new VerticalLabelUI(false));
 
@@ -1783,12 +1664,14 @@ public class WeekPanel extends JPanel {
                                 .addGap(0, 19, Short.MAX_VALUE))
         );
         jPanel19Layout.setVerticalGroup(
-                jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel19Layout.createSequentialGroup()
-                                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(0, 42, Short.MAX_VALUE))
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel19Layout.createSequentialGroup()
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel19Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -1799,9 +1682,15 @@ public class WeekPanel extends JPanel {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 80, Short.MAX_VALUE)
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 76, Short.MAX_VALUE)
+       jPanel16Layout.setVerticalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel20.setBackground(new java.awt.Color(255, 255, 255));
@@ -1810,7 +1699,7 @@ public class WeekPanel extends JPanel {
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("11");
 
-        jLabel14.setFont(fontMedium); // NOI18N
+        jLabel14.setFont(fontSmall); // NOI18N
         jLabel14.setText("FRI");
         jLabel14.setUI(new VerticalLabelUI(false));
 
@@ -1825,15 +1714,17 @@ public class WeekPanel extends JPanel {
                                 .addGap(0, 19, Short.MAX_VALUE))
         );
         jPanel20Layout.setVerticalGroup(
-                jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel20Layout.createSequentialGroup()
-                                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(0, 42, Short.MAX_VALUE))
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel3.setFont(fontMedium); // NOI18N
+        jLabel3.setFont(fontSmall); // NOI18N
         jLabel3.setText("SUN");
         jLabel3.setUI(new VerticalLabelUI(false));
 
@@ -1853,19 +1744,21 @@ public class WeekPanel extends JPanel {
                                 .addGap(0, 19, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
-                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(0, 42, Short.MAX_VALUE))
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel15.setFont(fontExtraLarge); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel15.setText("12");
 
-        jLabel16.setFont(fontMedium); // NOI18N
+        jLabel16.setFont(fontSmall); // NOI18N
         jLabel16.setText("SAT");
         jLabel16.setUI(new VerticalLabelUI(false));
 
@@ -1880,19 +1773,21 @@ public class WeekPanel extends JPanel {
                                 .addGap(0, 19, Short.MAX_VALUE))
         );
         jPanel21Layout.setVerticalGroup(
-                jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel21Layout.createSequentialGroup()
-                                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(0, 42, Short.MAX_VALUE))
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel7.setFont(fontExtraLarge); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("8");
 
-        jLabel8.setFont(fontMedium); // NOI18N
+        jLabel8.setFont(fontSmall); // NOI18N
         jLabel8.setText("TUE");
         jLabel8.setUI(new VerticalLabelUI(false));
 
@@ -1906,13 +1801,15 @@ public class WeekPanel extends JPanel {
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 19, Short.MAX_VALUE))
         );
-        jPanel17Layout.setVerticalGroup(
-                jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel17Layout.createSequentialGroup()
-                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(0, 42, Short.MAX_VALUE))
+       jPanel17Layout.setVerticalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
@@ -2048,6 +1945,153 @@ public class WeekPanel extends JPanel {
         fontSmall = fontSmall.deriveFont((float)fontSizeSmall);
         updateLargeFonts();
     }
+    
+    public void drawTheLines(Graphics g){
+        g.drawLine(0, jpanel12am.getHeight()-1, 168, jpanel12am.getHeight()-1); // Write here your coordinates
+                g.drawLine(0, jpanel12am.getHeight()*2-1, 168, jpanel12am.getHeight()*2-1);
+                g.drawLine(0, jpanel12am.getHeight()*3-1, 168, jpanel12am.getHeight()*3-1);
+                g.drawLine(0, jpanel12am.getHeight()*4-1, 168, jpanel12am.getHeight()*4-1);
+                g.drawLine(0, jpanel12am.getHeight()*5-1, 168, jpanel12am.getHeight()*5-1);
+                g.drawLine(0, jpanel12am.getHeight()*6-1, 168, jpanel12am.getHeight()*6-1);
+                g.drawLine(0, jpanel12am.getHeight()*7-1, 168, jpanel12am.getHeight()*7-1);
+                g.drawLine(0, jpanel12am.getHeight()*8-1, 168, jpanel12am.getHeight()*8-1);
+                g.drawLine(0, jpanel12am.getHeight()*9-1, 168, jpanel12am.getHeight()*9-1);
+                g.drawLine(0, jpanel12am.getHeight()*10-1, 168, jpanel12am.getHeight()*10-1);
+                g.drawLine(0, jpanel12am.getHeight()*11-1, 168, jpanel12am.getHeight()*11-1);
+                g.drawLine(0, jpanel12am.getHeight()*12-1, 168, jpanel12am.getHeight()*12-1);
+                g.drawLine(0, jpanel12am.getHeight()*13-1, 168, jpanel12am.getHeight()*13-1);
+                g.drawLine(0, jpanel12am.getHeight()*14-1, 168, jpanel12am.getHeight()*14-1);
+                g.drawLine(0, jpanel12am.getHeight()*15-1, 168, jpanel12am.getHeight()*15-1);
+                g.drawLine(0, jpanel12am.getHeight()*16-1, 168, jpanel12am.getHeight()*16-1);
+                g.drawLine(0, jpanel12am.getHeight()*17-1, 168, jpanel12am.getHeight()*17-1);
+                g.drawLine(0, jpanel12am.getHeight()*18-1, 168, jpanel12am.getHeight()*18-1);
+                g.drawLine(0, jpanel12am.getHeight()*19-1, 168, jpanel12am.getHeight()*19-1);
+                g.drawLine(0, jpanel12am.getHeight()*20-1, 168, jpanel12am.getHeight()*20-1);
+                g.drawLine(0, jpanel12am.getHeight()*21-1, 168, jpanel12am.getHeight()*21-1);
+                g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
+                g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
+                
+                int hour24px = jPanel3.getHeight();
+                int hourpx = hour24px/24;
+                int minpix = hourpx/60;
+                
+                Calendar cal = Calendar.getInstance();
+                Date date = cal.getTime();
+                TimeZone timeZone = TimeZone.getTimeZone("EST");
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                dateFormat.setTimeZone(timeZone);
+                String currentTime = dateFormat.format(date);
+                String[] times = currentTime.split(":");
+                String hours = times[0];
+                String minutes = times[1];
+                int currentHour = Integer.parseInt(hours);
+                int currentMinutes = Integer.parseInt(minutes);
+                int totalMinutes = (currentHour *60) + currentMinutes;
+                int pxls = currentHour*hourpx + currentMinutes * minpix;
+           
+                g.setColor(Color.red);
+                g.drawLine(0, pxls+currentHour, 168, pxls+currentHour);
+    }
+    
+    public void paintEvents(){
+
+    }
+    
+    public void firstThing(){
+        
+        DateFormat dateFormat = new SimpleDateFormat("dd");
+        DateFormat fullDateFormat = new SimpleDateFormat("MMM. dd");
+        DateFormat yearFormat = new SimpleDateFormat("YYYY");
+        Integer date [] = new Integer[7];
+        String dateTop [] = new String[2];
+        
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                int hour24px = jPanel3.getHeight();
+                int hourpx = hour24px/24;
+                int minpix = hourpx/60;
+                Calendar cal = Calendar.getInstance();
+                Date date = cal.getTime();
+                TimeZone timeZone = TimeZone.getTimeZone("EST");
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                dateFormat.setTimeZone(timeZone);
+                String currentTime = dateFormat.format(date);
+                String[] times = currentTime.split(":");
+                String hours = times[0];
+                String minutes = times[1];
+                int currentHour = Integer.parseInt(hours);
+                int currentMinutes = Integer.parseInt(minutes);
+                int totalMinutes = (currentHour *60) + currentMinutes;
+                int pxls = currentHour*hourpx + currentMinutes * minpix;
+                jScrollPane2.getVerticalScrollBar().setValue(pxls);
+            }
+        });
+        
+        jPanel15.removeAll(); 
+        jPanel15.updateUI();
+         jPanel14.removeAll();
+         jPanel14.updateUI();
+         jPanel13.removeAll();
+         jPanel13.updateUI();
+         jPanel12.removeAll();
+         jPanel12.updateUI();
+         jPanel9.removeAll();
+         jPanel9.updateUI();
+         jPanel8.removeAll();
+         jPanel8.updateUI();
+         jPanel5.removeAll();
+         jPanel5.updateUI();
+         
+        
+        for(int i = 0; i < 7; i++){
+            addEvent(i);
+           /* if(!yearFormat.format(cal.getTime()).equals(yearTemp)){
+               cal.roll(Calendar.YEAR, 1);
+               yearTemp = yearFormat.format(cal.getTime());
+            }*/
+            if(i == 0)
+                dateTop[0] = fullDateFormat.format(cal.getTime());
+            if(i == 6)
+                dateTop[1] = fullDateFormat.format(cal.getTime());
+            String otherTemp = dateFormat.format(cal.getTime());
+            date[i] = Integer.parseInt(otherTemp);
+            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) 
+                    + 1); 
+        }
+        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) 
+                    - 7);
+        jLabel2.setText(yearFormat.format(cal.getTime()));
+        jLabel1.setText(dateTop[0] + " - " + dateTop[1]);
+      //  jLabel3.setText(day[0]);
+       jLabel4.setText(date[0].toString());
+      //  jLabel6.setText(day[1]);
+        jLabel5.setText(date[1].toString());
+       // jLabel8.setText(day[2]);
+       jLabel7.setText(date[2].toString());
+       // jLabel10.setText(day[3]);
+        jLabel9.setText(date[3].toString());
+       // jLabel12.setText(day[4]);
+        jLabel11.setText(date[4].toString());
+       // jLabel14.setText(day[5]);
+       jLabel13.setText(date[5].toString());
+       // jLabel16.setText(day[6]);
+        jLabel15.setText(date[6].toString());
+    }
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        DateFormat yearFormat = new SimpleDateFormat("YYYY");
+        String yearTemp = yearFormat.format(cal.getTime());
+        
+        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 7); 
+        
+        
+        firstThing();
+    }
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 7);
+        firstThing();
+    }
 
     public void setFontPathSmall(String path) {
         fontPathSmall = path;
@@ -2059,6 +2103,43 @@ public class WeekPanel extends JPanel {
             fontSmall = new Font("Times New Roman", Font.BOLD,60);
         }
     }
+    
+    public void addEvent(int i ){
+        Date date = cal.getTime();
+        System.out.println(date);
+        
+        
+        ArrayList<Event> e = UserCalendar.getInstance().getEventsByDate(date);
+         
+        if(!e.isEmpty()){
+        for (int j = 0; j < e.size(); j++) {
+           EventBox ev = new EventBox(e.get(j),2064);
+           if(i == 0){
+               jPanel15.add(ev);
+           }else if (i == 1){
+               jPanel14.add(ev);
+           }else if (i == 2){
+               jPanel13.add(ev);
+           }else if (i == 3){
+               jPanel12.add(ev);
+           }else if (i == 4){
+               jPanel9.add(ev);
+           }else if (i == 5){
+               jPanel5.add(ev);
+           }else if (i == 6){
+               jPanel8.add(ev);
+           }
+        
+        }
+        }    
+     
+       
+    }
+    
+    public void refresh(){
+         firstThing();
+     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

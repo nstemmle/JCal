@@ -89,10 +89,11 @@ public class CategoryBar extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1280, 50));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(50, 40));
+        jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
 
         
         left.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        left.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
         left.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftArrow32.png"))); // NOI18N
         left.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -103,22 +104,21 @@ public class CategoryBar extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(left, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(left, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(left, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(left, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setPreferredSize(new java.awt.Dimension(50, 40));
-        jPanel2.setSize(new java.awt.Dimension(50, 40));
+        jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
+        jPanel2.setSize(new java.awt.Dimension(50, 50));
 
         right.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         right.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightArrow32.png"))); // NOI18N
-        right.setToolTipText("");
         right.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 goRight(evt);

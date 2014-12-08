@@ -20,5 +20,5 @@ public class ViewPanel extends JPanel {
         return value;
     }
 
-    public static void refresh(){}
+    public void refresh(){}
 }

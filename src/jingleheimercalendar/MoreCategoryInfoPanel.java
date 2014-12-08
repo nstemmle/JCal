@@ -135,7 +135,7 @@ public class MoreCategoryInfoPanel extends javax.swing.JPanel {
         j.setPreferredSize(new Dimension(500,150));
         JPanel text = new JPanel();
         text.setLayout(new BorderLayout());
-        JLabel label = new JLabel("<html><p>Are you sure?<br>Deleting a category uncategorizes the current event in this category.</p></html>",SwingConstants.CENTER);
+        JLabel label = new JLabel("<html><p>Are you sure?<br>Deleting a category uncategorizes the current events in this category.</p></html>",SwingConstants.CENTER);
         text.add(label, BorderLayout.CENTER);
         JButton cancelButton = new JButton("No");
         JButton setButton = new JButton("Yes");
@@ -163,6 +163,7 @@ public class MoreCategoryInfoPanel extends javax.swing.JPanel {
         Container contentPane = j.getContentPane();
         contentPane.add(text, BorderLayout.CENTER);
         contentPane.add(buttonPane, BorderLayout.PAGE_END);
+        j.setLocationRelativeTo(f);
         j.pack();
         j.setVisible(true);
         f.getGlassPane().setVisible(false);
