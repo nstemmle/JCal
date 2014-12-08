@@ -34,19 +34,21 @@ public class JingleheimerCalendar extends JFrame {
     // Class variables
     private Timer mTimer;
     private Calendar mCalendar;
-    private static NavigationPanel mNavigationPanel;
+    protected static NavigationPanel mNavigationPanel;
     private static CategoryBar mCategoryPanel;
 
     //Structure used for holding and accessing the different content views
     private static ViewPanel[] views;
 
-    public static final String VIEW_WEEK = "WeekView";
+    public static final String VIEW_TODAY = "TodayView";
     public static final String VIEW_DAY = "DayView";
+    public static final String VIEW_WEEK = "WeekView";
     public static final String VIEW_MONTH = "MonthView";
     public static final String VIEW_YEAR = "YearView";
 
     //Constants relating to managing the current view
     public static final int NUM_VIEWS = 4;
+    public static final int INDEX_TODAY_VIEW = 4;
     public static final int INDEX_DAY_VIEW = 0;
     public static final int INDEX_WEEK_VIEW = 1;
     public static final int INDEX_MONTH_VIEW = 2;
@@ -101,7 +103,6 @@ public class JingleheimerCalendar extends JFrame {
         getContentPane().setLayout(springLayoutRoot);
 
         //Set default location to center of default screen device
-        //this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Jingleheimer-Schmidt Calendar");
 
@@ -152,7 +153,6 @@ public class JingleheimerCalendar extends JFrame {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
 
-
         mNavigationPanel.setBackground(Color.BLUE);
         
         mCategoryPanel.setBackground(Color.WHITE);
@@ -183,8 +183,6 @@ public class JingleheimerCalendar extends JFrame {
         //if (maxWidth && maxHeight)
         //    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
-
-
     }
 
     private Font loadFont(String path) throws FontFormatException, IOException  {
@@ -238,10 +236,10 @@ public class JingleheimerCalendar extends JFrame {
     private void initializeViews(int viewWidth, int viewHeight) {
         //Initialize array of views
         views = new ViewPanel[NUM_VIEWS];
-        views[0] = new DayView(viewWidth, viewHeight);
-        views[1] = new WeekView(viewWidth, viewHeight, viewPanel);
-        views[2] = new MonthView(viewWidth, viewHeight);
-        views[3] = new YearView(viewWidth, viewHeight);
+        views[INDEX_DAY_VIEW] = new DayView(viewWidth, viewHeight);
+        views[INDEX_WEEK_VIEW] = new WeekView(viewWidth, viewHeight, viewPanel);
+        views[INDEX_MONTH_VIEW] = new MonthView(viewWidth, viewHeight);
+        views[INDEX_YEAR_VIEW] = new YearView(viewWidth, viewHeight);
 
         for (int i = 0; i < NUM_VIEWS; i++) {
             viewPanel.add(views[i], views[i].getStringValue());
@@ -291,9 +289,17 @@ public class JingleheimerCalendar extends JFrame {
     }
 
     public static void displayView(int viewIndex) {
-        cardViewLayout.show(viewPanel,views[viewIndex].getStringValue());
-        views[viewIndex].refresh();
-        setIndexDisplayedview(viewIndex);
+        if (viewIndex == INDEX_TODAY_VIEW)  {
+            cardViewLayout.show(viewPanel,views[INDEX_DAY_VIEW].getStringValue());
+            DayView.goToCurrentDay();
+            views[INDEX_DAY_VIEW].refresh();
+            setIndexDisplayedview(INDEX_DAY_VIEW);
+        } else {
+            cardViewLayout.show(viewPanel,views[viewIndex].getStringValue());
+            views[viewIndex].refresh();
+            setIndexDisplayedview(viewIndex);
+        }
+        mNavigationPanel.viewChanged(getViewString(viewIndex));
     }
 
     private static void setIndexDisplayedview(int index) {
@@ -306,85 +312,33 @@ public class JingleheimerCalendar extends JFrame {
 
     public static void refreshCurrentView() {
         getDisplayedView().refresh();
-        
     }
+
+    public static String getViewString(int index) {
+        if (index == INDEX_TODAY_VIEW)
+            return VIEW_TODAY;
+        return views[index].getStringValue();
+    }
+
+    public static int getViewIndex(String view) {
+        switch (view) {
+            case VIEW_TODAY:
+                return INDEX_TODAY_VIEW;
+            case VIEW_DAY:
+                return INDEX_DAY_VIEW;
+            case VIEW_WEEK:
+                return INDEX_WEEK_VIEW;
+            case VIEW_MONTH:
+                return INDEX_MONTH_VIEW;
+            case VIEW_YEAR:
+                return INDEX_YEAR_VIEW;
+            default: //Should throw an error
+                return -1;
+        }
+    }
+
 
     public static void refreshCategoryBar() {
         mCategoryPanel.refresh();
     }
-    
-    
-
-    /*private void initializeComponents() {
-        viewPanel.setAlignmentX(0.0f);
-        viewPanel.setAlignmentY(0.0f);
-        Dimension viewDimens = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT - CategoryPanel.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT);
-        viewPanel.setMaximumSize(viewDimens);
-        viewPanel.setMinimumSize(viewDimens);
-        viewPanel.setPreferredSize(viewDimens);
-
-        GroupLayout viewPanelLayout = new GroupLayout(viewPanel);
-        viewPanel.setLayout(viewPanelLayout);
-        viewPanelLayout.setHorizontalGroup(
-                viewPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        viewPanelLayout.setVerticalGroup(
-                viewPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 640, Short.MAX_VALUE)
-        );
-
-        mNavigationPanel.setAlignmentX(0.0f);
-        mNavigationPanel.setAlignmentY(0.0f);
-        Dimension navDimens = new Dimension(PREFERRED_WIDTH, NavigationPanel.MINIMUM_HEIGHT);
-        mNavigationPanel.setMaximumSize(navDimens);
-        mNavigationPanel.setMinimumSize(navDimens);
-        mNavigationPanel.setPreferredSize(navDimens);
-
-        GroupLayout navigationPanelLayout = new GroupLayout(mNavigationPanel);
-        mNavigationPanel.setLayout(navigationPanelLayout);
-        navigationPanelLayout.setHorizontalGroup(
-                navigationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        navigationPanelLayout.setVerticalGroup(
-                navigationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 40, Short.MAX_VALUE)
-        );
-
-        mCategoryPanel.setAlignmentX(0.0f);
-        mCategoryPanel.setAlignmentY(0.0f);
-        mCategoryPanel.setMaximumSize(navDimens);
-        mCategoryPanel.setMinimumSize(navDimens);
-        mCategoryPanel.setPreferredSize(navDimens);
-
-        GroupLayout CategoryPanelLayout = new GroupLayout(mCategoryPanel);
-        mCategoryPanel.setLayout(CategoryPanelLayout);
-        CategoryPanelLayout.setHorizontalGroup(
-                CategoryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        CategoryPanelLayout.setVerticalGroup(
-                CategoryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 40, Short.MAX_VALUE)
-        );
-
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(viewPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(mNavigationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(mCategoryPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(mNavigationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(viewPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mCategoryPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        );
-    }*/
 }

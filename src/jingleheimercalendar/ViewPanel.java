@@ -8,6 +8,7 @@ import java.awt.LayoutManager;
  */
 public class ViewPanel extends JPanel {
     String value;
+
     ViewPanel() {
         super();
     }

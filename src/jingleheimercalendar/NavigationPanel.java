@@ -1,6 +1,5 @@
 package jingleheimercalendar;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -13,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Calendar;
 
 /**
@@ -26,31 +27,34 @@ public class NavigationPanel extends JPanel {
     //Want 1 minute = 60 seconds * 1000 miliseconds/second = 60,000 ms
     private static final int DELAY_INTERVAL = 60000;
 
-    public static final String TEXT_BUTTON_TODAY = "Today";
-    public static final String TEXT_BUTTON_DAY = "Day";
-    public static final String TEXT_BUTTON_WEEK = "Week";
-    public static final String TEXT_BUTTON_MONTH = "Month";
-    public static final String TEXT_BUTTON_YEAR = "Year";
+    private static final int BUTTON_HEIGHT = (MINIMUM_HEIGHT /4) * 3;
 
-    public static final Color COLOR_BUTTON_DEFAULT = new Color(128,128,128);
-    public static final Color COLOR_BUTTON_SELECTED = new Color(192,192,192);
+    public static final String TEXT_BUTTON_TODAY = "TODAY";
+    public static final String TEXT_BUTTON_DAY = "DAY";
+    public static final String TEXT_BUTTON_WEEK = "WEEK";
+    public static final String TEXT_BUTTON_MONTH = "MONTH";
+    public static final String TEXT_BUTTON_YEAR = "YEAR";
+
+    public static final Color COLOR_BUTTON_DEFAULT = new Color(100,100,100);
+    public static final Color COLOR_BUTTON_HIGHLIGHTED = new Color(192,192,192);
+    public static final Color COLOR_BUTTON_SELECTED = new Color(164,164,164);
     public static final Color COLOR_BACKGROUND_DEFAULT = Color.WHITE;
 
     private Font fontLabels;
-    private int fontSizeLabels = 16;
+    private int fontSizeLabels = 20;
 
-    private Font fontButtons;
-    private int fontSizeButtons = 16;
+    protected static Font fontButtons;
+    private int fontSizeButtons = 20;
 
-    private JButton buttonToday;
+    private NavButton buttonToday;
 
     private JLabel labelTime;
 
-    private JButton buttonDay;
-    private JButton buttonWeek;
-    private JButton buttonMonth;
-    private JButton buttonYear;
-    private JButton lastSelected;
+    private NavButton buttonDay;
+    private NavButton buttonWeek;
+    private NavButton buttonMonth;
+    private NavButton buttonYear;
+    private NavButton lastSelected;
 
     public NavigationPanel(int width) {
         setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
@@ -67,31 +71,27 @@ public class NavigationPanel extends JPanel {
         fontLabels = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeLabels);
         fontButtons = JingleheimerCalendar.defaultFont.deriveFont((float)fontSizeButtons);
 
-
         JPanel todayButtonPane = new JPanel();
         todayButtonPane.setBackground(COLOR_BACKGROUND_DEFAULT);
         //todayButtonPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLUE));
-        todayButtonPane.setPreferredSize(new Dimension(width / 4, MINIMUM_HEIGHT));
-        todayButtonPane.setMinimumSize(new Dimension(width / 4, MINIMUM_HEIGHT));
+        todayButtonPane.setPreferredSize(new Dimension(width / 5, MINIMUM_HEIGHT));
+        todayButtonPane.setMinimumSize(new Dimension(width / 5, MINIMUM_HEIGHT));
 
         gbConstraints.fill = GridBagConstraints.BOTH;
         gbConstraints.gridx = 0;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.EAST;
-        gbConstraints.ipadx = 125;
+        //TODO: see if you can fix navigation objects layout
+        gbConstraints.ipadx = 0;
 
         add(todayButtonPane, gbConstraints);
 
-        buttonToday = new JButton(TEXT_BUTTON_TODAY);
-        buttonToday.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonToday.setBackground(COLOR_BUTTON_DEFAULT);
-        buttonToday.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
-                DayView.goToCurrentDay();
-            }
-        });
+        MouseListener navButtonListener = new NavButtonMouseListener();
+
+        //NavButton replacement
+        buttonToday = new NavButton(TEXT_BUTTON_TODAY, JingleheimerCalendar.VIEW_DAY, width / 10, BUTTON_HEIGHT);
+        //buttonToday.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
+        buttonToday.addMouseListener(navButtonListener);
         todayButtonPane.setLayout(new FlowLayout());
         todayButtonPane.add(buttonToday);
 
@@ -101,88 +101,45 @@ public class NavigationPanel extends JPanel {
         JPanel navButtonsPane = new JPanel();
         navButtonsPane.setBackground(COLOR_BACKGROUND_DEFAULT);
         //navButtonsPane.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.GREEN));
-        navButtonsPane.setPreferredSize(new Dimension(width / 2, MINIMUM_HEIGHT));
-        navButtonsPane.setMinimumSize(new Dimension(width / 2, MINIMUM_HEIGHT));
+        navButtonsPane.setPreferredSize(new Dimension((width / 5) * 3, MINIMUM_HEIGHT));
+        navButtonsPane.setMinimumSize(new Dimension((width / 5) * 3, MINIMUM_HEIGHT));
 
         gbConstraints.gridx = 1;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.CENTER;
+        gbConstraints.ipadx = 150;
         add(navButtonsPane, gbConstraints);
 
-        buttonDay = new JButton(TEXT_BUTTON_DAY);
-        buttonDay.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonDay.setBackground(COLOR_BUTTON_DEFAULT);
-        buttonDay.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonDay.setBackground(COLOR_BUTTON_SELECTED);
-                if (lastSelected != buttonDay) {
-                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
-                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
-                }
-                lastSelected = buttonDay;
-            }
-        });
+        buttonDay = new NavButton(TEXT_BUTTON_DAY, JingleheimerCalendar.VIEW_DAY, width /10, BUTTON_HEIGHT);
+        //buttonDay.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
+        buttonDay.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonDay);
 
-        buttonWeek = new JButton(TEXT_BUTTON_WEEK);
-        buttonWeek.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonWeek.setBackground(COLOR_BUTTON_DEFAULT);
-        buttonWeek.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonWeek.setBackground(COLOR_BUTTON_SELECTED);
-                if (lastSelected != buttonWeek) {
-                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_WEEK_VIEW);
-                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
-                }
-                lastSelected = buttonWeek;
-            }
-        });
+        buttonWeek = new NavButton(TEXT_BUTTON_WEEK, JingleheimerCalendar.VIEW_WEEK, width /10, BUTTON_HEIGHT);
+        //buttonWeek.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
+        buttonWeek.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonWeek);
 
-        buttonMonth = new JButton(TEXT_BUTTON_MONTH);
-        buttonMonth.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonMonth.setBackground(COLOR_BUTTON_DEFAULT);
-        buttonMonth.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonMonth.setBackground(COLOR_BUTTON_SELECTED);
-                if (lastSelected != buttonMonth) {
-                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_MONTH_VIEW);
-                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
-                }
-                lastSelected = buttonMonth;
-            }
-        });
+        buttonMonth = new NavButton(TEXT_BUTTON_MONTH, JingleheimerCalendar.VIEW_MONTH, width /10, BUTTON_HEIGHT);
+        //buttonMonth.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
+        buttonMonth.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonMonth);
 
-        buttonYear = new JButton(TEXT_BUTTON_YEAR);
-        buttonYear.setPreferredSize(new Dimension(width / 10, MINIMUM_HEIGHT / 2));
-        buttonYear.setBackground(COLOR_BUTTON_DEFAULT);
-        buttonYear.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonYear.setBackground(COLOR_BUTTON_SELECTED);
-                if (lastSelected != buttonYear) {
-                    JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_YEAR_VIEW);
-                    lastSelected.setBackground(COLOR_BUTTON_DEFAULT);
-                }
-                lastSelected = buttonYear;
-            }
-        });
+        buttonYear = new NavButton(TEXT_BUTTON_YEAR, JingleheimerCalendar.VIEW_YEAR, width /10, BUTTON_HEIGHT);
+        //buttonYear.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
+        buttonYear.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonYear);
 
         JPanel timeLabelPane = new JPanel();
         timeLabelPane.setBackground(COLOR_BACKGROUND_DEFAULT);
-        //timeLabelPane.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.PINK));
-        timeLabelPane.setPreferredSize(new Dimension(width / 4, MINIMUM_HEIGHT));
-        timeLabelPane.setMinimumSize(new Dimension(width / 4, MINIMUM_HEIGHT));
+        //timeLabelPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.PINK));
+        timeLabelPane.setPreferredSize(new Dimension(width / 5, BUTTON_HEIGHT));
+        timeLabelPane.setMinimumSize(new Dimension(width / 5, BUTTON_HEIGHT));
 
         gbConstraints.gridx = 2;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.EAST;
-        gbConstraints.ipadx = 150;
+        gbConstraints.ipadx = 0;
         add(timeLabelPane, gbConstraints);
 
         Calendar a  = Calendar.getInstance();
@@ -217,6 +174,7 @@ public class NavigationPanel extends JPanel {
         updateLabelFonts();
         updateButtonFonts();
 
+        buttonDay.selected();
         lastSelected = buttonDay;
     }
 
@@ -232,6 +190,64 @@ public class NavigationPanel extends JPanel {
     //TODO
     private void initializeLayouts() {
 
+    }
+
+    private class NavButtonMouseListener implements MouseListener {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            NavButton clicked = (NavButton) e.getComponent();
+            if (lastSelected != clicked) {
+                JingleheimerCalendar.displayView(clicked.getViewIndex());
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            NavButton hovered = (NavButton) e.getComponent();
+            hovered.setColor(NavigationPanel.COLOR_BUTTON_HIGHLIGHTED);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            NavButton hovered = (NavButton) e.getComponent();
+            if (hovered == lastSelected)
+                hovered.setColor(NavigationPanel.COLOR_BUTTON_SELECTED);
+            else
+                hovered.setColor(NavigationPanel.COLOR_BUTTON_DEFAULT);
+        }
+    }
+
+    public void viewChanged(String newView) {
+        lastSelected.unselected();
+        switch (newView) {
+            case JingleheimerCalendar.VIEW_TODAY:
+            case JingleheimerCalendar.VIEW_DAY:
+                buttonDay.selected();
+                lastSelected = buttonDay;
+                break;
+            case JingleheimerCalendar.VIEW_WEEK:
+                buttonWeek.selected();
+                lastSelected = buttonWeek;
+                break;
+            case JingleheimerCalendar.VIEW_MONTH:
+                buttonMonth.selected();
+                lastSelected = buttonMonth;
+                break;
+            case JingleheimerCalendar.VIEW_YEAR:
+                buttonYear.selected();
+                lastSelected = buttonYear;
+                break;
+        }
     }
 
     private void updateLabelFonts() {

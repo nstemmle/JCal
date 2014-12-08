@@ -57,7 +57,8 @@ public class DayPanel extends javax.swing.JPanel {
         monthText = new javax.swing.JLabel();
         alldayEventText = new javax.swing.JLabel();
         
-        monthPanel = new MonthPanel(372, 155, 0);
+        //monthPanel = new MonthPanel(372, 155, 0);
+        monthPanel = new MonthPanelDayView(372, 155, 0);
         bottomPanel = new javax.swing.JPanel();
         eventPanel = new javax.swing.JPanel();
         eventHeaderPanel = new javax.swing.JPanel();

@@ -9,7 +9,7 @@ public class DayView extends ViewPanel {
     private static DayPanel dayPanel;
 
     DayView(int width, int height) {
-        this.value = JingleheimerCalendar.VIEW_DAY;
+        value = JingleheimerCalendar.VIEW_DAY;
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_VIEW_HEIGHT));
 

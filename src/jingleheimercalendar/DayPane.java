@@ -3,12 +3,10 @@ package jingleheimercalendar;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
-
 /**
  * Created by Nathan on 12/7/2014.
  */
 class DayPane extends JPanel {
-
     public static final int SWITCH_PREVIOUS_MONTH = -1;
     public static final int SWITCH_CURRENT_MONTH = 0;
     public static final int SWITCH_NEXT_MONTH = 1;

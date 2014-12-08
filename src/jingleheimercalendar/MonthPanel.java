@@ -335,7 +335,6 @@ class MonthPanel extends JPanel {
             }
         }
 
-
         //Obtain numDays in previous month
         tempCalendar = (Calendar) monthCalendar.clone();
         //Need to get dates in previous month
