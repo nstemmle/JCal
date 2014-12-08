@@ -39,8 +39,8 @@ public class EventBox extends JPanel{
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
             SimpleDateFormat dateFormatO = new SimpleDateFormat("hh:mm a");
             
-            int hourpx = hour24px/24;
-                int minpix = hourpx/60;
+            double hourpx = hour24px/24;
+            double minpix = hourpx/60;
                 
             String startTime = dateFormat.format(dateFormatO.parse(e.getStartTime()));
             String[] times = startTime.split(":");
@@ -49,7 +49,8 @@ public class EventBox extends JPanel{
             int currentHour = Integer.parseInt(hours);
             int currentMinutes = Integer.parseInt(minutes);
             int totalMinutes = (currentHour *60) + currentMinutes;
-            y = currentHour * hourpx + currentMinutes * minpix;
+            double holder = currentHour*hourpx + currentMinutes*minpix;
+            y = (int)holder;
             
             String endTime = dateFormat.format(dateFormatO.parse(e.getEndTime()));
             String[] times2 = endTime.split(":");
@@ -58,8 +59,9 @@ public class EventBox extends JPanel{
             currentHour = Integer.parseInt(hours);
             currentMinutes = Integer.parseInt(minutes);
             totalMinutes = (currentHour *60) + currentMinutes;
-            height = currentHour * hourpx + currentMinutes * minpix;
-            setBounds(0,y,width,height-y);
+            holder = currentHour * hourpx + currentMinutes * minpix - y;
+            height = (int)holder;
+            setBounds(0,y,width,height);
         } catch (ParseException ex) {
             Logger.getLogger(EventBox.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -88,7 +90,7 @@ public class EventBox extends JPanel{
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
         
-        g2.fillRoundRect(0, 0, width, height-y, 25, 25); 
+        g2.fillRoundRect(0,0, width, height, 25, 25); 
     }
     
     
