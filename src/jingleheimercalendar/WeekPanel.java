@@ -1971,9 +1971,9 @@ public class WeekPanel extends JPanel {
                 g.drawLine(0, jpanel12am.getHeight()*22-1, 168, jpanel12am.getHeight()*22-1);
                 g.drawLine(0, jpanel12am.getHeight()*23-1, 168, jpanel12am.getHeight()*23-1);
                 
-                int hour24px = jPanel3.getHeight();
-                int hourpx = hour24px/24;
-                int minpix = hourpx/60;
+               int hour24px = jPanel3.getHeight();
+                double hourpx = hour24px/24;
+                double minpix = hourpx/60;
                 
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
@@ -1986,11 +1986,11 @@ public class WeekPanel extends JPanel {
                 String minutes = times[1];
                 int currentHour = Integer.parseInt(hours);
                 int currentMinutes = Integer.parseInt(minutes);
-                int totalMinutes = (currentHour *60) + currentMinutes;
-                int pxls = currentHour*hourpx + currentMinutes * minpix;
+                double holder = currentHour * hourpx + currentMinutes * minpix;
+                int pxls = (int)holder;
            
                 g.setColor(Color.red);
-                g.drawLine(0, pxls+currentHour, 168, pxls+currentHour);
+                g.drawLine(0, pxls, 168, pxls);
     }
     
     public void paintEvents(){
@@ -2008,8 +2008,8 @@ public class WeekPanel extends JPanel {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 int hour24px = jPanel3.getHeight();
-                int hourpx = hour24px/24;
-                int minpix = hourpx/60;
+                double hourpx = hour24px/24;
+                double minpix = hourpx/60;
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
                 TimeZone timeZone = TimeZone.getTimeZone("EST");
@@ -2021,9 +2021,9 @@ public class WeekPanel extends JPanel {
                 String minutes = times[1];
                 int currentHour = Integer.parseInt(hours);
                 int currentMinutes = Integer.parseInt(minutes);
-                int totalMinutes = (currentHour *60) + currentMinutes;
-                int pxls = currentHour*hourpx + currentMinutes * minpix;
-                jScrollPane2.getVerticalScrollBar().setValue(pxls);
+                double holder = currentHour * hourpx + currentMinutes * minpix;
+                int pxls = (int)holder;
+                jScrollPane2.getVerticalScrollBar().setValue(pxls-250);
             }
         });
         
