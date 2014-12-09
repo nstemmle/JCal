@@ -24,6 +24,7 @@ public class NavButton extends JPanel {
         this.context = context;
         setOpaque(false);
         initialize(text, width, height);
+        label.setForeground(new Color(215, 215, 215));
     }
 
     private class NavLabel extends JLabel {

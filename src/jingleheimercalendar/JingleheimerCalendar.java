@@ -109,7 +109,7 @@ public class JingleheimerCalendar extends JFrame {
 
         //Set default location to center of default screen device
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setTitle("Jingleheimer-Schmidt Calendar");
+        this.setTitle("JCal");
 
         defaultFont = null;
         try {
