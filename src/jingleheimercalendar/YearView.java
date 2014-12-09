@@ -25,9 +25,6 @@ public class YearView extends ViewPanel {
         add(yearHeader);
         add(yearPanel);
 
-        //yearHeader.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.GREEN));
-        //yearPanel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.RED));
-
         int gridPaddingVertical = 0;
         springPanelAndHeader.putConstraint(SpringLayout.NORTH, yearHeader, gridPaddingVertical, SpringLayout.NORTH, this);
         int gridPaddingHorizontal = 0;

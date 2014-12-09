@@ -76,12 +76,8 @@ public class NavButton extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-        //g.setColor(NavigationPanel.COLOR_BACKGROUND_DEFAULT);
-        //g.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(currentColor);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         g2.dispose();
-        //label.repaint();
-        //JingleheimerCalendar.mNavigationPanel.repaint();
     }
 }

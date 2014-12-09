@@ -8,7 +8,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,15 +25,14 @@ class MonthPanel extends JPanel {
 
     private static final int COLUMN_PANE_HEIGHT = 50; //50 px
 
-   // public static final Color BLUE_SELECTED = new Color(76, 200, 237, 64);
-    public static final Color BLUE_SELECTED_A25 = new Color(0,150,191);
-    //public static final Color BLUE_SELECTED_A25 = new Color(76, 200, 237, 64);
-    public static final Color BLUE_SELECTED_DARK = new Color(0,100,128);
-    public static final Color BLUE_SELECTED_MEDIUM = new Color(76, 200, 237, 196);
-    //public static final Color BLUE_SELECTED_MEDIUM = new Color(0,150,191);
     public static final Color DEFAULT_PANEL_BACKGROUND = Color.WHITE;
+
+    public static final Color BLUE_SELECTED_A25 = new Color(0,150,191);
+    public static final Color BLUE_SELECTED_MEDIUM = new Color(76, 200, 237, 196);
+
     public static final Color GRAY_CURRENT_DAY_BACKGROUND = new Color(128,128,128,128);
     public static final Color GRAY_CURRENT_DAY_SUBTLE = new Color(196, 196, 196, 128);
+
     public static final Color TEXT_BLACK = Color.BLACK;
     public static final Color TEXT_GRAY = Color.LIGHT_GRAY;
 
@@ -78,6 +80,7 @@ class MonthPanel extends JPanel {
 
     MonthPanel(int width, int height, int monthDelta){
         setPreferredSize(new Dimension(width, height));
+        setBackground(DEFAULT_PANEL_BACKGROUND);
 
         //Begin creating components
         columnPane = new JPanel();
@@ -90,7 +93,7 @@ class MonthPanel extends JPanel {
         this.add(dayPane);
         dayPane.setLayout(gridDayPanes);
         dayPane.setPreferredSize(new Dimension(width, height - COLUMN_PANE_HEIGHT));
-        dayPane.setOpaque(false);
+        dayPane.setBackground(DEFAULT_PANEL_BACKGROUND);
 
         createColumnHeaders(width, height);
 
@@ -194,10 +197,6 @@ class MonthPanel extends JPanel {
         }
     }
 
-    public int getCurrentWeekday() {
-        return currentWeekday;
-    }
-
     public String getCurrentWeekdayString() {
         switch (currentWeekday) {
             case Calendar.SUNDAY:
@@ -219,8 +218,20 @@ class MonthPanel extends JPanel {
         }
     }
 
+    public int getCurrentWeekday() {
+        return currentWeekday;
+    }
+
     public int getCurrentDate() {
         return currentDate;
+    }
+
+    public int getNumDaysCurrentMonth() {
+        return numDaysCurrentMonth;
+    }
+
+    public int getNumDaysInPreviousMonth() {
+        return numDaysInPreviousMonth;
     }
 
     public int getCurrentMonth() {
@@ -262,14 +273,6 @@ class MonthPanel extends JPanel {
         return currentYear;
     }
 
-    public int getNumDaysCurrentMonth() {
-        return numDaysCurrentMonth;
-    }
-
-    public int getNumDaysInPreviousMonth() {
-        return numDaysInPreviousMonth;
-    }
-
     //Set up the LayoutManagers
     private void initializeLayoutManagers() {
         //Start with MonthPanel and columnPane,dayPane relationships
@@ -307,7 +310,6 @@ class MonthPanel extends JPanel {
                 columnLabel.setFont(fontHeaders);
             }
         }
-
     }
 
     private void updateOrdinalFonts() {
@@ -491,10 +493,7 @@ class MonthPanel extends JPanel {
     private void createDayOrdinals(int width, int height) {
         //Calculate preferred size of each label/panel (Same size for now)
         int paneWidth = width / NUM_COLUMNS;
-
         int paneHeight = (height - COLUMN_PANE_HEIGHT) / NUM_ROWS;
-
-        //Random r = new Random();
 
         SpringLayout sl = new SpringLayout();
         dayPanes = new DayPane[NUM_DAYS_DISPLAYED];
@@ -502,18 +501,8 @@ class MonthPanel extends JPanel {
             JLabel ordinal = new JLabel("",SwingConstants.CENTER);
             ordinal.setVerticalAlignment(SwingConstants.CENTER);
             dayPanes[i] = new DayPane(paneWidth, paneHeight, ordinal);
-            //Testing line to set random borders on each JLabel
-            //dayOrdinalLabels[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256))));
             dayPane.add(dayPanes[i]);
         }
-    }
-
-    public Calendar getCalendarCopy() {
-        return (Calendar)monthCalendar.clone();
-    }
-
-    public int getNumDaysPreviousMonthDisplayed() {
-        return numDaysPreviousMonthDisplayed;
     }
 
     //Update the text of the Ordinal Day labels

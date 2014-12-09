@@ -23,11 +23,9 @@ class MPanelMonthView extends JPanel {
 
     private static final int COLUMN_PANE_HEIGHT = 50; //50 px
 
-    public static final Color BLUE_SELECTED_A25 = new Color(0,150,191);
     public static final Color BLUE_SELECTED_MEDIUM = new Color(76, 200, 237, 196);
     public static final Color DEFAULT_PANEL_BACKGROUND = Color.WHITE;
     public static final Color GRAY_CURRENT_DAY_BACKGROUND = new Color(128,128,128,128);
-    public static final Color GRAY_CURRENT_DAY_SUBTLE = new Color(196, 196, 196, 128);
     public static final Color TEXT_BLACK = Color.BLACK;
     public static final Color TEXT_GRAY = Color.LIGHT_GRAY;
 
@@ -76,6 +74,7 @@ class MPanelMonthView extends JPanel {
 
     MPanelMonthView(int width, int height, int monthDelta){
         setPreferredSize(new Dimension(width, height));
+        setBackground(DEFAULT_PANEL_BACKGROUND);
 
         //Begin creating components
         columnPane = new JPanel();
@@ -88,7 +87,7 @@ class MPanelMonthView extends JPanel {
         this.add(dayPane);
         dayPane.setLayout(gridDayPanes);
         dayPane.setPreferredSize(new Dimension(width, height - COLUMN_PANE_HEIGHT));
-        dayPane.setOpaque(false);
+        dayPane.setBackground(DEFAULT_PANEL_BACKGROUND);
 
         createColumnHeaders(width, height);
 

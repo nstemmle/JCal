@@ -80,8 +80,6 @@ public class YearHeader extends JPanel{
 
     private void initializeLayouts(int width) {
         springHeader.putConstraint(SpringLayout.NORTH, yearLabel, PADDING_VERTICAL_CONTAINER_EDGE, SpringLayout.NORTH, this);
-        //springHeader.putConstraint(SpringLayout.NORTH, buttonLeft, PADDING_VERTICAL_BUTTON_LABEL, SpringLayout.NORTH, monthLabel);
-        //springHeader.putConstraint(SpringLayout.NORTH, buttonRight, PADDING_VERTICAL_BUTTON_LABEL, SpringLayout.NORTH, monthLabel);
         springHeader.putConstraint(SpringLayout.NORTH, buttonLeft, 0, SpringLayout.NORTH, yearLabel);
         springHeader.putConstraint(SpringLayout.SOUTH, buttonLeft, 0, SpringLayout.SOUTH, yearLabel);
 
@@ -91,8 +89,6 @@ public class YearHeader extends JPanel{
         springHeader.putConstraint(SpringLayout.WEST, buttonLeft, PADDING_HORIZONTAL_CONTAINER_EDGE, SpringLayout.WEST, this);
         springHeader.putConstraint(SpringLayout.WEST, yearLabel, PADDING_HORIZONTAL_BUTTON_LABEL, SpringLayout.EAST, buttonLeft);
         springHeader.putConstraint(SpringLayout.WEST, buttonRight, PADDING_HORIZONTAL_BUTTON_LABEL, SpringLayout.EAST, yearLabel);
-
-        //springHeader.putConstraint(SpringLayout.EAST, yearLabel, -PADDING_HORIZONTAL_CONTAINER_EDGE, SpringLayout.EAST, this);
     }
 
     private void updateYearLabel() {

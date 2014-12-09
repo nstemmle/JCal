@@ -57,7 +57,6 @@ public class NavigationPanel extends JPanel {
         setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
         setPreferredSize(new Dimension(width, MINIMUM_HEIGHT));
         setBackground(COLOR_BACKGROUND_DEFAULT);
-        //setBorder(BorderFactory.createMatteBorder(0,0,2,0,Color.BLACK));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         this.setLayout(gridBagLayout);
@@ -70,7 +69,6 @@ public class NavigationPanel extends JPanel {
 
         JPanel todayButtonPane = new JPanel();
         todayButtonPane.setBackground(COLOR_BACKGROUND_DEFAULT);
-        //todayButtonPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLUE));
         todayButtonPane.setPreferredSize(new Dimension(width / 5, MINIMUM_HEIGHT));
         todayButtonPane.setMinimumSize(new Dimension(width / 5, MINIMUM_HEIGHT));
 
@@ -84,19 +82,15 @@ public class NavigationPanel extends JPanel {
 
         MouseListener navButtonListener = new NavButtonMouseListener();
 
-        //NavButton replacement
         buttonToday = new NavButton(TEXT_BUTTON_TODAY, JingleheimerCalendar.VIEW_TODAY, width / 10, BUTTON_HEIGHT);
-        //buttonToday.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
         buttonToday.addMouseListener(navButtonListener);
         todayButtonPane.setLayout(new FlowLayout());
         todayButtonPane.add(buttonToday);
 
-        //buttonToday.setLocation(PADDING_HORIZONTAL_CONTAINER_EDGE, PADDING_VERTICAL_CONTAINER_EDGE);
 
 
         JPanel navButtonsPane = new JPanel();
         navButtonsPane.setBackground(COLOR_BACKGROUND_DEFAULT);
-        //navButtonsPane.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.GREEN));
         navButtonsPane.setPreferredSize(new Dimension((width / 5) * 3, MINIMUM_HEIGHT));
         navButtonsPane.setMinimumSize(new Dimension((width / 5) * 3, MINIMUM_HEIGHT));
 
@@ -107,28 +101,23 @@ public class NavigationPanel extends JPanel {
         add(navButtonsPane, gbConstraints);
 
         buttonDay = new NavButton(TEXT_BUTTON_DAY, JingleheimerCalendar.VIEW_DAY, width /10, BUTTON_HEIGHT);
-        //buttonDay.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
         buttonDay.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonDay);
 
         buttonWeek = new NavButton(TEXT_BUTTON_WEEK, JingleheimerCalendar.VIEW_WEEK, width /10, BUTTON_HEIGHT);
-        //buttonWeek.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
         buttonWeek.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonWeek);
 
         buttonMonth = new NavButton(TEXT_BUTTON_MONTH, JingleheimerCalendar.VIEW_MONTH, width /10, BUTTON_HEIGHT);
-        //buttonMonth.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
         buttonMonth.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonMonth);
 
         buttonYear = new NavButton(TEXT_BUTTON_YEAR, JingleheimerCalendar.VIEW_YEAR, width /10, BUTTON_HEIGHT);
-        //buttonYear.setPreferredSize(new Dimension(width / 10, BUTTON_HEIGHT));
         buttonYear.addMouseListener(navButtonListener);
         navButtonsPane.add(buttonYear);
 
         JPanel timeLabelPane = new JPanel();
         timeLabelPane.setBackground(COLOR_BACKGROUND_DEFAULT);
-        //timeLabelPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.PINK));
         timeLabelPane.setPreferredSize(new Dimension(width / 5, 40));
         timeLabelPane.setMinimumSize(new Dimension(width / 5, 40));
 
@@ -186,12 +175,7 @@ public class NavigationPanel extends JPanel {
         int minute = c.get(Calendar.MINUTE);
         int second = c.get(Calendar.SECOND);
         int milis = c.get(Calendar.MILLISECOND);
-        return hour + ":" + minute + ":" + second + "." + milis;
-    }
-
-    //TODO
-    private void initializeLayouts() {
-
+        return String.valueOf(hour >= 10 ? hour : "0" + hour) + ":" + String.valueOf(minute >= 10 ? minute : "0" + minute) + ":" + String.valueOf(second >= 10 ? second : "0" + second) + "." + milis;
     }
 
     private class NavButtonMouseListener implements MouseListener {

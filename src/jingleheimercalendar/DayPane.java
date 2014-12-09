@@ -39,7 +39,6 @@ class DayPane extends JPanel {
         sl.putConstraint(SpringLayout.EAST, ordinalLabel, 0, SpringLayout.EAST, this);
     }
 
-    //TODO:
     public void updateOrdinalLabel(String text, Font font, Color textColor) {
         ordinalLabel.setText(text);
         ordinalLabel.setFont(font);
@@ -70,10 +69,6 @@ class DayPane extends JPanel {
         return monthContext;
     }
 
-    protected Color getCurrentColor() {
-        return currentColor;
-    }
-
     protected void setCurrentColor(Color color) {
         currentColor = color;
         repaint();
@@ -84,8 +79,6 @@ class DayPane extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        //g.setColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
-        //g.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(currentColor);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         g2.dispose();

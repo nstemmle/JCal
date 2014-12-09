@@ -2,8 +2,6 @@ package jingleheimercalendar;
 
 import java.awt.Dimension;
 import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Created by Nathan on 10/28/2014.
  */

@@ -98,8 +98,6 @@ public class MonthHeader extends JPanel {
 
     private void initializeLayouts(int width) {
         springHeader.putConstraint(SpringLayout.NORTH, monthLabel, PADDING_VERTICAL_CONTAINER_EDGE, SpringLayout.NORTH, this);
-        //springHeader.putConstraint(SpringLayout.NORTH, buttonLeft, PADDING_VERTICAL_BUTTON_LABEL, SpringLayout.NORTH, monthLabel);
-        //springHeader.putConstraint(SpringLayout.NORTH, buttonRight, PADDING_VERTICAL_BUTTON_LABEL, SpringLayout.NORTH, monthLabel);
         springHeader.putConstraint(SpringLayout.NORTH, buttonLeft, 0, SpringLayout.NORTH, monthLabel);
         springHeader.putConstraint(SpringLayout.SOUTH, buttonLeft, 0, SpringLayout.SOUTH, monthLabel);
 

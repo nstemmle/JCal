@@ -30,19 +30,7 @@ public class CategoryPanel extends JPanel {
     public static final Color COLOR_BACKGROUND_DEFAULT = Color.WHITE;
 
     public static final Color COLOR_TEXT_SELECTED = Color.WHITE;
-    //public static final Color COLOR_TEXT_SELECTED = Color.BLACK;
     public static final Color COLOR_TEXT_DEFAULT = new Color(128,128,128);
-
-    /*public static final Color COLOR_CAT_ONE_DEFAULT = new Color(255,183,0,64);
-    public static final Color COLOR_CAT_ONE_SELECTED = new Color(240,200,0);
-    public static final Color COLOR_CAT_TWO_DEFAULT = new Color(90,255,0,64);
-    public static final Color COLOR_CAT_TWO_SELECTED = new Color(90,255,0);
-    public static final Color COLOR_CAT_THREE_DEFAULT = new Color(255,68,0,64);
-    public static final Color COLOR_CAT_THREE_SELECTED = new Color(255,68,0);
-    public static final Color COLOR_CAT_FOUR_DEFAULT = new Color(0,200,255,64);
-    public static final Color COLOR_CAT_FOUR_SELECTED = new Color(0,200,255);
-    public static final Color COLOR_CAT_FIVE_DEFAULT = new Color(196,0,255,64);
-    public static final Color COLOR_CAT_FIVE_SELECTED = new Color(196,0,255);*/
 
     public static final Color COLOR_CAT_ONE_DEFAULT = new Color(63,169,245);
     public static final Color COLOR_CAT_TWO_DEFAULT = new Color(255,147,30);

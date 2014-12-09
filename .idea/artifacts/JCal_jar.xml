@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="TeamJingleherimer-Schmidt:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/TeamJingleherimer_Schmidt_jar</output-path>
+  <artifact type="jar" build-on-make="true" name="JCal:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JCal_jar</output-path>
     <root id="archive" name="TeamJingleherimer-Schmidt.jar">
       <element id="module-output" name="TeamJingleherimer-Schmidt" />
     </root>

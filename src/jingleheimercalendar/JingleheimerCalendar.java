@@ -18,12 +18,13 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Nathan
+ */
 public class JingleheimerCalendar extends JFrame {
     //Constants for preferred/target screen width and height
     public static final int PREFERRED_WIDTH = 1280;
@@ -38,8 +39,6 @@ public class JingleheimerCalendar extends JFrame {
     public static final String PATH_FONT_HELVETICA = "/font/HelveticaNeue.ttf";
 
     // Class variables
-    private Timer mTimer;
-    private Calendar mCalendar;
     protected static NavigationPanel mNavigationPanel;
     private static CategoryBar mCategoryPanel;
 
@@ -96,13 +95,10 @@ public class JingleheimerCalendar extends JFrame {
 
         this.setSize(prefWidth, prefHeight);
         this.setPreferredSize(new Dimension(prefWidth, prefHeight));
-        //System.out.println(this.getBounds());
-        //System.out.println(getContentPane().getBounds());
         this.setResizable(false);
 
         int viewWidth = PREFERRED_WIDTH;
         int viewHeight = PREFERRED_HEIGHT - CategoryBar.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT;
-        //System.out.println("viewWidth: " + viewWidth + ", viewHeight: " + viewHeight);
 
         springLayoutRoot = new SpringLayout();
         getContentPane().setLayout(springLayoutRoot);
@@ -117,9 +113,6 @@ public class JingleheimerCalendar extends JFrame {
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
-
-        //if (defaultFont == null)
-           // System.out.println("FUUUUUUUU!!!!");
 
         //Initialize Navigation and Category Panels
         Insets nullInsets = new Insets(0,0,0,0);
@@ -155,13 +148,12 @@ public class JingleheimerCalendar extends JFrame {
                 }
             }
         } catch (Exception e) {
-            // If Nimbus is not available, you can set the GUI to another look and feel.
+            e.printStackTrace();
         }
 
         mNavigationPanel.setBackground(Color.BLUE);
 
         mCategoryPanel.setBackground(Color.WHITE);
-        //mCategoryPanel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.PINK));
         getContentPane().setBackground(Color.WHITE);
         viewPanel.setBackground(Color.WHITE);
         this.setBackground(Color.WHITE);
@@ -170,24 +162,6 @@ public class JingleheimerCalendar extends JFrame {
         this.setVisible(true);
         this.validate();
 
-        /*System.out.println("NavigationPanel.bounds: " + mNavigationPanel.getBounds().toString());
-        System.out.println("NavigationPanel.x: " + mNavigationPanel.getX());
-        System.out.println("NavigationPanel.y: " + mNavigationPanel.getY());
-
-        System.out.println("viewPanel.bounds: " + viewPanel.getBounds().toString());
-        System.out.println("viewPanel.width: " + viewPanel.getWidth());
-        System.out.println("viewPanel.height: " + viewPanel.getHeight());
-        System.out.println("viewPanel.insets: " + viewPanel.getInsets());
-        System.out.println("viewPanel.border: " + viewPanel.getBorder());
-        System.out.println("viewPanel.x: " + viewPanel.getX());
-        System.out.println("viewPanel.y: " + viewPanel.getY());
-
-        System.out.println("CategoryPanel.bounds: " + mCategoryPanel.getBounds().toString());
-        System.out.println("CategoryPanel.x: " + mCategoryPanel.getX());
-        System.out.println("CategoryPanel.y: " + mCategoryPanel.getY());*/
-
-        //if (maxWidth && maxHeight)
-        //    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
     }
 
@@ -196,7 +170,6 @@ public class JingleheimerCalendar extends JFrame {
         Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
         font = font.deriveFont(Font.PLAIN, 24f);
         return font;
-        //return Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream()).deriveFont(Font.PLAIN, 24f);
     }
 
     static Rectangle getScreenBounds(Window currentWindow) {
@@ -254,33 +227,17 @@ public class JingleheimerCalendar extends JFrame {
 
     private void initializeViewSprings() {
         add(mNavigationPanel);
-        /*SpringLayout.Constraints nav = springLayoutRoot.getConstraints(mNavigationPanel);
-        nav.setX(Spring.constant(0));
-        nav.setY(Spring.constant(0));
-        nav.setWidth(Spring.constant(PREFERRED_WIDTH));
-        nav.setHeight(Spring.constant(NavigationPanel.MINIMUM_HEIGHT));
-        //nav.getConstraint(SpringLayout.WEST).setValue();*/
 
         springLayoutRoot.putConstraint(SpringLayout.NORTH, mNavigationPanel, 0, SpringLayout.NORTH, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.WEST, mNavigationPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, mNavigationPanel, 0, SpringLayout.EAST, getContentPane());
 
         add(mCategoryPanel);
-        /*SpringLayout.Constraints cat = springLayoutRoot.getConstraints(mCategoryPanel);
-        cat.setX(Spring.constant(0));
-        cat.setY(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT));
-        cat.setWidth(Spring.constant(PREFERRED_WIDTH));
-        cat.setHeight(Spring.constant(CategoryBar.MINIMUM_HEIGHT));*/
         springLayoutRoot.putConstraint(SpringLayout.SOUTH, mCategoryPanel, 0, SpringLayout.SOUTH, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.WEST, mCategoryPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, mCategoryPanel, 0, SpringLayout.EAST, getContentPane());
 
         add(viewPanel);
-        /*SpringLayout.Constraints view = springLayoutRoot.getConstraints(viewPanel);
-        view.setX(Spring.constant(0));
-        view.setY(Spring.constant(NavigationPanel.MINIMUM_HEIGHT));
-        view.setWidth(Spring.constant(PREFERRED_WIDTH));
-        view.setHeight(Spring.constant(PREFERRED_HEIGHT - NavigationPanel.MINIMUM_HEIGHT - CategoryBar.MINIMUM_HEIGHT));*/
         springLayoutRoot.putConstraint(SpringLayout.NORTH, viewPanel, 0, SpringLayout.SOUTH, mNavigationPanel);
         springLayoutRoot.putConstraint(SpringLayout.WEST, viewPanel, 0, SpringLayout.WEST, getContentPane());
         springLayoutRoot.putConstraint(SpringLayout.EAST, viewPanel, 0, SpringLayout.EAST, getContentPane());
@@ -345,6 +302,8 @@ public class JingleheimerCalendar extends JFrame {
                 return -1;
         }
     }
+
+    //Brandon from John's demo base
     private void demo(){
         try {
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");

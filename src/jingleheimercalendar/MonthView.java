@@ -1,13 +1,12 @@
 package jingleheimercalendar;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SpringLayout;
+import java.awt.Dimension;
 
 /**
  * Created by Nathan on 10/28/2014.
  */
 public class MonthView extends ViewPanel {
-    //static MonthPanel monthPanel;
     static MPanelMonthView monthPanel;
     static MonthHeader monthHeader;
 
