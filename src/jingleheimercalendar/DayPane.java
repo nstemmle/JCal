@@ -56,6 +56,10 @@ class DayPane extends JPanel {
         ordinalLabel.setForeground(color);
     }
 
+    public void setLabelFont(Font font) {
+        ordinalLabel.setFont(font);
+    }
+
     public int getDay() {
         return Integer.valueOf(ordinalLabel.getText());
     }

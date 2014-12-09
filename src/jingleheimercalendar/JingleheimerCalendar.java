@@ -430,6 +430,11 @@ public class JingleheimerCalendar extends JFrame {
             e = new Event("New Year's Day", "", "All Day", "",none,d);
             uc.addEventsByDate(e,d);
 
+            //TODO: remove
+            d = df.parse("01/01/2014");
+            e = new Event("New Year's Day", "", "All Day", "", none, d);
+            uc.addEventsByDate(e,d);
+
             // Tasks
             uc.addTasks(new Task("Cake and Ice Cream","Order from Yummy Cakes",3,school,"3:00 pm"));
             uc.addTasks(new Task("Finish quilt","Justine's new baby!",2,none,""));

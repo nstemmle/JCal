@@ -23,7 +23,7 @@ public class NavButton extends JPanel {
         super();
         this.context = context;
         setOpaque(false);
-        initiliaze(text, width, height);
+        initialize(text, width, height);
     }
 
     private class NavLabel extends JLabel {
@@ -34,7 +34,7 @@ public class NavButton extends JPanel {
         }
     }
 
-    private void initiliaze(String labelText, int width, int height) {
+    private void initialize(String labelText, int width, int height) {
         Dimension dimens = new Dimension(width, height);
         setPreferredSize(dimens);
         currentColor = NavigationPanel.COLOR_BUTTON_DEFAULT;

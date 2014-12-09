@@ -14,7 +14,6 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Calendar;
-import java.util.Random;
 
 /**
  * Created by Nathan on 10/29/2014.
@@ -30,19 +29,12 @@ class YearPanel extends JPanel {
     private int vgap = 10;
 
     YearPanel(int width, int height) {
-        //System.out.println("yearPanel.width: " + width);
-        //System.out.println("yearPanel.height: " + height);
         setBackground(Color.WHITE);
         Calendar c = Calendar.getInstance();
         int currentMonth = c.get(Calendar.MONTH);
         monthPanelWrappers = new MonthPanelYearViewWrapper[NUM_MONTHS];
-        Random r = new Random();
-        //System.out.println("monthPanelWrapper.width: " + String.valueOf((width - (hgap*(NUM_COLUMNS - 1))) / 4));
-        //System.out.println("monthPanelWrapper.height:" + String.valueOf((height - (vgap*(NUM_ROWS - 1))) / 3));
         for (int i = 0; i < NUM_MONTHS; i++) {
             monthPanelWrappers[i] = new MonthPanelYearViewWrapper((width - (hgap*(NUM_COLUMNS - 1))) / 4, (height - (vgap*(NUM_ROWS - 1))) / 3, -currentMonth + i);
-            //monthPanelWrappers[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256))));
-            //monthPanelWrappers[i].setBorder(BorderFactory.createMatteBorder(2,2,2,2, Color.BLACK));
             add(monthPanelWrappers[i]);
         }
         GridLayout gridLayout = new GridLayout(3, 4, hgap, vgap);

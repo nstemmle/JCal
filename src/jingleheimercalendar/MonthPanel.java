@@ -134,6 +134,7 @@ class MonthPanel extends JPanel {
         }
     }
 
+    //Will not work for dates from a previous month or later month; only the current month
     public DayPane getDayPane(int day) {
         return dayPanes[numDaysPreviousMonthDisplayed + day - 1];
     }

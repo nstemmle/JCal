@@ -6,8 +6,11 @@
 package jingleheimercalendar;
 
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import java.awt.Color;
 import java.awt.Font;
 
 /**
@@ -103,7 +106,25 @@ public class CategoryBar extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        
+        //TODO: Is this something we want?
+        ///*
+        Color textColor = new Color(50,50,50);
+        Font textFont = JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 30f);
+        Border catBorder = BorderFactory.createMatteBorder(2,2,0,2,textColor);
+        Border cat1b = BorderFactory.createMatteBorder(2,2,0,1,textColor);
+        Border cat2b = BorderFactory.createMatteBorder(2,1,0,1,textColor);
+        Border cat3b = BorderFactory.createMatteBorder(2,1,0,1,textColor);
+        Border cat4b = BorderFactory.createMatteBorder(2,1,0,2,textColor);
+        Border cat5b = BorderFactory.createMatteBorder(2,0,0,2,textColor);
+        Border cat5b1 = BorderFactory.createMatteBorder(0,0,0,2,textColor);
+
+        category1.setBorder(cat1b);
+        category2.setBorder(cat2b);
+        category3.setBorder(cat3b);
+        category4.setBorder(cat4b);
+        topBar.setBorder(cat5b);
+        addNew.setBorder(cat5b1);//*/
+
         left.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         left.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
         left.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftArrow32.png"))); // NOI18N
@@ -197,8 +218,8 @@ public class CategoryBar extends javax.swing.JPanel {
             }
         });
 
-        catName1.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 24f)); // NOI18N
-        catName1.setForeground(new java.awt.Color(69, 69, 69));
+        catName1.setFont(textFont); // NOI18N
+        catName1.setForeground(textColor);
         catName1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         catName1.setText(cat1.getName());
         
@@ -238,8 +259,8 @@ public class CategoryBar extends javax.swing.JPanel {
                 showCategory2Info(evt);
             }
         });
-        catName2.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 24f));
-        catName2.setForeground(new java.awt.Color(69,69,69));
+        catName2.setFont(textFont);
+        catName2.setForeground(textColor);
         catName2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         catName2.setText(cat2.getName());
         
@@ -279,8 +300,8 @@ public class CategoryBar extends javax.swing.JPanel {
                 showCategory3Info(evt);
             }
         });
-        catName3.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 24f));
-        catName3.setForeground(new java.awt.Color(69, 69, 69));
+        catName3.setFont(textFont);
+        catName3.setForeground(textColor);
         catName3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         catName3.setText(cat3.getName());
         
@@ -320,8 +341,8 @@ public class CategoryBar extends javax.swing.JPanel {
                 showCategory4Info(evt);
             }
         });
-        catName4.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 24f));
-        catName4.setForeground(new java.awt.Color(69, 69, 69));
+        catName4.setFont(textFont);
+        catName4.setForeground(textColor);
         catName4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         catName4.setText(cat4.getName());
        

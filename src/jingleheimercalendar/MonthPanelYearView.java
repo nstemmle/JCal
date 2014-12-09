@@ -1,5 +1,6 @@
 package jingleheimercalendar;
 
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
@@ -21,58 +22,39 @@ public class MonthPanelYearView extends MonthPanel {
         updateDayOrdinals();
     }
 
-    protected void updateMonthLabel() {
-    }
-
-    //TODO: Debug + fix labels being incorrect
     @Override
     protected void updateDayOrdinals() {
         super.updateDayOrdinals();
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        int day = getNumDaysInPreviousMonth() - getNumDaysPreviousMonthDisplayed();
         int m = getCurrentMonth();
-        int year = getCurrentYear();
         ArrayList<Event> allDayEvents = null;
-
-        int labelsIndex = 0;
-        for (; labelsIndex < getNumDaysPreviousMonthDisplayed(); labelsIndex++,day++) {
-            String date = String.valueOf(getCurrentMonth() >= 10 ? m : "0" + m) + "/" +
-                    String.valueOf(day >= 10 ? day : "0" + day) + "/" + String.valueOf(year);
+        Font bold = JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 22f);
+        for (int i = 0; i < MonthPanel.NUM_DAYS_DISPLAYED; i ++) {
+            int year = getCurrentYear();
+            DayPane current = getDayPaneAtIndex(i);
+            int month = m + 1 + current.getMonthContext();
+            if (month == 0) {
+                month = 12;
+                year--;
+            } else if (month == 13){
+                month = 1;
+                year++;
+            }
+            int day = current.getDay();
+            String date = String.valueOf(month >= 10 ? month : "0" + month);
+            date = date.concat("/").concat(String.valueOf(day >= 10 ? day : "0" + day )).concat("/");
+            date = date.concat(String.valueOf(year));
             try {
                 allDayEvents = UserCalendar.getInstance().getAllDayEventsByDate(df.parse(date));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if (allDayEvents != null && allDayEvents.size() > 0)
-                getDayPaneAtIndex(labelsIndex).setLabelColor(allDayEvents.get(0).getCategoryColor());
-        }
-
-        day = 1;
-        for (; labelsIndex < getNumDaysCurrentMonth() + getNumDaysPreviousMonthDisplayed(); labelsIndex++, day++) {
-            String date = String.valueOf(getCurrentMonth() >= 10 ? m : "0" + m) + "/" +
-                    String.valueOf(day >= 10 ? day : "0" + day) + "/" + String.valueOf(year);
-            try {
-                allDayEvents = UserCalendar.getInstance().getAllDayEventsByDate(df.parse(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            if (allDayEvents != null && allDayEvents.size() > 0) {
+                current.setLabelColor(allDayEvents.get(0).getCategoryColor());
+                current.setLabelFont(bold);
             }
-            if (allDayEvents != null && allDayEvents.size() > 0)
-                getDayPaneAtIndex(labelsIndex).setLabelColor(allDayEvents.get(0).getCategoryColor());
-        }
 
-        day = 1;
-        for (int i = 1; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++, i++) {
-            String date = String.valueOf(getCurrentMonth() >= 10 ? m : "0" + m) + "/" +
-                    String.valueOf(day >= 10 ? day : "0" + day) + "/" + String.valueOf(year);
-            try {
-                allDayEvents = UserCalendar.getInstance().getAllDayEventsByDate(df.parse(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (allDayEvents != null && allDayEvents.size() > 0)
-                getDayPaneAtIndex(labelsIndex).setLabelColor(allDayEvents.get(0).getCategoryColor());
         }
-
     }
 
     private class YearViewDayPanelClickedListener implements MouseListener {
