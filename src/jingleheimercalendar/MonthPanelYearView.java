@@ -28,10 +28,12 @@ public class MonthPanelYearView extends MonthPanel {
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         int m = getCurrentMonth();
         ArrayList<Event> allDayEvents = null;
-        Font bold = JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 22f);
+        Font bold = JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 18f);
         for (int i = 0; i < MonthPanel.NUM_DAYS_DISPLAYED; i ++) {
             int year = getCurrentYear();
             DayPane current = getDayPaneAtIndex(i);
+            if (current.getMonthContext() != DayPane.SWITCH_CURRENT_MONTH)
+                continue;
             int month = m + 1 + current.getMonthContext();
             if (month == 0) {
                 month = 12;
@@ -76,7 +78,7 @@ public class MonthPanelYearView extends MonthPanel {
             //Check to see if an action needs to be performed
             if (e.getClickCount() == 2) {
                 JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
-                JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth(), getCurrentYear());
+                JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth() + parent.getMonthContext(), getCurrentYear());
             }
             JingleheimerCalendar.repaintDisplayedCategoryWindow();
         }

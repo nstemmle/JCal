@@ -110,20 +110,20 @@ public class CategoryBar extends javax.swing.JPanel {
         ///*
         Color textColor = new Color(50,50,50);
         Font textFont = JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 30f);
-        Border catBorder = BorderFactory.createMatteBorder(2,2,0,2,textColor);
-        Border cat1b = BorderFactory.createMatteBorder(2,2,0,1,textColor);
-        Border cat2b = BorderFactory.createMatteBorder(2,1,0,1,textColor);
-        Border cat3b = BorderFactory.createMatteBorder(2,1,0,1,textColor);
-        Border cat4b = BorderFactory.createMatteBorder(2,1,0,2,textColor);
-        Border cat5b = BorderFactory.createMatteBorder(2,0,0,2,textColor);
-        Border cat5b1 = BorderFactory.createMatteBorder(0,0,0,2,textColor);
+        //Border catBorder = BorderFactory.createMatteBorder(2,2,0,2,textColor);
+        //Border cat1b = BorderFactory.createMatteBorder(2,2,0,1,textColor);
+        //Border cat2b = BorderFactory.createMatteBorder(2,1,0,1,textColor);
+        //Border cat3b = BorderFactory.createMatteBorder(2,1,0,1,textColor);
+        //Border cat4b = BorderFactory.createMatteBorder(2,1,0,2,textColor);
+        //Border cat5b = BorderFactory.createMatteBorder(2,0,0,2,textColor);
+        //Border cat5b1 = BorderFactory.createMatteBorder(0,0,0,2,textColor);
 
-        category1.setBorder(cat1b);
+        /*category1.setBorder(cat1b);
         category2.setBorder(cat2b);
         category3.setBorder(cat3b);
         category4.setBorder(cat4b);
         topBar.setBorder(cat5b);
-        addNew.setBorder(cat5b1);//*/
+        addNew.setBorder(cat5b1);*/
 
         left.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         left.setVerticalAlignment(javax.swing.SwingConstants.CENTER);

@@ -504,6 +504,7 @@ public class DayPanel extends javax.swing.JPanel {
         weekdayText.setText(getWeekDay((c.get(Calendar.DAY_OF_WEEK))));
         monthPanel.changeMonthBy(day, month, year);
         monthPanel.changeHighlightedDay(c);
+        refresh();
     }
 
     public void resetEventPanel(){

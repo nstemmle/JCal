@@ -8,6 +8,8 @@ import java.awt.Dimension;
  * Created by Nathan on 10/28/2014.
  */
 public class YearView extends ViewPanel {
+    private YearPanel yearPanel;
+    private YearHeader yearHeader;
     private static DayPane lastClicked;
 
     YearView(int width, int height) {
@@ -17,8 +19,8 @@ public class YearView extends ViewPanel {
         setBackground(Color.WHITE);
         SpringLayout springPanelAndHeader = new SpringLayout();
 
-        YearPanel yearPanel = new YearPanel(width, height - YearHeader.MINIMUM_HEIGHT - 10);
-        YearHeader yearHeader = new YearHeader(width);
+        yearPanel = new YearPanel(width, height - YearHeader.MINIMUM_HEIGHT - 10);
+        yearHeader = new YearHeader(width);
 
         add(yearHeader);
         add(yearPanel);
@@ -37,6 +39,11 @@ public class YearView extends ViewPanel {
         springPanelAndHeader.putConstraint(SpringLayout.EAST, yearPanel, gridPaddingHorizontal, SpringLayout.EAST, this);
         springPanelAndHeader.putConstraint(SpringLayout.SOUTH, yearPanel, 0, SpringLayout.SOUTH, this);
 
+    }
+
+    @Override
+    public void refresh() {
+        yearPanel.refresh1();
     }
 
     protected static  DayPane getLastClicked() {

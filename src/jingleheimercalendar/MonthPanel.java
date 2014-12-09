@@ -8,10 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -504,7 +501,7 @@ class MonthPanel extends JPanel {
         for (int i = 0; i < NUM_DAYS_DISPLAYED; i++) {
             JLabel ordinal = new JLabel("",SwingConstants.CENTER);
             ordinal.setVerticalAlignment(SwingConstants.CENTER);
-            dayPanes[i] = new DayPane(this, paneWidth, paneHeight, ordinal);
+            dayPanes[i] = new DayPane(paneWidth, paneHeight, ordinal);
             //Testing line to set random borders on each JLabel
             //dayOrdinalLabels[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256))));
             dayPane.add(dayPanes[i]);
@@ -528,7 +525,7 @@ class MonthPanel extends JPanel {
 
         //Previous month labels
         for (labelsIndex = 0; labelsIndex < numDaysPreviousMonthDisplayed; labelsIndex++) {
-            dayPanes[labelsIndex].updateOrdinalLabel(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex), fontOrdinals ,TEXT_GRAY);
+            dayPanes[labelsIndex].updateOrdinalLabel(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex), fontOrdinals, TEXT_GRAY);
             dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_PREVIOUS_MONTH);
         }
 

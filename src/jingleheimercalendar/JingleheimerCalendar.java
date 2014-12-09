@@ -295,11 +295,14 @@ public class JingleheimerCalendar extends JFrame {
     }
 
     public static void displayView(int viewIndex) {
-        if (viewIndex == INDEX_TODAY_VIEW)  {
-            cardViewLayout.show(viewPanel,views[INDEX_DAY_VIEW].getStringValue());
+        if (viewIndex == INDEX_TODAY_VIEW) {
+            cardViewLayout.show(viewPanel, views[INDEX_DAY_VIEW].getStringValue());
             DayView.goToCurrentDay();
             views[INDEX_DAY_VIEW].refresh();
             setIndexDisplayedview(INDEX_DAY_VIEW);
+        } else if (viewIndex == INDEX_YEAR_VIEW) {
+            cardViewLayout.show(viewPanel, views[viewIndex].getStringValue());
+            views[viewIndex].refresh();
         } else {
             cardViewLayout.show(viewPanel,views[viewIndex].getStringValue());
             views[viewIndex].refresh();
@@ -348,11 +351,15 @@ public class JingleheimerCalendar extends JFrame {
             UserCalendar uc = UserCalendar.getInstance();
             ArrayList<Category> categories = uc.getCategories();
 
+            categories.add(new Category("US Holidays", new Color(196, 2, 51)));
+
             Category none     = categories.get(0);
             Category work     = categories.get(1);
             Category school   = categories.get(2);
             Category family   = categories.get(3);
             Category wellness = categories.get(4);
+            Category holiday = categories.get(5);
+
 
             Date d;
             Event e;
@@ -373,6 +380,7 @@ public class JingleheimerCalendar extends JFrame {
             d = df.parse("12/11/2014");
             e = new Event("HR Audit", "The auditor will be here!", "9:00 am", "11:00 am",work,d);
             uc.addEventsByDate(e,d);
+
 
             d = df.parse("12/09/2014");
             e = new Event("Andy's practice", "My turn to pick the boys up", "3:00 pm", "4:00 pm",school,d);
@@ -406,34 +414,200 @@ public class JingleheimerCalendar extends JFrame {
             e = new Event("New Years' Party", "Our place", "9:00 pm", "2:00 am",family,d);
             uc.addEventsByDate(e,d);
 
+
             d = df.parse("12/16/2014");
-            e = new Event("Hanukkah", "begins at sundown", "All Day", "",none,d);
+            e = new Event("Hanukkah", "begins at sundown", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/16/2015");
+            e = new Event("Hanukkah", "begins at sundown", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
 
             d = df.parse("12/24/2014");
-            e = new Event("Christmas Eve", "", "All Day", "",none,d);
+            e = new Event("Christmas Eve", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/24/2015");
+            e = new Event("Christmas Eve", "", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
 
             d = df.parse("12/25/2014");
-            e = new Event("Christmas", "", "All Day", "",none,d);
+            e = new Event("Christmas", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/25/2015");
+            e = new Event("Christmas", "", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
 
             d = df.parse("12/26/2014");
-            e = new Event("Boxing Day", "Canada", "All Day", "",none,d);
+            e = new Event("Boxing Day", "Canada", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/26/2015");
+            e = new Event("Boxing Day", "Canada", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
 
             d = df.parse("12/31/2014");
-            e = new Event("New Year's Eve", "", "All Day", "",none,d);
+            e = new Event("New Year's Eve", "", "All Day", "", holiday, d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/31/2015");
+            e = new Event("New Year's Eve", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("1/1/2014");
+            e = new Event("New Year's Day", "", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
 
             d = df.parse("1/1/2015");
-            e = new Event("New Year's Day", "", "All Day", "",none,d);
+            e = new Event("New Year's Day", "", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
 
-            //TODO: remove
-            d = df.parse("01/01/2014");
-            e = new Event("New Year's Day", "", "All Day", "", none, d);
+            d = df.parse("1/20/2015");
+            e = new Event("Martin Luther King Day", "", "All Day", "",holiday,d);
             uc.addEventsByDate(e,d);
+
+            d = df.parse("1/20/2014");
+            e = new Event("Martin Luther King Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("2/14/2015");
+            e = new Event("Valentine's Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("2/14/2014");
+            e = new Event("Valentine's Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("2/17/2015");
+            e = new Event("Presidents' Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("2/17/2014");
+            e = new Event("Presidents' Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("4/5/2015");
+            e = new Event("Easter", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("4/20/2014");
+            e = new Event("Easter", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("5/11/2015");
+            e = new Event("Mothers' Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("5/11/2014");
+            e = new Event("Mothers' Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("6/15/2015");
+            e = new Event("Fathers'Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("6/15/2014");
+            e = new Event("Fathers'Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("7/4/2015");
+            e = new Event("Independence Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("7/4/2014");
+            e = new Event("Independence Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("9/1/2015");
+            e = new Event("Labor Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("9/1/2014");
+            e = new Event("Labor Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("10/13/2015");
+            e = new Event("Columbus Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("10/13/2014");
+            e = new Event("Columbus Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+
+            d = df.parse("10/31/2015");
+            e = new Event("Columbus Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("10/31/2014");
+            e = new Event("Columbus Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("11/11/2015");
+            e = new Event("Veterans Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("11/11/2014");
+            e = new Event("Veterans Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("11/27/2015");
+            e = new Event("Thanksgiving Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("11/27/2014");
+            e = new Event("Thanksgiving Day", "", "All Day", "",holiday,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("8/11/2014");
+            e = new Event("Vacation - WDW", "", "All Day", "",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("8/12/2014");
+            e = new Event("Vacation - WDW", "", "All Day", "",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("8/13/2014");
+            e = new Event("Vacation - WDW", "", "All Day", "",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("8/14/2014");
+            e = new Event("Vacation - WDW", "", "All Day", "",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("8/15/2014");
+            e = new Event("Vacation - WDW", "", "All Day", "",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("3/14/2014");
+            e = new Event("Conference", "", "All Day", "",work,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("3/15/2014");
+            e = new Event("Conference", "", "All Day", "",work,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("3/16/2014");
+            e = new Event("Conference", "", "All Day", "",work,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("6/16/2014");
+            e = new Event("Regents", "", "All Day", "",school,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("6/17/2014");
+            e = new Event("Regents", "", "All Day", "",school,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("6/18/2014");
+            e = new Event("Regents", "", "All Day", "",school,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("6/19/2014");
+            e = new Event("Regents", "", "All Day", "",school,d);
+            uc.addEventsByDate(e,d);
+
 
             // Tasks
             uc.addTasks(new Task("Cake and Ice Cream","Order from Yummy Cakes",3,school,"3:00 pm"));

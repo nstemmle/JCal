@@ -18,15 +18,13 @@ class DayPane extends JPanel {
     public static final int SWITCH_CURRENT_MONTH = 0;
     public static final int SWITCH_NEXT_MONTH = 1;
     private int monthContext;
-    private MonthPanel parentPanel;
     private boolean isCurrentDay;
     private Color currentColor;
     private JLabel ordinalLabel;
 
-    DayPane(MonthPanel parentPanel, int width, int height, JLabel ordinalLabel) {
+    DayPane(int width, int height, JLabel ordinalLabel) {
         super();
         this.ordinalLabel = ordinalLabel;
-        this.parentPanel = parentPanel;
         setBackground(MonthPanel.DEFAULT_PANEL_BACKGROUND);
         currentColor = MonthPanel.DEFAULT_PANEL_BACKGROUND;
         setPreferredSize(new Dimension(width, height));

@@ -1,13 +1,14 @@
 package jingleheimercalendar;
 
-import javax.swing.SpringLayout;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Nathan on 10/28/2014.
  */
 public class MonthView extends ViewPanel {
-    static MonthPanel monthPanel;
+    //static MonthPanel monthPanel;
+    static MPanelMonthView monthPanel;
     static MonthHeader monthHeader;
 
     MonthView(int width, int height) {
@@ -15,7 +16,7 @@ public class MonthView extends ViewPanel {
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(new Dimension(JingleheimerCalendar.MINIMUM_WIDTH, JingleheimerCalendar.MINIMUM_VIEW_HEIGHT));
 
-        monthPanel = new MonthPanelMonthView(width, height - MonthHeader.HEADER_MINIMUM_HEIGHT, 0);
+        monthPanel = new MPanelMonthView(width, height - MonthHeader.HEADER_MINIMUM_HEIGHT, 0);
         monthHeader = new MonthHeader(width, MonthHeader.HEADER_MINIMUM_HEIGHT);
 
         SpringLayout springPanelAndHeader = new SpringLayout();

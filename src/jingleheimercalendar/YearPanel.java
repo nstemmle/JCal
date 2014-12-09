@@ -75,8 +75,8 @@ class YearPanel extends JPanel {
             setPreferredSize(new Dimension(width, height));
             setBackground(Color.WHITE);
             monthPanel = new MonthPanelYearView(width, (height / 5) * 4, monthdelta);
-            monthPanel.setFontSizeHeaders(22);
-            monthPanel.setFontSizeOrdinals(22);
+            monthPanel.setFontSizeHeaders(20);
+            monthPanel.setFontSizeOrdinals(16);
             add(monthPanel);
 
             MonthLabelMouseListener mouseListener = new MonthLabelMouseListener();
@@ -118,6 +118,10 @@ class YearPanel extends JPanel {
             setLayout(sl);
         }
 
+        public void refresh1() {
+            monthPanel.updateDayOrdinals();
+        }
+
         protected int getCurrentYear() {
             return monthPanel.getCurrentYear();
         }
@@ -136,6 +140,8 @@ class YearPanel extends JPanel {
                 if (e.getClickCount() >= 2) {
                     JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_MONTH_VIEW);
                     JingleheimerCalendar.changeMonthViewMonth(getCurrentMonth(), getCurrentYear());
+                    MonthView.monthHeader.update();
+                    JingleheimerCalendar.repaintDisplayedCategoryWindow();
                 }
             }
 
@@ -143,12 +149,14 @@ class YearPanel extends JPanel {
             public void mouseEntered(MouseEvent e) {
                 MonthLabelHolder parent = (MonthLabelHolder) e.getComponent();
                 parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
+                JingleheimerCalendar.repaintDisplayedCategoryWindow();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 MonthLabelHolder parent = (MonthLabelHolder) e.getComponent();
                 parent.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
+                JingleheimerCalendar.repaintDisplayedCategoryWindow();
             }
 
             @Override
@@ -176,6 +184,12 @@ class YearPanel extends JPanel {
             updateMonthPanels(yearDelta*12);
         }
         currentYear = monthPanelWrappers[0].getCurrentYear();
+    }
+
+    public void refresh1() {
+        for (MonthPanelYearViewWrapper monthPanelYearViewWrapper : monthPanelWrappers) {
+            monthPanelYearViewWrapper.refresh1();
+        }
     }
 
     public static int getCurrentYear() {

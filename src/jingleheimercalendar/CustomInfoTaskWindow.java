@@ -29,11 +29,11 @@ public class CustomInfoTaskWindow extends JDialog{
     color = task.getCategoryColor();
     secondaryColor=task.getSecondaryColor();
     setUndecorated(true);
-    add(new MyPanel(250,300,this));
+    add(new MyPanel2(250,300,this));
     pack();
     setBounds(300, 300, 250, 300);
     setVisible(true);
- 
+    setBackground(new Color(0,0,0,0));
     addMouseMotionListener(new MouseMotionListener() {
     private int mx, my;
 
@@ -62,11 +62,11 @@ public class CustomInfoTaskWindow extends JDialog{
     secondaryColor = c;
 }
   
-  public class MyPanel extends JPanel{
+  public class MyPanel2 extends JPanel{
         private int width;
         private int height;
         JDialog parent;
-        public MyPanel(int x,int y, JDialog p){
+        public MyPanel2(int x,int y, JDialog p){
             parent = p;
             width = x;
             height = y;
@@ -74,7 +74,7 @@ public class CustomInfoTaskWindow extends JDialog{
             this.add(e);
             e.setBounds(0, 0, 250, 300);
             this.setSize(x, y);
-            this.setBackground(new Color(0,0,0,0));
+            //this.setBackground(new Color(0,0,0,0));
             this.setOpaque(false);
         }
         
@@ -89,7 +89,7 @@ public class CustomInfoTaskWindow extends JDialog{
             g2.setColor(secondaryColor);
             g2.fillRect(0, 35, width, height - 30*2);
             g2.fillRoundRect(0,height - 25*2, width, 25*2, 25, 25);
-            g2.dispose();
+            //g2.dispose();
         }
         
     }

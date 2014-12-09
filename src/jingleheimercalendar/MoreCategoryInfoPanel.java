@@ -197,7 +197,7 @@ public class MoreCategoryInfoPanel extends javax.swing.JPanel {
         
                     jPanel1.add(Box.createRigidArea(new Dimension(0,10)));
                     JLabel j = new JLabel(df.format(e.get(i).getDate()));
-                    j.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.PLAIN, 13f));
+                    j.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD, 13f));
                     j.setAlignmentX(Component.LEFT_ALIGNMENT);
                     j.setForeground(new Color(69,69,69));
                     previousDate = e.get(i).getDate();
