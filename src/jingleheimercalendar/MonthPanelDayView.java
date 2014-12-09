@@ -52,8 +52,8 @@ public class MonthPanelDayView extends MonthPanel {
                 currentlyHighlighted.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
             }
             //Check to see if an action needs to be performed
-            if (e.getClickCount() == 2) {
-                JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth(), getCurrentYear());
+            if (e.getClickCount() >= 2) {
+                JingleheimerCalendar.changeDayViewDay(parent.getDay(), (getCurrentMonth() + parent.getMonthContext()), getCurrentYear());
             }
         }
 

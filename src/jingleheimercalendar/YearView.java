@@ -1,5 +1,6 @@
 package jingleheimercalendar;
 
+import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,6 +14,8 @@ public class YearView extends ViewPanel {
     private SpringLayout springPanelAndHeader;
     private int gridPaddingHorizontal = 0;
     private int gridPaddingVertical = 0;
+    private static DayPane lastClicked;
+    private static JLabel lastHovered;
 
     YearView(int width, int height) {
         this.value = JingleheimerCalendar.VIEW_YEAR;
@@ -21,11 +24,14 @@ public class YearView extends ViewPanel {
         setBackground(Color.WHITE);
         springPanelAndHeader = new SpringLayout();
 
-        yearPanel = new YearPanel(width, height - YearHeader.MINIMUM_HEIGHT);
+        yearPanel = new YearPanel(width, height - YearHeader.MINIMUM_HEIGHT - 10);
         yearHeader = new YearHeader(width);
 
         add(yearHeader);
         add(yearPanel);
+
+        //yearHeader.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.GREEN));
+        //yearPanel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.RED));
 
         springPanelAndHeader.putConstraint(SpringLayout.NORTH, yearHeader, gridPaddingVertical, SpringLayout.NORTH, this);
         springPanelAndHeader.putConstraint(SpringLayout.WEST, yearHeader, gridPaddingHorizontal, SpringLayout.WEST, this);
@@ -34,7 +40,15 @@ public class YearView extends ViewPanel {
         springPanelAndHeader.putConstraint(SpringLayout.NORTH, yearPanel, gridPaddingVertical, SpringLayout.SOUTH, yearHeader);
         springPanelAndHeader.putConstraint(SpringLayout.WEST, yearPanel, gridPaddingHorizontal, SpringLayout.WEST, this);
         springPanelAndHeader.putConstraint(SpringLayout.EAST, yearPanel, gridPaddingHorizontal, SpringLayout.EAST, this);
-        springPanelAndHeader.putConstraint(SpringLayout.SOUTH, yearPanel, gridPaddingVertical, SpringLayout.SOUTH, this);
+        springPanelAndHeader.putConstraint(SpringLayout.SOUTH, yearPanel, 0, SpringLayout.SOUTH, this);
 
+    }
+
+    protected static  DayPane getLastClicked() {
+        return lastClicked;
+    }
+
+    protected static void setLastClicked(DayPane clicked) {
+        lastClicked = clicked;
     }
 }

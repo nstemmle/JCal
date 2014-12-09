@@ -15,9 +15,14 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JingleheimerCalendar extends JFrame {
     //Constants for preferred/target screen width and height
@@ -80,6 +85,7 @@ public class JingleheimerCalendar extends JFrame {
     }
 
     public JingleheimerCalendar() {
+        demo();
         this.getContentPane().setMinimumSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         this.getContentPane().setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         pack();
@@ -90,13 +96,13 @@ public class JingleheimerCalendar extends JFrame {
 
         this.setSize(prefWidth, prefHeight);
         this.setPreferredSize(new Dimension(prefWidth, prefHeight));
-        System.out.println(this.getBounds());
-        System.out.println(getContentPane().getBounds());
+        //System.out.println(this.getBounds());
+        //System.out.println(getContentPane().getBounds());
         this.setResizable(false);
 
         int viewWidth = PREFERRED_WIDTH;
         int viewHeight = PREFERRED_HEIGHT - CategoryBar.MINIMUM_HEIGHT - NavigationPanel.MINIMUM_HEIGHT;
-        System.out.println("viewWidth: " + viewWidth + ", viewHeight: " + viewHeight);
+        //System.out.println("viewWidth: " + viewWidth + ", viewHeight: " + viewHeight);
 
         springLayoutRoot = new SpringLayout();
         getContentPane().setLayout(springLayoutRoot);
@@ -112,8 +118,8 @@ public class JingleheimerCalendar extends JFrame {
             e.printStackTrace();
         }
 
-        if (defaultFont == null)
-            System.out.println("FUUUUUUUU!!!!");
+        //if (defaultFont == null)
+           // System.out.println("FUUUUUUUU!!!!");
 
         //Initialize Navigation and Category Panels
         Insets nullInsets = new Insets(0,0,0,0);
@@ -153,8 +159,9 @@ public class JingleheimerCalendar extends JFrame {
         }
 
         mNavigationPanel.setBackground(Color.BLUE);
-        
+
         mCategoryPanel.setBackground(Color.WHITE);
+        //mCategoryPanel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.PINK));
         getContentPane().setBackground(Color.WHITE);
         viewPanel.setBackground(Color.WHITE);
         this.setBackground(Color.WHITE);
@@ -163,7 +170,7 @@ public class JingleheimerCalendar extends JFrame {
         this.setVisible(true);
         this.validate();
 
-        System.out.println("NavigationPanel.bounds: " + mNavigationPanel.getBounds().toString());
+        /*System.out.println("NavigationPanel.bounds: " + mNavigationPanel.getBounds().toString());
         System.out.println("NavigationPanel.x: " + mNavigationPanel.getX());
         System.out.println("NavigationPanel.y: " + mNavigationPanel.getY());
 
@@ -177,7 +184,7 @@ public class JingleheimerCalendar extends JFrame {
 
         System.out.println("CategoryPanel.bounds: " + mCategoryPanel.getBounds().toString());
         System.out.println("CategoryPanel.x: " + mCategoryPanel.getX());
-        System.out.println("CategoryPanel.y: " + mCategoryPanel.getY());
+        System.out.println("CategoryPanel.y: " + mCategoryPanel.getY());*/
 
         //if (maxWidth && maxHeight)
         //    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -335,9 +342,109 @@ public class JingleheimerCalendar extends JFrame {
                 return -1;
         }
     }
+    private void demo(){
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");
+            UserCalendar uc = UserCalendar.getInstance();
+            ArrayList<Category> categories = uc.getCategories();
 
+            Category none     = categories.get(0);
+            Category work     = categories.get(1);
+            Category school   = categories.get(2);
+            Category family   = categories.get(3);
+            Category wellness = categories.get(4);
+
+            Date d;
+            Event e;
+
+            // Events
+            d = df.parse("12/10/2014");
+            e = new Event("Dad's Birthday", "56 Years Old!", "All Day", "",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/10/2014");
+            e = new Event("ELA State Test", "Don't let Timmy go to school without breakfast", "10:45 am", "1:30 pm",school,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/13/2014");
+            e = new Event("Yoga", "Don't forget a mat this week!", "8:00 am", "9:30 am",wellness,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/11/2014");
+            e = new Event("HR Audit", "The auditor will be here!", "9:00 am", "11:00 am",work,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/09/2014");
+            e = new Event("Andy's practice", "My turn to pick the boys up", "3:00 pm", "4:00 pm",school,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/10/2014");
+            e = new Event("Andy's soccer game", "Home game", "6:00 pm", "7:30 pm",school,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/11/2014");
+            e = new Event("Jason's practice", "My turn to pick the boys up", "3:00 pm", "4:00 pm",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/12/2014");
+            e = new Event("Movie night", "With Jack, bring the kids?", "7:00 pm", "10:00 pm",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/13/2014");
+            e = new Event("Shopping!", "Pick up Justine and Kate", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/24/2014");
+            e = new Event("Christmas Eve Party", "At Justine's, bring chicken wing dip.", "7:00 pm", "10:00 pm",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/25/2014");
+            e = new Event("Christmas Dinner", "Mom and Dad's", "5:00 pm", "7:00 pm",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/31/2014");
+            e = new Event("New Years' Party", "Our place", "9:00 pm", "2:00 am",family,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/16/2014");
+            e = new Event("Hanukkah", "begins at sundown", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/24/2014");
+            e = new Event("Christmas Eve", "", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/25/2014");
+            e = new Event("Christmas", "", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/26/2014");
+            e = new Event("Boxing Day", "Canada", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("12/31/2014");
+            e = new Event("New Year's Eve", "", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            d = df.parse("1/1/2015");
+            e = new Event("New Year's Day", "", "All Day", "",none,d);
+            uc.addEventsByDate(e,d);
+
+            // Tasks
+            uc.addTasks(new Task("Cake and Ice Cream","Order from Yummy Cakes",3,school,"3:00 pm"));
+            uc.addTasks(new Task("Finish quilt","Justine's new baby!",2,none,""));
+            uc.addTasks(new Task("Call the caterer","New Years' Party",1,none,""));
+        } catch (ParseException ex) {
+            Logger.getLogger(JingleheimerCalendar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
     public static void changeDayViewDay(int date, int month, int year) {
         ((DayView)views[INDEX_DAY_VIEW]).changeDay(date, month, year);
+    }
+
+    public static void changeMonthViewMonth(int month, int year) {
+        ((MonthView)views[INDEX_MONTH_VIEW]).setMonth(month, year);
     }
 
     public static void repaintDisplayedCategoryWindow() {

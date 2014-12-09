@@ -554,7 +554,7 @@ public class DayPanel extends javax.swing.JPanel {
     }
     
     public void refreshTaskPanel(){
-        System.out.println("CALLED REFRESH");
+        //System.out.println("CALLED REFRESH");
         taskScrollContentPanel.removeAll();
         validate();
         
@@ -577,7 +577,7 @@ public class DayPanel extends javax.swing.JPanel {
     
     
     public void refreshEventPanel(){
-        System.out.println("CALLED REFRESH");
+        //System.out.println("CALLED REFRESH");
         eventScrollContentPanel.removeAll();
         validate();
         

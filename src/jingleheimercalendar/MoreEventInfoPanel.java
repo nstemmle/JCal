@@ -10,6 +10,7 @@ package jingleheimercalendar;
  * @author Brandon
  */
 
+import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Font;
@@ -18,8 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
-import javax.swing.event.PopupMenuListener;
 
 /**
  *
@@ -363,8 +362,6 @@ public class MoreEventInfoPanel extends javax.swing.JPanel {
     private void editMouseClicked(java.awt.event.MouseEvent evt) {                                     
        
             try {
-                
-                
                 SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");
                 Date possibleNewDate;
                 possibleNewDate = df.parse(date.getText());

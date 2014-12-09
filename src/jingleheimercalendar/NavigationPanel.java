@@ -141,7 +141,10 @@ public class NavigationPanel extends JPanel {
         Calendar a  = Calendar.getInstance();
         String time = "";
         int min = a.get(Calendar.MINUTE);
-        time = time.concat(String.valueOf(a.get(Calendar.HOUR))).concat(":");
+        int hour = a.get(Calendar.HOUR);
+        if (hour == 0)
+            hour = 12;
+        time = time.concat(String.valueOf(hour)).concat(":");
         time = time.concat(min < 10 ? "0" + String.valueOf(min) : String.valueOf(min));
         time = time.concat((a.get(Calendar.AM_PM ) == Calendar.AM ? " AM" : " PM"));
         labelTime = new JLabel(time, SwingConstants.CENTER);
@@ -153,7 +156,10 @@ public class NavigationPanel extends JPanel {
                 Calendar c  = Calendar.getInstance();
                 String time = "";
                 int min = c.get(Calendar.MINUTE);
-                time = time.concat(String.valueOf(c.get(Calendar.HOUR))).concat(":");
+                int hour = c.get(Calendar.HOUR);
+                if (hour == 0)
+                    hour = 12;
+                time = time.concat(String.valueOf(hour)).concat(":");
                 time = time.concat(min < 10 ? "0" + String.valueOf(min) : String.valueOf(min));
                 time = time.concat((c.get(Calendar.AM_PM ) == Calendar.AM ? " AM" : " PM"));
                 labelTime.setText(time);
@@ -192,7 +198,6 @@ public class NavigationPanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             NavButton clicked = (NavButton) e.getComponent();
-            System.out.println(clicked.getViewIndex());
             if (lastSelected != clicked && lastSelected != buttonToday) {
                 JingleheimerCalendar.displayView(clicked.getViewIndex());
             } else if (lastSelected == buttonToday) {

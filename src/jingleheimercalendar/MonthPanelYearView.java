@@ -1,6 +1,5 @@
 package jingleheimercalendar;
 
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
@@ -11,10 +10,6 @@ import java.util.ArrayList;
  * Created by Nathan on 12/7/2014.
  */
 public class MonthPanelYearView extends MonthPanel {
-    private DayPane lastClicked;
-    private JPanel monthLabelPanel;
-    private JLabel monthLabel;
-    //TODO: Create a wrapper panel for this so you can set springlayout of this and its monthPanel
 
     public MonthPanelYearView(int width, int height, int monthDelta){
         super(width, height, monthDelta);
@@ -23,12 +18,7 @@ public class MonthPanelYearView extends MonthPanel {
         updateDayColumnHeaders(MonthPanel.DAY_LABELS_YEARVIEW_CONTEXT);
         setColumnPaneSize(width, 20);
 
-        monthLabelPanel = new JPanel();
-        monthLabel = new JLabel(getCurrentMonthString(), SwingConstants.LEADING);
-
         updateDayOrdinals();
-        SpringLayout sl = new SpringLayout();
-
     }
 
     protected void updateMonthLabel() {
@@ -39,12 +29,12 @@ public class MonthPanelYearView extends MonthPanel {
     protected void updateDayOrdinals() {
         super.updateDayOrdinals();
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        int labelsIndex = 0;
         int day = getNumDaysInPreviousMonth() - getNumDaysPreviousMonthDisplayed();
         int m = getCurrentMonth();
         int year = getCurrentYear();
         ArrayList<Event> allDayEvents = null;
 
+        int labelsIndex = 0;
         for (; labelsIndex < getNumDaysPreviousMonthDisplayed(); labelsIndex++,day++) {
             String date = String.valueOf(getCurrentMonth() >= 10 ? m : "0" + m) + "/" +
                     String.valueOf(day >= 10 ? day : "0" + day) + "/" + String.valueOf(year);
@@ -58,7 +48,7 @@ public class MonthPanelYearView extends MonthPanel {
         }
 
         day = 1;
-        for (; labelsIndex < getNumDaysCurrentMonth(); labelsIndex++, day++) {
+        for (; labelsIndex < getNumDaysCurrentMonth() + getNumDaysPreviousMonthDisplayed(); labelsIndex++, day++) {
             String date = String.valueOf(getCurrentMonth() >= 10 ? m : "0" + m) + "/" +
                     String.valueOf(day >= 10 ? day : "0" + day) + "/" + String.valueOf(year);
             try {
@@ -71,7 +61,7 @@ public class MonthPanelYearView extends MonthPanel {
         }
 
         day = 1;
-        for (; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++, day++) {
+        for (int i = 1; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++, i++) {
             String date = String.valueOf(getCurrentMonth() >= 10 ? m : "0" + m) + "/" +
                     String.valueOf(day >= 10 ? day : "0" + day) + "/" + String.valueOf(year);
             try {
@@ -92,6 +82,7 @@ public class MonthPanelYearView extends MonthPanel {
         public void mouseClicked(MouseEvent e) {
             DayPane parent = (DayPane) e.getComponent();
             //First recolor
+            DayPane lastClicked = YearView.getLastClicked();
             if (lastClicked !=  null && parent != lastClicked) {
                 parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
                 if (lastClicked.isCurrentDay())
@@ -99,20 +90,11 @@ public class MonthPanelYearView extends MonthPanel {
                 else
                     lastClicked.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
             }
-            lastClicked = parent;
+            YearView.setLastClicked(parent);
             //Check to see if an action needs to be performed
             if (e.getClickCount() == 2) {
                 JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
                 JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth(), getCurrentYear());
-            } else {
-                int context = parent.getMonthContext();
-                if (context == DayPane.SWITCH_NEXT_MONTH) {
-                    changeMonthBy(1);
-                    MonthView.monthHeader.update();
-                } else if (context == DayPane.SWITCH_PREVIOUS_MONTH) {
-                    changeMonthBy(-1);
-                    MonthView.monthHeader.update();
-                }
             }
             JingleheimerCalendar.repaintDisplayedCategoryWindow();
         }
@@ -129,7 +111,7 @@ public class MonthPanelYearView extends MonthPanel {
         @Override
         public void mouseExited(MouseEvent e) {
             DayPane parent = (DayPane) e.getComponent();
-            if (lastClicked != null && parent == lastClicked ) {
+            if (YearView.getLastClicked() != null && parent == YearView.getLastClicked()) {
                 parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
             } else if (parent.isCurrentDay()) {
                 parent.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);

@@ -1,10 +1,7 @@
 package jingleheimercalendar;
 
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Nathan on 12/7/2014.
@@ -26,26 +23,31 @@ public class MonthPanelMonthView extends MonthPanel {
             DayPane parent = (DayPane) e.getComponent();
             //First recolor
             if (lastClicked !=  null && parent != lastClicked) {
-                parent.setCurrentColor(MonthPanel.BLUE_SELECTED_MEDIUM);
+                parent.setCurrentColor(BLUE_SELECTED_MEDIUM);
                 if (lastClicked.isCurrentDay())
-                    lastClicked.setCurrentColor(MonthPanel.GRAY_CURRENT_DAY_BACKGROUND);
+                    lastClicked.setCurrentColor(GRAY_CURRENT_DAY_BACKGROUND);
                 else
-                    lastClicked.setCurrentColor(MonthPanel.DEFAULT_PANEL_BACKGROUND);
+                    lastClicked.setCurrentColor(DEFAULT_PANEL_BACKGROUND);
             }
             lastClicked = parent;
-            //Check to see if an action needs to be performed
-            if (e.getClickCount() == 2) {
+            int context = parent.getMonthContext();
+            //Panel in non-current month selected
+            int date = parent.getDay();
+            int month = getCurrentMonth();
+            int year = getCurrentYear();
+            if (context != DayPane.SWITCH_CURRENT_MONTH) {
+                if (lastClicked.isCurrentDay())
+                    lastClicked.setCurrentColor(GRAY_CURRENT_DAY_BACKGROUND);
+                else
+                    lastClicked.setCurrentColor(DEFAULT_PANEL_BACKGROUND);
+                changeMonthBy(context);
+                MonthView.monthHeader.update();
+                lastClicked = getDayPane(date);
+                lastClicked.setCurrentColor(BLUE_SELECTED_MEDIUM);
+            }
+            if (e.getClickCount() >= 2) {
                 JingleheimerCalendar.displayView(JingleheimerCalendar.INDEX_DAY_VIEW);
-                JingleheimerCalendar.changeDayViewDay(parent.getDay(), getCurrentMonth(), getCurrentYear());
-            } else {
-                int context = parent.getMonthContext();
-                if (context == DayPane.SWITCH_NEXT_MONTH) {
-                    changeMonthBy(1);
-                    MonthView.monthHeader.update();
-                } else if (context == DayPane.SWITCH_PREVIOUS_MONTH) {
-                    changeMonthBy(-1);
-                    MonthView.monthHeader.update();
-                }
+                JingleheimerCalendar.changeDayViewDay(date, month, year);
             }
             JingleheimerCalendar.repaintDisplayedCategoryWindow();
         }

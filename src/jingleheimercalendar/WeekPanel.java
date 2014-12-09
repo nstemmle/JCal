@@ -2387,7 +2387,7 @@ public class WeekPanel extends JPanel {
     
     public void addEvent(int i ){
         Date date = cal.getTime();
-        System.out.println(date);
+        //System.out.println(date);
         
         
         ArrayList<Event> e = UserCalendar.getInstance().getEventsByDate(date);

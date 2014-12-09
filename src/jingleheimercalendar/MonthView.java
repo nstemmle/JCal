@@ -36,4 +36,9 @@ public class MonthView extends ViewPanel {
         springPanelAndHeader.putConstraint(SpringLayout.EAST, monthPanel, gridPaddingHorizontal, SpringLayout.EAST, this);
         springPanelAndHeader.putConstraint(SpringLayout.SOUTH, monthPanel, gridPaddingVertical, SpringLayout.SOUTH, this);
     }
+
+    protected static void setMonth(int month, int year) {
+        monthPanel.changeMonthBy((month - monthPanel.getCurrentMonth()) + ((year - monthPanel.getCurrentYear()) * 12));
+        monthHeader.updateMonthLabel();
+    }
 }

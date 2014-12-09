@@ -43,18 +43,18 @@ public class CatInfoRow extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(275, 25));
         setPreferredSize(new java.awt.Dimension(275, 25));
 
-        jLabel1.setFont(JingleheimerCalendar.defaultFont.deriveFont(12f));
+        jLabel1.setFont(JingleheimerCalendar.defaultFont.deriveFont(11f));
         
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText(s);
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 16));
         
-        jLabel2.setFont(JingleheimerCalendar.defaultFont.deriveFont(12f));
+        jLabel2.setFont(JingleheimerCalendar.defaultFont.deriveFont(11f));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText(e);
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 16));
         
-        jLabel3.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD,13f));
+        jLabel3.setFont(JingleheimerCalendar.defaultFont.deriveFont(Font.BOLD,12f));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText(n);
         

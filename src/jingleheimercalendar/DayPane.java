@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -38,6 +39,17 @@ class DayPane extends JPanel {
         sl.putConstraint(SpringLayout.SOUTH, ordinalLabel, 0, SpringLayout.SOUTH, this);
         sl.putConstraint(SpringLayout.WEST, ordinalLabel, 0, SpringLayout.WEST, this);
         sl.putConstraint(SpringLayout.EAST, ordinalLabel, 0, SpringLayout.EAST, this);
+    }
+
+    //TODO:
+    public void updateOrdinalLabel(String text, Font font, Color textColor) {
+        ordinalLabel.setText(text);
+        ordinalLabel.setFont(font);
+        ordinalLabel.setForeground(textColor);
+    }
+
+    public void updateOrdinalFont(Font font) {
+        ordinalLabel.setFont(font);
     }
 
     public void setLabelColor(Color color) {

@@ -25,7 +25,7 @@ class MonthPanel extends JPanel {
 
     private static final int COLUMN_PANE_HEIGHT = 50; //50 px
 
-    public static final Color BLUE_SELECTED = new Color(76, 200, 237, 64);
+   // public static final Color BLUE_SELECTED = new Color(76, 200, 237, 64);
     public static final Color BLUE_SELECTED_A25 = new Color(0,150,191);
     //public static final Color BLUE_SELECTED_A25 = new Color(76, 200, 237, 64);
     public static final Color BLUE_SELECTED_DARK = new Color(0,100,128);
@@ -55,7 +55,6 @@ class MonthPanel extends JPanel {
 
     private JPanel dayPane;
     private DayPane[] dayPanes;
-    private JLabel[] dayOrdinalLabels;
 
     //Date values from the current system date
 
@@ -126,7 +125,7 @@ class MonthPanel extends JPanel {
         updateDayColumnHeaders(DAY_LABELS_MONTHVIEW_CONTEXT);
 
         //Set the day ordinal labels text
-        initializeDayOrdinals();
+        updateDayOrdinals();
     }
 
     void updateDayPanelClickListener(MouseListener mouseListener) {
@@ -137,6 +136,22 @@ class MonthPanel extends JPanel {
 
     public DayPane getDayPane(int day) {
         return dayPanes[numDaysPreviousMonthDisplayed + day - 1];
+    }
+
+    public DayPane getDayPane(int day, int monthContext) {
+        switch (monthContext) {
+            case DayPane.SWITCH_PREVIOUS_MONTH:
+                System.out.println("getDayPane.switch_current_month: " + String.valueOf(numDaysInPreviousMonth - day));
+                return dayPanes[numDaysInPreviousMonth - day];
+            case DayPane.SWITCH_CURRENT_MONTH:
+                System.out.println("getDayPane.switch_current_month: " + String.valueOf(numDaysPreviousMonthDisplayed + day - 1));
+                return dayPanes[numDaysPreviousMonthDisplayed + day - 1];
+            case DayPane.SWITCH_NEXT_MONTH:
+                System.out.println("getDayPane.switch_next_month: " + String.valueOf(numDaysPreviousMonthDisplayed + numDaysCurrentMonth + day - 1));
+                return dayPanes[numDaysPreviousMonthDisplayed + numDaysCurrentMonth + day - 1];
+            default:
+                return null;
+        }
     }
 
     public DayPane getDayPaneAtIndex(int index) {
@@ -298,10 +313,8 @@ class MonthPanel extends JPanel {
     }
 
     private void updateOrdinalFonts() {
-        if (dayOrdinalLabels != null) {
-            for (JLabel dayLabel : dayOrdinalLabels) {
-                dayLabel.setFont(fontOrdinals);
-            }
+        for (DayPane pane : dayPanes) {
+            pane.updateOrdinalFont(fontOrdinals);
         }
     }
 
@@ -486,12 +499,11 @@ class MonthPanel extends JPanel {
         //Random r = new Random();
 
         SpringLayout sl = new SpringLayout();
-        dayOrdinalLabels = new JLabel[NUM_DAYS_DISPLAYED];
         dayPanes = new DayPane[NUM_DAYS_DISPLAYED];
         for (int i = 0; i < NUM_DAYS_DISPLAYED; i++) {
-            dayOrdinalLabels[i] = new JLabel("",SwingConstants.CENTER);
-            dayOrdinalLabels[i].setVerticalAlignment(SwingConstants.CENTER);
-            dayPanes[i] = new DayPane(this, paneWidth, paneHeight, dayOrdinalLabels[i]);
+            JLabel ordinal = new JLabel("",SwingConstants.CENTER);
+            ordinal.setVerticalAlignment(SwingConstants.CENTER);
+            dayPanes[i] = new DayPane(this, paneWidth, paneHeight, ordinal);
             //Testing line to set random borders on each JLabel
             //dayOrdinalLabels[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256))));
             dayPane.add(dayPanes[i]);
@@ -515,55 +527,19 @@ class MonthPanel extends JPanel {
 
         //Previous month labels
         for (labelsIndex = 0; labelsIndex < numDaysPreviousMonthDisplayed; labelsIndex++) {
-            dayOrdinalLabels[labelsIndex].setText(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex));
-            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
-            dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
+            dayPanes[labelsIndex].updateOrdinalLabel(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex), fontOrdinals ,TEXT_GRAY);
             dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_PREVIOUS_MONTH);
         }
 
         //Current month labels
         for (; labelsIndex < (numDaysCurrentMonth + numDaysPreviousMonthDisplayed); labelsIndex++) {
-            dayOrdinalLabels[labelsIndex].setText(String.valueOf(1 + labelsIndex - numDaysPreviousMonthDisplayed));
-            dayOrdinalLabels[labelsIndex].setForeground(Color.BLACK);
-            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
+            dayPanes[labelsIndex].updateOrdinalLabel(String.valueOf(1 + labelsIndex - numDaysPreviousMonthDisplayed), fontOrdinals, Color.BLACK);
             dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_CURRENT_MONTH);
         }
 
         //Next month labels
         for (int i = 1; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++, i++) {
-            dayOrdinalLabels[labelsIndex].setText(String.valueOf(i));
-            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
-            dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
-            dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_NEXT_MONTH);
-        }
-
-        markCurrentDay();
-    }
-
-    private void initializeDayOrdinals() {
-        int labelsIndex;
-
-        //Previous month labels
-        for (labelsIndex = 0; labelsIndex < numDaysPreviousMonthDisplayed; labelsIndex++) {
-            dayOrdinalLabels[labelsIndex].setText(String.valueOf(numDaysInPreviousMonth - numDaysPreviousMonthDisplayed + 1 + labelsIndex));
-            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
-            dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
-            dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_PREVIOUS_MONTH);
-        }
-
-        //Current month labels
-        for (; labelsIndex < (numDaysCurrentMonth + numDaysPreviousMonthDisplayed); labelsIndex++) {
-            dayOrdinalLabels[labelsIndex].setText(String.valueOf(1 + labelsIndex - numDaysPreviousMonthDisplayed));
-            dayOrdinalLabels[labelsIndex].setForeground(Color.BLACK);
-            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
-            dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_CURRENT_MONTH);
-        }
-
-        //Next month labels
-        for (int i = 1; labelsIndex < NUM_DAYS_DISPLAYED; labelsIndex++,i++) {
-            dayOrdinalLabels[labelsIndex].setText(String.valueOf(i));
-            dayOrdinalLabels[labelsIndex].setFont(fontOrdinals);
-            dayOrdinalLabels[labelsIndex].setForeground(TEXT_GRAY);
+            dayPanes[labelsIndex].updateOrdinalLabel(String.valueOf(i), fontOrdinals, TEXT_GRAY);
             dayPanes[labelsIndex].setMonthContext(DayPane.SWITCH_NEXT_MONTH);
         }
 
